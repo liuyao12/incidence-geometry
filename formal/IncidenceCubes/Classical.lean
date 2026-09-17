@@ -1,0 +1,8 @@
+import IncidenceCubes.Classical.Basic
+import IncidenceCubes.Classical.PappusDesargues
+import IncidenceCubes.Classical.Pascal
+import IncidenceCubes.Classical.Conics
+import IncidenceCubes.Classical.Triangle
+import IncidenceCubes.Classical.Polarity
+import IncidenceCubes.Classical.Brianchon
+import IncidenceCubes.Classical.ProjectiveCertificates

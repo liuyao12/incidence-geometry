@@ -2,3 +2,6 @@ import IncidenceCubes.Penrose.Algebra
 import IncidenceCubes.Fomin.Surface
 import IncidenceCubes.Fomin.Coherence
 import IncidenceCubes.Connection.Veronese
+import IncidenceCubes.Classical
+import IncidenceCubes.Connection.Determinantal
+import IncidenceCubes.Connection.LocalComparison
