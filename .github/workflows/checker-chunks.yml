@@ -1,0 +1,43 @@
+name: Transfer development checker
+on:
+  push:
+    paths: ['.github/workflows/checker-chunks.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  split:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: offline-lean-small
+          run-id: 35243231119
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - run: split -b 400M offline-lean-small.tar.zst checker-part-
+      - uses: actions/upload-artifact@v4
+        with:
+          name: checker-aa
+          path: checker-part-aa
+          compression-level: 0
+          retention-days: 1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: checker-ab
+          path: checker-part-ab
+          compression-level: 0
+          retention-days: 1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: checker-ac
+          path: checker-part-ac
+          compression-level: 0
+          retention-days: 1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: checker-ad
+          path: checker-part-ad
+          compression-level: 0
+          retention-days: 1
