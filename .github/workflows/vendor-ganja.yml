@@ -1,0 +1,29 @@
+name: Vendor pinned ganja.js
+on:
+  push:
+    paths: ['.github/workflows/vendor-ganja.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  vendor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch and verify the pinned public source
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p vendor
+          curl --fail --location --retry 2 https://raw.githubusercontent.com/enkimute/ganja.js/6e97cb45d780cd7c661d9240f1610eb005707417/ganja.js -o vendor/ganja.js
+          curl --fail --location --retry 2 https://raw.githubusercontent.com/enkimute/ganja.js/6e97cb45d780cd7c661d9240f1610eb005707417/LICENSE -o vendor/ganja.LICENSE
+          echo '84f0d776375e5dd11beb90a3da2a6fc9b053e12aef86f8f86cbf4442ecd99b9b  vendor/ganja.js' | sha256sum -c
+          echo '8161ab4967ce2ba91a2266fd0161262ac3bcf72d2bcd67d03f772a4a1c173193  vendor/ganja.LICENSE' | sha256sum -c
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add vendor/ganja.js vendor/ganja.LICENSE
+          if ! git diff --cached --quiet; then
+            git commit -m 'Vendor unmodified ganja.js at 6e97cb4 with MIT license'
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
