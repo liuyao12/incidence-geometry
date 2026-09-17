@@ -1,0 +1,33 @@
+name: Ganja development fixtures
+on:
+  push:
+    paths: ['.github/workflows/ganja-fixtures.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  fixtures:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Collect public pinned dependency and notebook
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/ganja-fixtures/repo /tmp/ganja-fixtures/reference
+          git archive HEAD | tar -xf - -C /tmp/ganja-fixtures/repo
+          mkdir -p /tmp/ganja-fixtures/repo/vendor
+          curl --fail --location --retry 2 https://raw.githubusercontent.com/enkimute/ganja.js/6e97cb45d780cd7c661d9240f1610eb005707417/ganja.js -o /tmp/ganja-fixtures/repo/vendor/ganja.js
+          curl --fail --location --retry 2 https://raw.githubusercontent.com/enkimute/ganja.js/6e97cb45d780cd7c661d9240f1610eb005707417/LICENSE -o /tmp/ganja-fixtures/repo/vendor/ganja.LICENSE
+          curl --fail --location --retry 2 'https://api.observablehq.com/@liuyao12/conics-sections.js?v=3' -o /tmp/ganja-fixtures/reference/conics-sections.js
+          sha256sum /tmp/ganja-fixtures/repo/vendor/*
+          wc -c /tmp/ganja-fixtures/reference/conics-sections.js
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ganja-fixtures
+          path: /tmp/ganja-fixtures
+          include-hidden-files: true
+          retention-days: 7
