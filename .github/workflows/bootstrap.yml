@@ -1,0 +1,72 @@
+name: Bootstrap checked incidence geometry
+on:
+  push:
+    paths: ['.github/workflows/bootstrap.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: liuyao12/geometric-tree-search
+          ref: ef6f3fb6347d97cd1a6418a5871f884ed2bd2f19
+          sparse-checkout: apps/incidence-cubes
+          path: migration-source
+          persist-credentials: false
+      - name: Import the verified starting point once
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -d formal ]; then
+            cp -a migration-source/apps/incidence-cubes/. .
+            printf '\nMigrated from liuyao12/geometric-tree-search at ef6f3fb6347d97cd1a6418a5871f884ed2bd2f19.\n' > PROVENANCE.md
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add formal index.html app.js engine.js style.css README.md BLUEPRINT.md verification.json axiom-audit.txt test.cjs test-results.json browser-test-results.json scripts PROVENANCE.md
+            git commit -m 'Import verified Lean kernels, tests and floating exposition'
+            git push origin HEAD:main
+          fi
+          rm -rf migration-source
+      - name: Test mathematical engine
+        run: node test.cjs
+      - uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: formal
+          build: 'true'
+          test: 'false'
+          lint: 'false'
+          use-mathlib-cache: 'true'
+      - name: Audit starting theorems
+        working-directory: formal
+        run: lake env lean Audit.lean
+      - name: Export an offline checker for development
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/checker/toolchain /tmp/checker/packages
+          toolchain="$(dirname "$(dirname "$(elan which lean)")")"
+          export TOOLCHAIN="$toolchain"
+          python3 - <<'PY'
+          import os, pathlib, shutil
+          root=pathlib.Path('/tmp/checker')
+          tc=pathlib.Path(os.environ['TOOLCHAIN'])
+          for p in tc.rglob('*'):
+              if p.is_file() and (p.suffix in ['.olean','.lean'] or '.so' in p.name or p == tc/'bin/lean' or p == tc/'bin/lake'):
+                  q=root/'toolchain'/p.relative_to(tc);q.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(p,q)
+          for p in pathlib.Path('formal/.lake/packages').rglob('*'):
+              if p.is_file() and '.git' not in p.parts and (p.suffix in ['.olean','.lean','.toml'] or p.name in ['lake-manifest.json','lean-toolchain']):
+                  q=root/'packages'/p.relative_to('formal/.lake/packages');q.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(p,q)
+          PY
+          tar --zstd -cf offline-lean.tar.zst -C /tmp/checker .
+          ls -lh offline-lean.tar.zst
+      - uses: actions/upload-artifact@v4
+        with:
+          name: offline-lean-development
+          path: offline-lean.tar.zst
+          compression-level: 0
+          retention-days: 3
