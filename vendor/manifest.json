@@ -1,0 +1,9 @@
+{
+  "library": "ganja.js",
+  "repository": "https://github.com/enkimute/ganja.js",
+  "commit": "6e97cb45d780cd7c661d9240f1610eb005707417",
+  "files": {
+    "ganja.js": "84f0d776375e5dd11beb90a3da2a6fc9b053e12aef86f8f86cbf4442ecd99b9b",
+    "ganja.LICENSE": "8161ab4967ce2ba91a2266fd0161262ac3bcf72d2bcd67d03f772a4a1c173193"
+  }
+}

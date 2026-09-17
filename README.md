@@ -1,14 +1,16 @@
-# Incidence cubes
+# Incidence Geometry
 
 An interactive exposition and an independent Lean 4 project for Penrose's conic cube, Fomin–Pylyavskyy's surface cancellation, and the Veronese coefficient-space bridge.
 
-[Live exposition](https://liuyao12.github.io/geometric-tree-search/apps/incidence-cubes/) · [Lean CI](https://github.com/liuyao12/geometric-tree-search/actions/workflows/incidence-cubes.yml) · [Blueprint](BLUEPRINT.md)
+[Live exposition](https://liuyao12.github.io/incidence-geometry/) · [Lean CI](https://github.com/liuyao12/incidence-geometry/actions/workflows/ci.yml) · [Blueprint](BLUEPRINT.md)
 
 The page follows the reading-plus-floating-demo arrangement of `GCTS-I.html`. Its panel is sticky, draggable and horizontally resizable on desktop, and stacked above the text on mobile. “Follow text” selects the corresponding experiment while reading; using a control turns automatic following off. The reset-position button restores the panel.
 
-## Four experiments
+## Five experiments
 
 **Conics:** seven conics in a symmetric-matrix normal form; reveal the eighth; select cube edges for contact chords, points and tangents; select faces for concurrency. Drag the hollow seed-chord handles, change matrix couplings, pan with empty-space drag and zoom with Shift-wheel.
+
+**Pascal:** adapted from [Yao Liu’s Conic sections notebook](https://observablehq.com/@liuyao12/conics-sections). Drag five points and construct a sixth via Pascal’s join/meet straightedge construction. Trace the conic, inspect the three collinear opposite-side intersections, and optionally show tangent envelopes. An independent equation is used for diagnostics and optional tangents, not to generate the point locus. This experiment is not yet formally proved in Lean.
 
 **Incidences:** a point/line cube built from perspective triangles. Drag O or vary the three point positions. Reveal the line containing the three side-intersection points. The face ratios are numerical diagnostics, not proof evidence.
 
@@ -51,10 +53,11 @@ The build record is in `verification.json`. The GitHub workflow builds the root 
 
 ```sh
 node test.cjs
+node test-ganja.cjs
 python -m http.server 8000
 ```
 
-Then open `http://localhost:8000/`. The engine and page have no external runtime dependencies. `test.cjs` runs 1,000 deterministic configurations, including all twelve contact identities and all six face conditions, exact edge-product cancellation, non-incidence and coefficient identities. `test-results.json` records the output. These are software tests, not replacements for Lean proofs.
+Then open `http://localhost:8000/`. The page uses a locally vendored, hash-pinned copy of ganja.js and needs no external runtime services. `pga.js` supplies Float64 projective algebra; `ganja-view.js` uses ganja’s native SVG renderer with our touch/keyboard/pointer adapter. See [vendor provenance](vendor/README.md). `test.cjs` runs 1,000 deterministic configurations, including all twelve contact identities and all six face conditions, exact edge-product cancellation, non-incidence and coefficient identities. `test-results.json` records the original engine output; `ganja-test-results.json` records the independent ganja tests. Browser tests run with `python scripts/browser_smoke.py --serve` after installing Python Playwright and Chromium. Without `--serve`, the script exercises the actual local assets offline and supplies only the verification.json response. These are software tests, not replacements for Lean proofs.
 
 Export data saves the current numerical configuration, explicitly marked as not a Lean certificate. No accounts, tracking, browser storage or user-data uploads are used.
 
@@ -63,3 +66,9 @@ Export data saves the current numerical configuration, explicitly marked as not 
 - Arnold, Chern, Eide, Gunn, Neukirchner and Penrose, [Penrose's eight-conic theorem](https://arxiv.org/html/2409.17150v8), especially §§6–7.
 - Fomin and Pylyavskyy, [Incidences and tilings](https://arxiv.org/abs/2305.07728), Proposition 2.5, Theorem 2.6 and Proposition 9.1.
 - [Chern's Penrose project page](https://cseweb.ucsd.edu/~alchern/projects/Penrose/).
+
+## Ganja rendering and proof scope
+
+The canvas implementation has been replaced by native ganja SVG output. Joins/meets in the incidence cube and Pascal construction use ganja operations, not a renamed coordinate cross-product routine. Quadratic-form coefficients still provide Penrose’s conic algebra; a general conic is not misidentified with a single PGA line or point. Homogeneous curve samples are split and clipped at infinity, and zero construction vectors raise diagnostics.
+
+The upgrade preserves the existing 17 Lean theorems. No new geometric completion theorem, full Pascal proof, or reduction between the papers is claimed. The original proof evidence remains in `verification.json`; current CI separately rebuilds and audits these same sources in this repository.

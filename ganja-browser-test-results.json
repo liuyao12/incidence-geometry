@@ -1,0 +1,18 @@
+{
+  "status": "passed",
+  "checks": [
+    "Native ganja conic rendering, contact chords, face selection, seed dragging and tangents",
+    "Pascal locus, movable sixth point, native joins/meets, dragging and keyboard handles",
+    "Degenerate Pascal input rejected; handles remain available for recovery",
+    "Ganja-computed Fomin/Desargues cube and center dragging",
+    "Unchanged exact BigInt surface cancellation",
+    "Non-elliptic conic branches, coefficient display and five-tab keyboard navigation",
+    "Responsive SVG pan, Shift-wheel zoom and fit-view reset",
+    "Sticky panel, section following and manual override",
+    "Mobile 390px and tablet layouts; correct non-square dragging"
+  ],
+  "javascriptErrors": [],
+  "failedRequests": [],
+  "method": "Offline real assets in Chromium; only the verification.json fetch is supplied locally",
+  "scope": "Interactive software checks, not Lean proof evidence."
+}

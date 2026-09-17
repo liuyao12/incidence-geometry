@@ -1,0 +1,50 @@
+name: Geometry, browser and Lean checks
+on:
+  push:
+    paths-ignore: ['.github/workflows/ganja-fixtures.yml', '.github/workflows/vendor-ganja.yml']
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test independent mathematical engines
+        run: |
+          node test.cjs
+          node test-ganja.cjs
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test HTTP-loaded interactive in Chromium
+        run: |
+          pip install playwright==1.55.0
+          python -m playwright install --with-deps chromium
+          python scripts/browser_smoke.py --serve
+      - uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: formal
+          use-mathlib-cache: 'true'
+          build: 'true'
+          test: 'false'
+          lint: 'false'
+      - name: Audit all implemented theorem dependencies
+        working-directory: formal
+        shell: bash
+        run: |
+          set -euo pipefail
+          lake env lean Audit.lean | tee axiom-audit-current.txt
+          if grep -E 'sorryAx|Lean.ofReduceBool|Lean.trustCompiler' axiom-audit-current.txt; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: incidence-geometry-checks
+          path: |
+            formal/axiom-audit-current.txt
+            test-results.json
+            ganja-test-results.json
+            ganja-browser-test-results.json
+            ganja-preview.png
+            ganja-mobile-preview.png

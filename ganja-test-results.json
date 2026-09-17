@@ -1,0 +1,18 @@
+{
+  "status": "passed",
+  "checks": 127756,
+  "cases": {
+    "joinMeet": 300,
+    "incidenceCube": 120,
+    "pascal": 120,
+    "conicCubes": 120
+  },
+  "maxima": {
+    "pascalLocus": 6.245004513516507e-16,
+    "conicLocus": 5.817345115664996e-16,
+    "incidenceRatios": 3.9968028886505635e-15
+  },
+  "engine": "ganja.js Float64 Cl(2,0,1)",
+  "upstreamCommit": "6e97cb45d780cd7c661d9240f1610eb005707417",
+  "scope": "Software tests and independent numerical cross-checks, not Lean theorem verification."
+}

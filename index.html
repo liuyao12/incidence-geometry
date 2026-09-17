@@ -3,18 +3,20 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="Interactive conic cubes, incidence geometry, tiled-surface cancellation, and a joint Lean formalization.">
-<title>Incidence cubes — Penrose, Fomin–Pylyavskyy, and Lean</title>
+<title>Incidence Geometry — conics, cubes, ganja.js and Lean</title>
 <link rel="stylesheet" href="style.css">
-<script defer src="engine.js"></script><script defer src="app.js"></script>
+<script defer src="vendor/ganja.js"></script>
+<script defer src="engine.js"></script><script defer src="pga.js"></script>
+<script defer src="ganja-view.js"></script><script defer src="app.js"></script>
 </head>
 <body>
 <main class="page">
 <header class="article-header">
-<a class="back" href="../../">← Geometric Tree Search</a>
+<a class="back" href="https://github.com/liuyao12/incidence-geometry">Incidence Geometry · source and formalization ↗</a>
 <p class="eyebrow">Geometry · compatibility · formal proof</p>
 <h1>Incidence cubes</h1>
 <p class="subtitle">Penrose’s eight conics, Fomin–Pylyavskyy’s tiled surfaces,<br class="wide"> and the space between them.</p>
-<p class="byline">A project by Yao Liu · implementation and formalization in collaboration with ChatGPT</p>
+<p class="byline">A project by Yao Liu · interactive projective geometry with ganja.js · proofs in Lean</p>
 <div class="status-strip"><span class="status-dot"></span><span id="build-summary">Lean project: verification status is recorded below.</span> <a href="#formalization">What is proved?</a></div>
 </header>
 <div class="reading-layout">
@@ -41,8 +43,21 @@
 <div class="equation">D<sub>S∪{k}</sub>F<sub>S</sub> − D<sub>S</sub>F<sub>S∪{k}</sub> = L<sub>S,k</sub><sup>2</sup>.</div>
 <p>It is a polynomial identity over any commutative ring. Its geometric interpretation needs additional hypotheses. The parameter determinants D<sub>S</sub> and determinants of the conic matrices are different diagnostics.</p>
 </section>
+<section id="classical" data-stage="pascal">
+<h2>3. Pascal, with a moving sixth point</h2>
+<p>The <button class="inline-action" data-demo="pascal">Pascal experiment</button> adapts the five-point construction in my <a href="https://observablehq.com/@liuyao12/conics-sections">Conic sections notebook</a>. Drag five points A–E. A moving line through A determines the sixth point F by joins and meets, tracing the conic through the five points. The orange line is its Pascal line.</p>
+<p>For the ordering A, D, E, B, C, F, the three opposite-side intersections are</p>
+<div class="equation">X = AD ∩ BC,&ensp; Y = AF ∩ BE,&ensp; Z = DE ∩ CF.</div>
+<p>The construction takes X and Y first, then uses the line XY to recover Z and F. It does not solve for the conic equation to draw the locus. An independently computed equation checks the sample points and provides the optional tangent envelope.</p>
+<p class="instruction">Drag the hollow points; use the ray slider or <em>Trace F</em> to move the sixth point. A conic can change between ellipse and hyperbola. Branches are split at infinity rather than joined by a false segment. Keyboard users can tab to a handle and use the arrow keys.</p>
+<aside class="note"><strong>A construction is not a formal proof.</strong> This experiment uses actual ganja.js projective-algebra operations and its SVG renderer. Pascal’s theorem and the correctness of this entire five-point construction have not yet been added to the Lean library. The displayed residuals are independent numerical diagnostics.</aside>
+<details class="pga-explanation"><summary>How ganja represents this geometry</summary>
+<p>In the projective algebra Cl(2,0,1), a point is <code>z e12 − x e02 + y e01</code>, and a line is <code>a e1 + b e2 + c e0</code>. Ganja’s <code>Vee</code> joins points; <code>Wedge</code> meets lines. Ideal points retain z = 0. The metric used by the algebra is not a restriction on the conic.</p>
+<p><a href="pga.js">Inspect the construction code</a> · <a href="vendor/README.md">Pinned ganja dependency and license</a></p>
+</details>
+</section>
 <section id="incidences" data-stage="fomin">
-<h2>3. Another cube: points and lines</h2>
+<h2>4. Another cube: points and lines</h2>
 <p>Fomin–Pylyavskyy also have a seven-to-eight cube theorem, their Proposition 9.1. This time the vertices alternate between <em>points</em> and <em>lines</em>. Three coherent faces determine a missing line, and the remaining three faces are coherent. They identify this with Desargues’ theorem. <a class="ref" href="#ref-fomin">[2]</a></p>
 <p><button class="inline-action" data-demo="fomin">Switch to the incidence cube</button>. The seed lines form a triangle. The three additional points move along rays from a common point O to its vertices. Change their positions with the sliders, or drag O. Reveal the final line to see the three side-intersection points lie on it.</p>
 <p>For a face (A, ℓ, B, m), the condition is that the join AB contains the meet ℓ ∩ m. Its mixed cross-ratio is</p>
@@ -51,7 +66,7 @@
 <p class="source-link"><a href="formal/IncidenceCubes/Fomin/Coherence.lean">Lean: mixed ratio equals one ↔ coordinate incidence ↗</a></p>
 </section>
 <section id="surface" data-stage="surface">
-<h2>4. Why the surface closes the proof</h2>
+<h2>5. Why the surface closes the proof</h2>
 <p>Forget coordinates for a moment and place a nonzero scalar on each edge. A consistently oriented face uses two edge factors in its numerator and two in its denominator. Every physical edge is used once with each sign. Hence</p>
 <div class="equation">∏<sub>faces f</sub> r<sub>f</sub> = 1.</div>
 <p>If all but one face have r<sub>f</sub> = 1, the remaining face must too. This is the cancellation core of the master theorem. It works for any finite paired-edge certificate, not just a cube. The full geometric theorem combines it with the interpretation of coherence. <a class="ref" href="#ref-fomin">[2]</a></p>
@@ -61,7 +76,7 @@
 <p class="source-link"><a href="formal/IncidenceCubes/Fomin/Surface.lean">Lean: total_product, last_face, cube_last_face ↗</a></p>
 </section>
 <section id="bridge" data-stage="bridge">
-<h2>5. The bridge retains the quadratic data</h2>
+<h2>6. The bridge retains the quadratic data</h2>
 <p>A conic equation has six homogeneous coefficients, so its projective class is a point of ℙ<sup>5</sup>. A line ℓ gives the special coefficient vector ν<sub>2</sub>(ℓ) representing its square. Thus</p>
 <div class="equation">q′ = αq + βℓ²<br><span class="equation-arrow">↓ in coefficient space</span><br>[q], [q′], [ν<sub>2</sub>(ℓ)] are collinear.</div>
 <p><button class="inline-action" data-demo="bridge">Move along a conic pencil</button>. The two curves vary, but their coefficient vectors stay in one linear pencil with a double-line vector. The readout shows all six coordinates; it is not a misleading two-dimensional picture of ℙ<sup>5</sup>.</p>
@@ -70,7 +85,7 @@
 <p class="source-link"><a href="formal/IncidenceCubes/Connection/Veronese.lean">Lean: the coordinate Veronese bridge ↗</a></p>
 </section>
 <section id="formalization" data-stage="bridge">
-<h2>6. What the formalization establishes</h2>
+<h2>7. What the formalization establishes</h2>
 <p>The independent Lake project lives alongside this page. Its root import includes every implemented module; <code>Audit.lean</code> prints the dependencies of every public theorem listed here. The browser never supplies evidence to Lean.</p>
 <div id="verification-detail" class="verification-note">Build evidence is recorded in verification.json and in the linked CI run. A green numerical diagnostic is not a Lean verification badge.</div>
 <table class="ledger"><thead><tr><th>Layer</th><th>Implemented scope</th></tr></thead><tbody>
@@ -79,8 +94,8 @@
 <tr><td>Connection</td><td>Double-line coefficients; evaluation; rescaling and nonvanishing; linear-pencil interpretation.</td></tr>
 <tr><td>Not yet implemented</td><td>Arbitrary-input normalization; complete projective contact theory; geometric completion and uniqueness; singular complete conics; a full comparison theorem.</td></tr>
 </tbody></table>
-<p><a href="https://github.com/liuyao12/geometric-tree-search/tree/main/apps/incidence-cubes/formal">Browse the Lean project</a> · <a href="https://github.com/liuyao12/geometric-tree-search/actions/workflows/incidence-cubes.yml">Build and axiom audit</a> · <a href="axiom-audit.txt">Recorded theorem dependencies</a> · <a href="BLUEPRINT.md">Development blueprint</a></p>
-<pre><code>cd apps/incidence-cubes/formal
+<p><a href="https://github.com/liuyao12/incidence-geometry/tree/main/formal">Browse the Lean project</a> · <a href="https://github.com/liuyao12/incidence-geometry/actions/workflows/ci.yml">Build and axiom audit</a> · <a href="axiom-audit.txt">Recorded theorem dependencies</a> · <a href="BLUEPRINT.md">Development blueprint</a></p>
+<pre><code>cd formal
 lake exe cache get
 lake build
 lake env lean Audit.lean</code></pre>
@@ -90,7 +105,7 @@ lake env lean Audit.lean</code></pre>
 <h2>Sources and reproducibility</h2>
 <p id="ref-penrose"><strong>[1]</strong> R. Arnold, A. Chern, M. Eide, C. Gunn, T. Neukirchner, R. Penrose. <a href="https://arxiv.org/html/2409.17150v8">Penrose’s eight-conic theorem</a>, especially §§6–7. See also <a href="https://cseweb.ucsd.edu/~alchern/projects/Penrose/">Chern’s project page</a>.</p>
 <p id="ref-fomin"><strong>[2]</strong> S. Fomin and P. Pylyavskyy. <a href="https://arxiv.org/abs/2305.07728">Incidences and tilings</a>, Proposition 2.5, Theorem 2.6 and Proposition 9.1.</p>
-<p>The mathematical engine has no external runtime dependencies. It is independently exercised by <a href="test.cjs">deterministic tests</a>; their <a href="test-results.json">recorded results</a> are separate from Lean evidence. The visual construction is intentionally a general-position family, not a sampler of every admissible configuration.</p>
+<p>The page vendors a pinned, MIT-licensed copy of <a href="https://github.com/enkimute/ganja.js">ganja.js</a> by Steven De Keninck; it requires no external runtime services. It is independently exercised by <a href="test.cjs">deterministic tests</a> and <a href="test-ganja.cjs">ganja construction tests</a>; their <a href="test-results.json">recorded results</a> are separate from Lean evidence. The visual construction is intentionally a general-position family, not a sampler of every admissible configuration.</p>
 <p class="ending">The useful common language is compatibility—not congruence of shapes.</p>
 </section>
 </article>
@@ -99,19 +114,20 @@ lake env lean Audit.lean</code></pre>
 <div id="dragbar" class="dragbar"><span class="grip">⠿</span><strong>Incidence laboratory</strong><button id="reset-panel" title="Restore panel position" aria-label="Restore panel position">↺</button><label><input id="follow" type="checkbox" checked> Follow text</label></div>
 <div class="tabs" role="tablist" aria-label="Mathematical experiment">
 <button role="tab" id="tab-penrose" data-mode="penrose" aria-selected="true" aria-controls="experiment">Conics</button>
+<button role="tab" id="tab-pascal" data-mode="pascal" aria-selected="false" aria-controls="experiment" tabindex="-1">Pascal</button>
 <button role="tab" id="tab-fomin" data-mode="fomin" aria-selected="false" aria-controls="experiment" tabindex="-1">Incidences</button>
 <button role="tab" id="tab-surface" data-mode="surface" aria-selected="false" aria-controls="experiment" tabindex="-1">Cancellation</button>
 <button role="tab" id="tab-bridge" data-mode="bridge" aria-selected="false" aria-controls="experiment" tabindex="-1">Bridge</button>
 </div>
 <div id="experiment" role="tabpanel" aria-labelledby="tab-penrose">
-<div class="experiment-heading"><span id="mode-caption">Seven conics → eight</span><button id="reset">Reset</button><button id="complete" class="primary" aria-pressed="false">Complete cube</button></div>
+<div class="experiment-heading"><span id="mode-caption">Seven conics → eight</span><button id="play" hidden>Trace F</button><button id="reset">Reset</button><button id="complete" class="primary" aria-pressed="false">Complete cube</button></div>
 <div id="controls" class="controls"></div>
-<div id="stage" class="stage"><canvas id="geometry" aria-label="Interactive projective geometry. Drag the hollow handles to vary the configuration."></canvas><svg id="cube" viewBox="0 0 200 176" role="group" aria-label="Cube: select an edge or vertex"></svg><span id="stage-label" class="stage-label"></span></div>
-<div class="selection"><label>Inspect <select id="inspect" aria-label="Choose an edge or face"></select></label><label id="chord-toggle"><input id="chords" type="checkbox" checked> Contact chords</label><button id="overview">All curves</button></div>
+<div id="stage" class="stage"><div id="geometry" role="group" aria-label="Ganja projective geometry. Drag a hollow handle, or tab to it and use arrow keys."></div><svg id="cube" viewBox="0 0 200 176" role="group" aria-label="Cube: select an edge or vertex"></svg><span id="stage-label" class="stage-label"></span></div>
+<div class="selection"><label>Inspect <select id="inspect" aria-label="Choose an edge or face"></select></label><label id="chord-toggle"><input id="chords" type="checkbox" checked> Contact chords</label><label id="envelope-toggle"><input id="envelope" type="checkbox"> Tangents</label><button id="fit-view">Fit view</button><button id="overview">All curves</button></div>
 <div id="readout" class="readout" aria-live="polite"></div>
 <div id="face-readout" class="face-readout"></div>
 <p id="hint" class="hint"></p>
-<div class="panel-footer"><span id="arithmetic-label">Floating-point illustration</span><button id="export">Export data</button><a id="lemma-link" href="formal/IncidenceCubes/Penrose/Algebra.lean">Lean source ↗</a></div>
+<div class="panel-footer"><span class="renderer-badge">ganja.js</span><span id="arithmetic-label">Floating-point illustration</span><button id="export">Export data</button><a id="construction-link" href="pga.js" hidden>Construction ↗</a><a id="lemma-link" href="formal/IncidenceCubes/Penrose/Algebra.lean">Lean source ↗</a></div>
 </div>
 </div>
 </aside>
