@@ -22,7 +22,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          export TOOLCHAIN="$(dirname "$(dirname "$(elan which lean)")")"
+          binary="$(cd formal && elan which lean)"
+          export TOOLCHAIN="$(dirname "$(dirname "$binary")")"
+          test -x "$TOOLCHAIN/bin/lean"
           mkdir -p /tmp/small-checker
           python3 - <<'PY'
           import os,pathlib,shutil,re
@@ -51,7 +53,7 @@ jobs:
               seen.add(mod)
               if mod not in mapping: continue
               pkg,f=mapping[mod]
-              text=f.read_text();text=re.sub(r'/\*.*?\*/','',text,flags=re.S)
+              text=f.read_text()
               for line in text.splitlines():
                   if line.startswith('import '): stack.extend(line.split('--')[0].split()[1:])
               rel=f.relative_to(pkg);cp(f,dst/'packages'/pkg.name/rel)
