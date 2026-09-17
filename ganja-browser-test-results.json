@@ -1,6 +1,7 @@
 {
   "status": "passed",
   "checks": [
+    "Chern-inspired and original presets; reset preserves selection; eighth conic has continuous dashes",
     "Native ganja conic rendering, contact chords, face selection, seed dragging and tangents",
     "Pascal locus, movable sixth point, native joins/meets, dragging and keyboard handles",
     "Degenerate Pascal input rejected; handles remain available for recovery",
