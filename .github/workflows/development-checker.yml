@@ -1,0 +1,71 @@
+name: Offline development checker
+on:
+  push:
+    paths: ['.github/workflows/development-checker.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: formal
+          build: 'false'
+          test: 'false'
+          lint: 'false'
+          use-mathlib-cache: 'true'
+      - name: Assemble minimal interpreter and imported modules
+        shell: bash
+        run: |
+          set -euo pipefail
+          export TOOLCHAIN="$(dirname "$(dirname "$(elan which lean)")")"
+          mkdir -p /tmp/small-checker
+          python3 - <<'PY'
+          import os,pathlib,shutil,re
+          tc=pathlib.Path(os.environ['TOOLCHAIN']);dst=pathlib.Path('/tmp/small-checker')
+          def cp(p,q):
+              q.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(p,q)
+          for name in ['lean','lake']:
+              cp(tc/'bin'/name,dst/'toolchain/bin'/name)
+          for p in (tc/'lib').glob('*.so*'):
+              if not p.name.startswith('libLLVM'): cp(p,dst/'toolchain/lib'/p.name)
+          for p in (tc/'lib/lean').rglob('*'):
+              if p.is_file() and (p.suffix=='.olean' or '.so' in p.name): cp(p,dst/'toolchain/lib/lean'/p.relative_to(tc/'lib/lean'))
+          packages=pathlib.Path('formal/.lake/packages')
+          mapping={}
+          for pkg in packages.iterdir():
+              if not pkg.is_dir(): continue
+              for f in pkg.rglob('*.lean'):
+                  rel=f.relative_to(pkg)
+                  if any(part.startswith('.') for part in rel.parts): continue
+                  mapping['.'.join(rel.with_suffix('').parts)]=(pkg,f)
+          roots=['Mathlib.Tactic','Mathlib.LinearAlgebra.Matrix.NonsingularInverse','Mathlib.LinearAlgebra.Dual.Defs','Mathlib.LinearAlgebra.Projectivization.Basic','Mathlib.LinearAlgebra.QuadraticForm.Basic','Mathlib.Algebra.BigOperators.Group.Finset.Basic','Mathlib.Data.Matrix.Notation']
+          seen=set();stack=list(roots)
+          while stack:
+              mod=stack.pop()
+              if mod in seen: continue
+              seen.add(mod)
+              if mod not in mapping: continue
+              pkg,f=mapping[mod]
+              text=f.read_text();text=re.sub(r'/\*.*?\*/','',text,flags=re.S)
+              for line in text.splitlines():
+                  if line.startswith('import '): stack.extend(line.split('--')[0].split()[1:])
+              rel=f.relative_to(pkg);cp(f,dst/'packages'/pkg.name/rel)
+              o=pkg/'.lake/build/lib/lean'/rel.with_suffix('.olean')
+              if o.exists(): cp(o,dst/'packages'/pkg.name/'.lake/build/lib/lean'/rel.with_suffix('.olean'))
+          print('Import closure:',len(seen))
+          (dst/'imports.txt').write_text('\n'.join(sorted(seen)))
+          PY
+          du -sh /tmp/small-checker/* /tmp/small-checker/toolchain/*
+          tar -I 'zstd -6 -T0' -cf offline-lean-small.tar.zst -C /tmp/small-checker .
+          ls -lh offline-lean-small.tar.zst
+      - uses: actions/upload-artifact@v4
+        with:
+          name: offline-lean-small
+          path: offline-lean-small.tar.zst
+          compression-level: 0
+          retention-days: 1
