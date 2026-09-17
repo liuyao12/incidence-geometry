@@ -9,7 +9,7 @@
   },
   "maxima": {
     "pascalLocus": 6.245004513516507e-16,
-    "conicLocus": 5.817345115664996e-16,
+    "conicLocus": 2.809188054067203e-16,
     "incidenceRatios": 3.9968028886505635e-15
   },
   "engine": "ganja.js Float64 Cl(2,0,1)",

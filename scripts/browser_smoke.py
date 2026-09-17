@@ -47,6 +47,21 @@ with sync_playwright() as p:
     page.locator('#follow').uncheck()
     assert page.locator('#ganja-svg').get_attribute('data-renderer')=='ganja.js'
     assert page.locator('#ganja-svg line').count()>100
+    assert page.locator('#conic-preset').input_value()=='chern'
+    assert page.evaluate('incidenceApp.state.params.diagonal')<0
+    assert page.locator('#ganja-svg [data-conic-dash]').count()==0
+    page.locator('#complete').click()
+    assert page.locator('#ganja-svg [data-conic-dash] path').count()==1
+    assert page.locator('#completion-key').is_visible()
+    page.locator('#demo').screenshot(path=str(ROOT/'chern-eight-preview.png'))
+    page.locator('#conic-preset').select_option('compact')
+    assert page.evaluate('incidenceApp.state.params.diagonal')==3.5
+    assert not page.evaluate('incidenceApp.state.complete')
+    page.locator('#reset').click()
+    assert page.locator('#conic-preset').input_value()=='compact'
+    page.locator('#conic-preset').select_option('chern')
+    assert page.evaluate('incidenceApp.getData().minMinor')>0
+    results.append('Chern-inspired and original presets; reset preserves selection; eighth conic has continuous dashes')
     page.locator('#complete').click();page.locator('#inspect').select_option('edge:0')
     assert '12 edge identities' in page.locator('#readout').inner_text()
     assert '2 real contact points' in page.locator('#readout').inner_text()
@@ -122,6 +137,11 @@ with sync_playwright() as p:
     for width,height in [(1440,1000),(1000,800),(820,900),(390,844)]:
         page.set_viewport_size({'width':width,'height':height});page.wait_for_timeout(100)
         assert not page.evaluate('document.documentElement.scrollWidth>innerWidth'),width
+    page.evaluate("incidenceApp.setMode('penrose',true);incidenceApp.state.complete=true;incidenceApp.render()")
+    page.locator('#demo').scroll_into_view_if_needed()
+    page.locator('#demo').screenshot(path=str(ROOT/'chern-mobile-preview.png'))
+    assert page.locator('#ganja-svg [data-conic-dash] path').count()==1
+    assert not page.evaluate('document.documentElement.scrollWidth>innerWidth')
     page.evaluate("incidenceApp.setMode('pascal',true)")
     page.locator('#demo').scroll_into_view_if_needed();page.wait_for_timeout(100)
     page.screenshot(path=str(ROOT/'ganja-mobile-preview.png'))

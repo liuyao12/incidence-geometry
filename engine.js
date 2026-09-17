@@ -21,7 +21,14 @@ const edgeId=(a,b)=>EDGES.findIndex(e=>(e[0]===a&&e[1]===b)||(e[0]===b&&e[1]===a
 const faceEdges=f=>f.map((v,i)=>edgeId(v,f[(i+1)%4]));
 const POS=FACES.flatMap(f=>[edgeId(f[0],f[1]),edgeId(f[2],f[3])]);
 const NEG=FACES.flatMap(f=>[edgeId(f[2],f[1]),edgeId(f[0],f[3])]);
-function defaults(){return {couplings:[0.35,-0.25,0.45],offsets:[0.20,0.10,-0.08],angles:[0,2.0943951023931953,4.1887902047863905],diagonal:3.5};}
+// Chern-inspired all-ellipse plate. These independently chosen parameters
+// are NOT digitized coordinates from Chern's image. A negative-definite M
+// puts the three first-level conics inside q0, rather than nearly on top of it.
+function defaults(preset='chern'){
+ if(preset==='compact')return {couplings:[0.35,-0.25,0.45],offsets:[0.20,0.10,-0.08],angles:[0,2.0943951023931953,4.1887902047863905],diagonal:3.5};
+ if(preset==='chern')return {couplings:[0.28,-0.26,0.27],offsets:[0.09,-0.10,0.14],angles:[0.20,1.45,2.45],diagonal:-0.5};
+ throw new Error('Unknown conic preset');
+}
 function penrose(params=defaults()){
  const {couplings:[a,b,c],offsets,angles,diagonal:d}=params;
  const M=[[d,a,b],[a,d,c],[b,c,d]],p=angles.map((t,i)=>[Math.cos(t),Math.sin(t),offsets[i]]),q0=[[1,0,0],[0,1,0],[0,0,-1]],Q=[],blocks=[];

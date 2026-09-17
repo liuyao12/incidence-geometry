@@ -103,7 +103,7 @@
   function conicSamples(Q, N = 180) {
     let A=null;
     const ellipse = E.ellipse(Q, 8) || E.ellipse(Q.map(r=>r.map(x=>-x)), 8);
-    if (ellipse) A=[...ellipse[0],1];
+    if (ellipse) return (E.ellipse(Q,N)||E.ellipse(Q.map(r=>r.map(x=>-x)),N)).slice(0,-1).map(x=>point([...x,1]));
     if (!A) for (const k of [0,.5,-.5,1,-1,2,-2,4,-4]) {
       for(const l of [[1,0,k],[0,1,k],[1,1,k]]) {
         A=E.lineConic(Q,l).find(p=>E.norm(E.mul(Q,p))>1e-9) || null;

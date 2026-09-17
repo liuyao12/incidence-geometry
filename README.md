@@ -72,3 +72,31 @@ Export data saves the current numerical configuration, explicitly marked as not 
 The canvas implementation has been replaced by native ganja SVG output. Joins/meets in the incidence cube and Pascal construction use ganja operations, not a renamed coordinate cross-product routine. Quadratic-form coefficients still provide Penrose’s conic algebra; a general conic is not misidentified with a single PGA line or point. Homogeneous curve samples are split and clipped at infinity, and zero construction vectors raise diagnostics.
 
 The upgrade preserves the existing 17 Lean theorems. No new geometric completion theorem, full Pascal proof, or reduction between the papers is claimed. The original proof evidence remains in `verification.json`; current CI separately rebuilds and audits these same sources in this repository.
+
+
+## Chern-inspired arrangement
+
+The default **Conics** preset follows the visual organization of Albert Chern's
+[colored all-ellipse plate (PDF page 12)](https://cseweb.ucsd.edu/~alchern/projects/Penrose/PenroseDGS2024.pdf#page=12):
+a dark enclosing conic, three elongated blue conics, three green conics and a
+dashed orange completion. These are independently chosen parameters, not an
+image trace or Chern's original numerical data. The reference image itself is
+not bundled. The original compact positive-diagonal preset remains available.
+
+`engine.defaults('chern')` uses diagonal −0.5, off-diagonals (0.28, −0.26, 0.27),
+chord-normal angles (0.20, 1.45, 2.45) radians and offsets (0.09, −0.10, 0.14).
+Every curve is generated from the same symmetric matrix. It is negative definite
+at the preset, with independent chord forms: all twelve edge contacts are real
+and all eight conics are nonsingular ellipses. No curve is translated or resized
+independently. Arbitrary slider changes may leave this all-ellipse regime.
+
+The viewport reserves space for the miniature cube. Contact chords and tangents
+appear on inspection rather than cluttering the default overview. Ellipses use
+uniform angular sampling; unbounded conics retain homogeneous branch splitting.
+The dashed eighth conic combines contiguous ganja-generated SVG segments so the
+dash pattern does not restart at every sample.
+
+`node test-chern.cjs` checks this preset and 125 nearby configurations separately
+from the original randomized family. UI regression tests cover both presets,
+reset behavior, the dashed curve and the mobile layout. The Lean files and formal
+coverage are unchanged by this display update.

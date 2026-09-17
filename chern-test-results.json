@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "seed": 20260918,
+  "cases": 126,
+  "checks": 222264,
+  "maxima": {
+    "edge": 8.806934691139449e-16,
+    "face": 6.291412473819563e-17,
+    "locus": 1.7023934578749423e-16,
+    "tangency": 5.508899405288561e-16
+  },
+  "scope": "Software checks of the Chern-inspired preset and nearby parameters, not new Lean proofs."
+}

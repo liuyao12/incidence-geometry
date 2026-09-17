@@ -15,3 +15,11 @@
 .pga-explanation summary{cursor:pointer;color:var(--accent)}.pga-explanation p{margin:12px 0 0}
 .selection #overview{margin-left:0}.selection #fit-view{margin-left:auto}
 @media(max-width:450px){.experiment-heading{flex-wrap:wrap}.experiment-heading span{flex:1 1 100%;margin-bottom:2px}.panel-footer{flex-wrap:wrap}.selection{padding:7px 9px}.selection select{max-width:145px}}
+
+/* Chern-inspired configuration: readable curve families and a separate cube. */
+.preset-row{display:flex;gap:8px;align-items:center;padding:3px 13px 9px;font:10px/1.5 var(--sans);color:var(--muted)}
+.preset-row label{display:flex;align-items:center;gap:5px;white-space:nowrap}.preset-row select{font:11px var(--sans);padding:4px;border:1px solid var(--line);border-radius:4px;background:white;color:var(--ink)}
+.preset-row a{margin-left:auto;font-size:10px;white-space:nowrap}.penrose-legend{display:flex;gap:8px;flex-wrap:wrap;padding:8px 13px 3px;font:10px/1.5 var(--sans);color:var(--muted)}
+.penrose-legend span{display:inline-flex;gap:4px;align-items:center}.penrose-legend i{display:inline-block;width:15px;height:0;border-top:2px solid}.penrose-legend .outer{border-color:#273b46}.penrose-legend .first{border-color:#265bad}.penrose-legend .second{border-color:#348e87}.penrose-legend .eighth{border-color:#c25624;border-top-style:dashed}
+.preset-note{font:10px/1.5 var(--sans);color:var(--muted);margin:2px 13px 6px}.stage.penrose #cube{width:clamp(88px,24%,130px);height:auto;top:12px;right:8px}.stage.penrose{height:340px}
+@media(max-width:450px){.stage.penrose{height:290px}.preset-row{flex-wrap:wrap}.stage.penrose .stage-label{font-size:9px;max-width:95%}.penrose-legend{gap:5px 9px}}

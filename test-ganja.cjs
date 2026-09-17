@@ -38,7 +38,7 @@ for(let n=0;n<120;n++){
  points.forEach(p=>near(G.evalCoefficients(d.coefficients,p),0));
 }
 for(let n=0;n<120;n++){
- const params=E.defaults();params.couplings=params.couplings.map(()=>1.8*random()-.9);
+ const params=E.defaults('compact');params.couplings=params.couplings.map(()=>1.8*random()-.9);
  for(const Q of E.penrose(params).Q){
   const samples=G.conicSamples(Q,64);assert.ok(samples.length);samples.filter(G.valid).forEach(P=>{
    const x=G.pointCoordinates(P),r=Math.abs(E.quad(Q,x))/(1+E.dot(x,x));maxConic=Math.max(maxConic,r);near(r,0);

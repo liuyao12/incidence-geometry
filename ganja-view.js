@@ -62,7 +62,7 @@
       line,point,
       path(ps,c,alpha=1,width=1.6,dash=[]){if(!ps?.length)return;group(c,alpha,width,dash,()=>segments(ps.map(p=>G.point([...p.slice(0,2),1])),false));},
       curve(samples,c,alpha=1,width=1.6){group(c,alpha,width,[],()=>segments(samples));},
-      conic(Q,c,alpha=1,width=1.6){group(c,alpha,width,[],()=>segments(G.conicSamples(Q)));},
+      conic(Q,c,alpha=1,width=1.6,dash=[]){group(c,alpha,width,dash,()=>segments(G.conicSamples(Q)),dash.length?'data-conic-dash="true"':'');},
       envelope(Q,c='#71898b'){
         const samples=G.conicSamples(Q,32);
         samples.filter(G.finite).forEach(p=>{const x=G.pointCoordinates(p);line(root.IncidenceMath.mul(Q,x),c,.17,.7);});
@@ -77,6 +77,19 @@
         svg.onwheel=null;svg.onmousedown=null;svg.onmousemove=null;
         svg.querySelectorAll('[onmousedown]').forEach(n=>n.removeAttribute('onmousedown'));
         svg.querySelectorAll('[data-point-radius]').forEach(g=>{const c=g.querySelector('circle');if(!c)return;c.setAttribute('r',g.dataset.pointRadius);if(g.dataset.hollow){c.setAttribute('stroke',c.getAttribute('fill'));c.setAttribute('fill','#fff');}});
+        svg.querySelectorAll('[data-conic-dash]').forEach(g=>{
+          const ls=[...g.querySelectorAll('line')];if(!ls.length)return;
+          let d='',last=null;
+          ls.forEach(l=>{
+            const a=[+l.getAttribute('x1'),+l.getAttribute('y1')],b=[+l.getAttribute('x2'),+l.getAttribute('y2')];
+            if(!last||Math.hypot(a[0]-last[0],a[1]-last[1])>1e-7)d+=`M${a[0]} ${a[1]} `;
+            d+=`L${b[0]} ${b[1]} `;last=b;
+          });
+          const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+          path.setAttribute('d',d);path.setAttribute('fill','none');
+          path.setAttribute('stroke',ls[0].getAttribute('stroke')||'currentColor');
+          g.replaceChildren(path);
+        });
         host.replaceChildren(svg);host.ganjaScene=scene;
         if(focus)host.querySelector(`[data-handle="${focus}"]`)?.focus({preventScroll:true});
         return svg;

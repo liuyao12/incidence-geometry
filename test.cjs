@@ -11,7 +11,7 @@ for(const slots of [E.POS,E.NEG])assert.deepEqual([...slots].sort((a,b)=>a-b),Ar
 const lean=fs.readFileSync(path.join(__dirname,'formal/IncidenceCubes/Fomin/Surface.lean'),'utf8');
 for(const [name,v] of [['positiveIndex',E.POS],['negativeIndex',E.NEG]])ok(lean.includes(`def ${name} : Fin 12 → Fin 12 := ![${v.join(',')}]`),'Lean/browser cube certificate mismatch');
 for(let n=0;n<250;n++){
- const p=E.defaults();p.couplings=p.couplings.map(()=>1.8*rng()-.9);p.offsets=p.offsets.map(()=>rng()-.5);p.angles=p.angles.map(a=>a+(rng()-.5)*.4);
+ const p=E.defaults('compact');p.couplings=p.couplings.map(()=>1.8*rng()-.9);p.offsets=p.offsets.map(()=>rng()-.5);p.angles=p.angles.map(a=>a+(rng()-.5)*.4);
  const d=E.penrose(p);counts.penrose++;maxEdge=Math.max(maxEdge,d.maxEdge);maxFace=Math.max(maxFace,d.maxFace);
  ok(d.maxEdge<1e-9,'rank-one edge identity');ok(d.maxFace<1e-8,'face concurrence');
  for(const c of d.contacts){const pts=E.lineConic(d.Q[c.s],c.l);ok(pts.length===2,'sample must have two real contacts');for(const x of pts){near(E.quad(d.Q[c.s],x),0);near(E.quad(d.Q[c.t],x),0);near(E.dot(c.l,x),0);near(E.norm(E.cross(E.mul(d.Q[c.s],x),E.mul(d.Q[c.t],x))),0);}}
