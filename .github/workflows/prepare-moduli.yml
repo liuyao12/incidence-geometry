@@ -1,0 +1,70 @@
+name: Validate and assemble moduli explorer
+on:
+  push:
+    branches: ['work/penrose-moduli']
+    paths: ['scripts/_release_moduli.py', 'scripts/_moduli_tour.js', '.github/workflows/prepare-moduli.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: work/penrose-moduli
+      - name: Assemble exactly the locally tested release
+        run: python3 scripts/_release_moduli.py
+      - name: Check every mathematical engine
+        run: |
+          node test.cjs
+          node test-ganja.cjs
+          node test-chern.cjs
+          node test-narrative.cjs
+          node test-moduli.cjs
+          python3 scripts/check_site_links.py
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test real HTTP-loaded pages and focus regression
+        run: |
+          pip install playwright==1.55.0
+          python -m playwright install --with-deps chromium
+          python scripts/browser_narrative.py --serve
+          python scripts/browser_moduli.py --serve
+          python scripts/browser_focus.py --serve
+      - uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: formal
+          use-mathlib-cache: 'true'
+          build: 'true'
+          test: 'false'
+          lint: 'false'
+      - name: Audit all 87 existing public theorems
+        working-directory: formal
+        run: |
+          set -euo pipefail
+          lake env lean Audit.lean | tee axiom-audit-current.txt
+          python3 ../scripts/audit_axioms.py axiom-audit-current.txt
+      - name: Commit validated sources and remove one-time assembly helpers
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html narrative.css narrative-math.js story.js MODULI.md moduli.js test-moduli.cjs scripts/browser_moduli.py README.md NARRATIVE.md .github/workflows/ci.yml moduli-test-results.json
+          git rm scripts/_release_moduli.py scripts/_moduli_tour.js .github/workflows/prepare-moduli.yml
+          git commit -m 'Add smooth random walks in a twelve-parameter Penrose chart with nine moduli'
+          git push origin HEAD:work/penrose-moduli
+          git rev-parse HEAD > moduli-verified-commit.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: moduli-validation
+          path: |
+            moduli-verified-commit.txt
+            moduli-test-results.json
+            moduli-browser-test-results.json
+            moduli-preview.png
+            moduli-mobile-preview.png
+            narrative-browser-test-results.json
+            focus-test-results.json
+            formal/axiom-audit-current.txt
