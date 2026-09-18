@@ -92,6 +92,21 @@
           path.setAttribute('stroke',ls[0].getAttribute('stroke')||'currentColor');
           g.replaceChildren(path);
         });
+        // Native SVG focus outlines use the diagram's user-space units. On
+        // pointer focus Chromium can paint a huge black/white ring even though
+        // the point itself is only a few pixels wide. Keep the handle focusable,
+        // but replace that outline with a fixed-screen-width circle stroke.
+        // Own this rule in the shared renderer so every page gets the fix.
+        const focusStyle=document.createElementNS('http://www.w3.org/2000/svg','style');
+        focusStyle.textContent=`
+          #ganja-svg .ganja-handle:focus { outline: none; }
+          #ganja-svg .ganja-handle:focus circle {
+            stroke: #d5853e !important;
+            stroke-width: 2px !important;
+            vector-effect: non-scaling-stroke;
+          }
+        `;
+        svg.prepend(focusStyle);
         host.replaceChildren(svg);host.ganjaScene=scene;
         if(focus)host.querySelector(`[data-handle="${focus}"]`)?.focus({preventScroll:true});
         return svg;

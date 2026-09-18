@@ -59,6 +59,7 @@ jobs:
           PY
           python scripts/browser_smoke.py --url http://127.0.0.1:8000/lab.html
           python scripts/browser_narrative.py --serve
+          python scripts/browser_focus.py --serve
       - uses: leanprover/lean-action@v1
         with:
           lake-package-directory: formal
@@ -85,6 +86,8 @@ jobs:
             ganja-browser-test-results.json
             narrative-test-results.json
             narrative-browser-test-results.json
+            focus-test-results.json
+            focus-fixed-preview.png
             narrative-cube-preview.png
             narrative-dandelin-preview.png
             narrative-mobile-preview.png
