@@ -62,3 +62,7 @@ Open `http://localhost:8000/`. The new suite checks 732 numerical configurations
 The main page now has **Random target**, **Wander**, pause/resume, and a **Keep seed chords fixed** option. The latter moves the conics without changing the linked cuboid. Three weights and three independent face couplings are exposed, along with nine regular-chart invariant coordinates. The path is numerically screened, not formally certified or uniformly sampled from the whole moduli space. See [MODULI.md](MODULI.md) for the 17/12/9 parameter counts, the chart, and sampling limitations.
 
 Run `node test-moduli.cjs` and `python scripts/browser_moduli.py --serve` for the added tests.
+
+### Control the conics from the cube
+
+At the Penrose endpoint, **Moduli vectors · editable** lets you drag any of the seven hollow non-origin corners to reconstruct the conics. Shift-drag changes depth; dragging a face or the background orbits the camera; clicking a face highlights its conics. Reframe changes only the display; Undo restores the last geometric edit. All nine vector coordinates can be edited directly. The former chord-only cube remains available. [Controls, inverse construction, and limitations](VECTOR_CONTROLS.md).

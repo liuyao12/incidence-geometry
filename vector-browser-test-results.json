@@ -1,0 +1,18 @@
+{
+  "status": "passed",
+  "checks": [
+    "All seven non-origin corners change the conics; unaffected vectors, camera and all 12 real contacts are preserved; Undo restores the exact state",
+    "Depth drag and keyboard view-plane/depth movement with focus preserved",
+    "All nine framed vector-coordinate inputs have genuine geometric effects",
+    "Reframing and magnification change only the display, not the moduli",
+    "Far invalid target is clamped to an admissible real configuration",
+    "Background orbit and actual face picking do not change conics; all six face highlights work",
+    "Locked-chord random motion changes the moduli cube; vector edits cancel random motion",
+    "Reconstructed states remain compatible with the narrative endpoints and quadric lifting",
+    "Responsive point controls work at desktop, tablet and mobile widths"
+  ],
+  "javascriptErrors": [],
+  "failedRequests": [],
+  "method": "HTTP-loaded actual assets",
+  "scope": "Browser tests, not formal proof evidence"
+}

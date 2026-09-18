@@ -73,3 +73,7 @@ The Lean library remains at the previously checked 87 public theorems at `dc01f4
 ## Moduli explorer extension
 
 The original equal-coupling narrative is retained as the default. Random exploration and the advanced controls now vary all three scalar couplings independently, as well as the weighted seeds. All three couplings converge to one at the Salmon stage. See [MODULI.md](MODULI.md) for the division-free top-conic formula and the distinction between a cuboid, a 12-parameter fixed-carrier chart, and nine generic projective moduli.
+
+## Editable moduli vectors
+
+The regular Penrose endpoint now defaults to a second, bidirectional cube model: three framed vectors encode the nine normalized moduli. Hollow vector endpoints change the conics, whereas dragging faces/background changes only the camera. The original unweighted seed-chord model remains selectable and continues to be used at earlier stages and in spatial views. See [VECTOR_CONTROLS.md](VECTOR_CONTROLS.md) for the calibrated matrix chart and its inverse, corner-distribution rule, and numerical guards. This does not add Lean theorem coverage.

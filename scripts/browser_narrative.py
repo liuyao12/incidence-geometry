@@ -62,6 +62,7 @@ with sync_playwright() as pw:
     assert page.locator('[data-handle^="chord:"]').count()==3
     checks.append('Continuous stages, duality and three Penrose chord handles')
 
+    page.locator('#cube-model').select_option('chords');page.wait_for_timeout(100)
     before=page.evaluate('JSON.stringify(incidenceStory.state.p)')
     shape=page.locator('#story-cube').get_attribute('data-shape')
     # Chord edits change the conics and their coefficient-space cubical directions.

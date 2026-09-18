@@ -79,3 +79,7 @@ The random seed can be reset. Given the same starting state, anchor, lock settin
 `scripts/browser_moduli.py` tests actual controls, intermediate frames, pause/resume, speed changes, repeated destinations, the chord lock, live face selection, independent camera, geometric-edit cancellation, reduced motion and responsive layout. CI also runs the earlier narrative, geometry and black-circle focus regression suites and the existing Lean audit.
 
 No Lean source is changed by this visual release; the formal library remains at 87 audited public theorems.
+
+## Bidirectional framed-vector chart
+
+The full Penrose endpoint now also has an editable cube model encoding **all nine** coordinates via A=GM^-1. It is different from the original unweighted chord cube discussed above. The inverse recovers the unit-diagonal symmetric M from AM=MA^T, then recovers G and a continuous local representative P. All seven non-origin corners can drive the conics. The fixed frame, local magnification, inverse-chart exclusions, controls and numerical safety qualifications are detailed in [VECTOR_CONTROLS.md](VECTOR_CONTROLS.md).

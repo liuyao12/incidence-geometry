@@ -4,12 +4,13 @@
  */
 (()=>{
 'use strict';
-const E=window.IncidenceMath,G=window.IncidencePGA,N=window.IncidenceNarrative,W=window.IncidenceModuli,$=id=>document.getElementById(id);
+const E=window.IncidenceMath,G=window.IncidencePGA,N=window.IncidenceNarrative,W=window.IncidenceModuli,VM=window.IncidenceVectors,$=id=>document.getElementById(id);
 const C=['#2b414d','#2c5f9e','#507fb2','#168477','#5676af','#44a18b','#80a393','#bb592e'];
 const state={scene:'journey',phase:0,dual:false,conclusion:true,follow:true,p:N.defaults(),playing:false,lift:.82,height:0,proof:3,surface:true,zoom:1,pan:[0,0],yaw:-.3,tilt:.95,selection:'all',edge:0};
 const B=window.IncidenceCube;
 const host=$('story-geometry'),R=window.createGanjaView(host);
-const cube=B.create($('story-cube'),key=>{markManual();state.selection=key;if(key.startsWith('edge:'))state.edge=+key.split(':')[1];schedule();});let view={s:1,x:0,y:0,w:0,h:0},data,drag=null,frame=0,playFrame=0,lastTime=0,liftFrame=0;
+const cube=B.create($('story-cube'),key=>{markManual();state.selection=key;if(key.startsWith('edge:'))state.edge=+key.split(':')[1];schedule();},{onEdit:editVectors,onEditStart:beginVectorEdit,onEditEnd:endVectorEdit});let view={s:1,x:0,y:0,w:0,h:0},data,drag=null,frame=0,playFrame=0,lastTime=0,liftFrame=0;
+const vectorState={reference:VM.copy(VM.defaultReference),gain:1000,undo:[],snapshot:null,active:false};
 const sci=x=>Number.isFinite(x)?x.toExponential(1):'not defined';
 const rgba=(color,label)=>`<span><i style="--legend-color:${color}"></i>${label}</span>`;
 const inverseLabel=['Pappus','Brianchon','Dual Salmon','Penrose · dual'];
@@ -188,11 +189,54 @@ function drawExtrusion(){
 }
 function drawCube(){
  try {
-  const S=cube.update(state.p,state.selection,state.conclusion,$('cube-linked').checked);
-  $('cube-metrics').textContent=`Edge lengths: ${S.lengths.map(x=>x.toFixed(2)).join(' · ')}. Angles 12 / 23 / 31: ${S.angles.map(x=>x.toFixed(1)+'°').join(' / ')}${S.volume<1e-4?' · Flattened: the seed chords are nearly dependent.':''}`;
+  const useModuli=$('cube-model').value==='moduli'&&state.scene==='journey'&&state.phase>2.999,linked=$('cube-linked').checked;
+  let opts={};vectorState.active=false;
+  if(useModuli){
+    const encoded=VM.encode(state.p,vectorState.reference);
+    // Display a magnified affine chart around I; retain its exact inverse.
+    const shown=encoded.V.map((row,i)=>row.map((v,j)=> +(i===j)+vectorState.gain*(v- +(i===j))));
+    try{VM.recover(encoded.A);opts={basis:VM.transpose(shown),editable:linked};vectorState.active=linked;}
+    catch(e){$('vector-feedback').textContent='Vector chart unavailable here: '+e.message;}
+  }
+  $('vector-controls').hidden=!vectorState.active;
+  $('cube-linked-text').textContent=useModuli?'Link shape to configuration':'Link shape to chords';
+  $('cube-explanation').textContent=useModuli?'Hollow vertices control the conics. Shift-drag moves in depth; dragging a face or the background only rotates the camera. Dashed e₁, e₂, e₃ are the fixed reference frame. Click a face to inspect its conics.':'Directions follow the unweighted seed chords. Drag to orbit; click a face to inspect. Editable moduli vectors are available at the regular Penrose endpoint.';
+  const S=cube.update(state.p,state.selection,state.conclusion,linked,opts);
+  if(vectorState.active)S.basis.forEach((v,i)=>v.forEach((x,j)=>{const el=$(`vector-${i}-${j}`);if(document.activeElement!==el)el.value=x.toFixed(5);}));
+  $('cube-metrics').textContent=`Edge lengths: ${S.lengths.map(x=>x.toFixed(2)).join(' · ')}. Angles 12 / 23 / 31: ${S.angles.map(x=>x.toFixed(1)+'°').join(' / ')}${S.volume<1e-4?' · The displayed frame is nearly flat. Reframe to restore a cube.':''}`;
   $('cube-faces').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(state.selection===`face:${b.dataset.cubeFace}`)));
   S.chords.forEach((c,i)=>{if(document.activeElement!==$(`chord-angle-${i}`))$(`chord-angle-${i}`).value=c.angle;$(`chord-angle-value-${i}`).textContent=c.angle.toFixed(1)+'°';if(document.activeElement!==$(`chord-offset-${i}`))$(`chord-offset-${i}`).value=c.distance;$(`chord-offset-value-${i}`).textContent=c.distance.toFixed(3);});
  }catch(e){$('cube-metrics').textContent=e.message;}
+}
+function displayedVectors(){
+ const V=VM.encode(state.p,vectorState.reference).V;
+ return VM.transpose(V.map((r,i)=>r.map((v,j)=> +(i===j)+vectorState.gain*(v- +(i===j)))));
+}
+function beginVectorEdit(){
+ if(!vectorState.active)return;
+ pauseWalk(true);stopPlay();markManual();vectorState.snapshot=W.clone(state.p);
+}
+function endVectorEdit(){
+ if(vectorState.snapshot&&JSON.stringify(vectorState.snapshot)!==JSON.stringify(state.p)){
+  vectorState.undo.push(vectorState.snapshot);if(vectorState.undo.length>30)vectorState.undo.shift();
+ }
+ vectorState.snapshot=null;$('vector-undo').disabled=!vectorState.undo.length;
+}
+function editVectors(basis){
+ if(!vectorState.active)return false;
+ try{
+  const display=VM.transpose(basis),to=display.map((r,i)=>r.map((v,j)=> +(i===j)+(v- +(i===j))/vectorState.gain));
+  const from=VM.encode(state.p,vectorState.reference).V;
+  const result=VM.move(from,to,state.p,vectorState.reference);
+  state.p=result.p;
+  $('vector-feedback').textContent=result.limited?'Stopped at the last valid point: '+result.reason:'Conics reconstructed from the vectors. All contact and face relations are retained.';
+  $('vector-feedback').classList.toggle('limited',result.limited);
+  render();return !result.limited;
+ }catch(e){$('vector-feedback').textContent='No change applied: '+e.message;$('vector-feedback').classList.add('limited');return false;}
+}
+function reframeVectors(){
+ try{vectorState.reference=VM.encode(state.p).A;$('vector-feedback').textContent='The current configuration is now the unit-cube reference. The conics have not changed.';$('vector-feedback').classList.remove('limited');schedule();}
+ catch(e){$('vector-feedback').textContent=e.message;}
 }
 function syncControls(){
  const space=state.scene!=='journey',later=state.phase>2.001;
@@ -245,6 +289,19 @@ $('chord-sliders').addEventListener('input',e=>{
  editChord(i,e.target.hasAttribute('data-chord-angle')?+e.target.value:c.angle,e.target.hasAttribute('data-chord-offset')?+e.target.value:c.distance);
 });
 $('cube-faces').addEventListener('click',e=>{const b=e.target.closest('[data-cube-face]');if(b){markManual();state.selection=`face:${b.dataset.cubeFace}`;schedule();}});
+$('vector-coordinates').innerHTML='<span></span><strong>x</strong><strong>y</strong><strong>z</strong>'+[0,1,2].map(i=>`<strong>v${i+1}</strong>`+[0,1,2].map(j=>`<input id="vector-${i}-${j}" data-vector-i="${i}" data-vector-j="${j}" type="number" step=".02" aria-label="Vector ${i+1} ${['x','y','z'][j]} coordinate">`).join('')).join('');
+$('vector-coordinates').addEventListener('change',e=>{
+ if(!e.target.hasAttribute('data-vector-i'))return;
+ const value=Number(e.target.value),i=+e.target.dataset.vectorI,j=+e.target.dataset.vectorJ;
+ if(!Number.isFinite(value)){e.target.value='';return;}
+ beginVectorEdit();const basis=displayedVectors();basis[i][j]=value;editVectors(basis);endVectorEdit();
+ // Blur commits the accepted rather than the rejected input value.
+ e.target.value=displayedVectors()[i][j].toFixed(5);
+});
+$('cube-model').onchange=()=>{markManual();if($('cube-model').value==='moduli'&&state.phase>2.999)reframeVectors();schedule();};
+$('vector-reframe').onclick=reframeVectors;
+$('vector-gain').oninput=e=>{vectorState.gain=+e.target.value;$('vector-gain-value').textContent='×'+e.target.value;schedule();};
+$('vector-undo').onclick=()=>{if(!vectorState.undo.length)return;pauseWalk(true);stopPlay();markManual();state.p=vectorState.undo.pop();$('vector-undo').disabled=!vectorState.undo.length;$('vector-feedback').textContent='Previous configuration restored.';$('vector-feedback').classList.remove('limited');schedule();};
 $('cube-reset').onclick=()=>cube.reset();$('cube-perspective').onchange=e=>cube.setPerspective(e.target.checked);
 $('cube-linked').onchange=()=>schedule();$('cube-clear').onclick=()=>{markManual();state.selection='all';schedule();};
 
@@ -390,7 +447,7 @@ function updateModuliReadout(){
  catch{invariantNames.forEach((_,i)=>$(`invariant-${i}`).textContent='—');}
 }
 
-window.incidenceStory={state,render,setPhase,setScene,getData:()=>data,getView:()=>view,cube,editChord,tour,randomTarget,wander,pauseWalk};
+window.incidenceStory={state,render,setPhase,setScene,getData:()=>data,getView:()=>view,cube,editChord,vectorState,displayedVectors,beginVectorEdit,endVectorEdit,editVectors,reframeVectors,tour,randomTarget,wander,pauseWalk};
 const entry=new URLSearchParams(location.search).get('stage');
 if(entry==='penrose'){state.phase=3;state.follow=false;$('follow-story').checked=false;}
 render();

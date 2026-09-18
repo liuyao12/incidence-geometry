@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "checks": 28020,
+  "configurations": 166,
+  "roundTrips": 88,
+  "maxContact": 4.440892098500626e-14,
+  "maxFace": 3.781947188083234e-14,
+  "seed": 482123,
+  "scope": "Numerical implementation tests of a local inverse, not a Lean moduli classification or certified path proof."
+}

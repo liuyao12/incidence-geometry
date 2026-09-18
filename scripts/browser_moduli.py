@@ -48,6 +48,7 @@ with sync_playwright() as pw:
     assert not page.locator('#story-readout').evaluate("e=>e.classList.contains('error')")
     assert page.evaluate('new Set(incidenceStory.state.p.couplings).size')==3
     checks.append('Smooth one-target motion, pause/resume, continuous speed changes and unequal couplings')
+    page.locator('#cube-model').select_option('chords');page.wait_for_timeout(100)
     # Locked chords give an experimentally visible counterexample to cuboid completeness.
     page.locator('#lock-chords').check()
     shape=page.locator('#story-cube').get_attribute('data-shape')
