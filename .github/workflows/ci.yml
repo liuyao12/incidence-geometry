@@ -12,6 +12,17 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
+      - name: Record formal source independently of build outcome
+        uses: actions/upload-artifact@v4
+        with:
+          name: formal-source
+          path: |
+            formal/**/*.lean
+            formal/lean-toolchain
+            formal/lake-manifest.json
+            research/
+            scripts/
+          retention-days: 7
       - name: Test independent mathematical engines
         run: |
           node test.cjs
