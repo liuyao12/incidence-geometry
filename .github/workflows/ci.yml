@@ -33,6 +33,7 @@ jobs:
           node test-ganja.cjs
           node test-chern.cjs
           node test-narrative.cjs
+          node test-moduli.cjs
           python3 scripts/check_site_links.py
       - uses: actions/setup-python@v5
         with:
@@ -59,6 +60,7 @@ jobs:
           PY
           python scripts/browser_smoke.py --url http://127.0.0.1:8000/lab.html
           python scripts/browser_narrative.py --serve
+          python scripts/browser_moduli.py --serve
           python scripts/browser_focus.py --serve
       - uses: leanprover/lean-action@v1
         with:
@@ -84,6 +86,10 @@ jobs:
             ganja-test-results.json
             chern-test-results.json
             ganja-browser-test-results.json
+            moduli-test-results.json
+            moduli-browser-test-results.json
+            moduli-preview.png
+            moduli-mobile-preview.png
             narrative-test-results.json
             narrative-browser-test-results.json
             focus-test-results.json

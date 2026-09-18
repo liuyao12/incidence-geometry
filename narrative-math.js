@@ -23,9 +23,11 @@ const identity3=()=>[[1,0,0],[0,1,0],[0,0,1]];
 const baseDual=()=>[[1,0,0],[0,1,0],[0,0,-1]];
 const pairIndices=[[0,1],[1,2],[2,0]], masks=[3,6,5];
 const names=['A','A′','B','B′','C','C′'];
-const defaults=()=>({u:[2.13,-2.49,1.60],v:[1.47,-2.54,2.89],inflation:[.17,.12,.21],opening:.12});
+const defaults=()=>({u:[2.13,-2.49,1.60],v:[1.47,-2.54,2.89],inflation:[.17,.12,.21],opening:.12,couplings:[1,1,1]});
 function validate(p){
   for(const key of ['u','v','inflation'])if(!Array.isArray(p[key])||p[key].length!==3||!p[key].every(Number.isFinite))throw Error('Invalid seed parameters.');
+  if(p.couplings&&(!Array.isArray(p.couplings)||p.couplings.length!==3||!p.couplings.every(Number.isFinite)))throw Error('Invalid face couplings.');
+  if(!Number.isFinite(p.opening))throw Error('Invalid cube opening.');
   if([...p.u,...p.v].some(x=>Math.abs(x)<.1))throw Error('A seed is too near the excluded zero parameter.');
 }
 // x² + t y² = w². At t=0 the carrier is x=±w; at t=1 it is a circle.
@@ -88,32 +90,47 @@ function family(phase,p=defaults()){
   const P=C.p.map((x,i)=>scale(x,1-inflate*p.inflation[i])),R=[],Q0=baseDual();
   R[0]=Q0;
   [1,2,4].forEach((s,i)=>R[s]=matrixAdd(Q0,matrixScale(outer(P[i]),-1)));
+  // Independent pair couplings (12,23,31). Equal values recover the original
+  // narrative path; all three still tend to one at the Salmon boundary.
+  const [a,c,b]=p.couplings||[1,1,1], z=open;
+  const rates=[[0,a,b],[a,0,c],[b,c,0]], M=rates.map((row,i)=>row.map((r,j)=>i===j?1:1+z*r));
   pairIndices.forEach(([i,j],k)=>{
-    R[masks[k]]=matrixAdd(matrixScale(Q0,1-rho*rho),matrixAdd(matrixScale(matrixAdd(outer(P[i]),outer(P[j])),-1),matrixScale(matrixAdd(outer(P[i],P[j]),outer(P[j],P[i])),rho)));
+    const mij=M[i][j];
+    R[masks[k]]=matrixAdd(matrixScale(Q0,1-mij*mij),matrixAdd(matrixScale(matrixAdd(outer(P[i]),outer(P[j])),-1),matrixScale(matrixAdd(outer(P[i],P[j]),outer(P[j],P[i])),mij)));
   });
-  const sum=P.reduce(add,[0,0,0]),sumSq=P.reduce((A,x)=>matrixAdd(A,outer(x)),Array.from({length:3},()=>[0,0,0]));
-  // The raw 4x4 bordered determinant has a common factor open. Cancel it
-  // symbolically, not by division by a floating-point value close to zero.
-  R[7]=matrixAdd(matrixScale(Q0,open*(3+2*open)),matrixAdd(matrixScale(sumSq,3+2*open),matrixScale(outer(sum),-rho)));
+  // Divide the bordered 4x4 determinant by its common factor z SYMBOLICALLY.
+  // det(M)/z = z * (2(ab+ac+bc)-a²-b²-c² + 2zabc).
+  // This is valid for unequal couplings and does not divide numerically near z=0.
+  const K=2*(a*b+a*c+b*c)-a*a-b*b-c*c, opposite=[c,b,a];
+  R[7]=matrixScale(Q0,z*(K+2*z*a*b*c));
+  P.forEach((v,i)=>R[7]=matrixAdd(R[7],matrixScale(outer(v),2*opposite[i]+z*opposite[i]*opposite[i])));
+  pairIndices.forEach(([i,j])=>{
+    const k=3-i-j, coefficient=rates[i][k]+rates[j][k]-rates[i][j]+z*rates[i][k]*rates[j][k];
+    R[7]=matrixAdd(R[7],matrixScale(matrixAdd(outer(P[i],P[j]),outer(P[j],P[i])),-coefficient));
+  });
   const meetings=pairIndices.map(([i,j])=>unit(sub(P[i],P[j]))),axis=unit(G.joinCoordinates(meetings[0],meetings[1]));
   const tangentPairs=pairIndices.map(([i],k)=>lineConic(R[1<<i],meetings[k]));
   const contacts=E.EDGES.map(([s,t])=>{
     const k=Math.log2(s^t),ids=[0,1,2].filter(i=>s>>i&1);let l;
     if(ids.length===0)l=P[k];
-    else if(ids.length===1)l=sub(P[k],scale(P[ids[0]],rho));
-    else l=sub(scale(P[k],rho+1),scale(add(P[ids[0]],P[ids[1]]),rho));
+    else if(ids.length===1)l=sub(P[k],scale(P[ids[0]],M[k][ids[0]]));
+    else {
+      const [i,j]=ids,h=rates[i][j],b=rates[i][k],c=rates[j][k];
+      // The top-edge linear minor also has the common factor -z.
+      l=add(scale(P[k],2*h+z*h*h),add(scale(P[i],b-h-c-z*h*c),scale(P[j],c-h-b-z*h*b)));
+    }
     l=unit(l);
     const tangents=lineConic(R[s],l),primalPoints=tangents.map(x=>mul(R[s],x)).filter(x=>norm(x)>1e-10).map(unit);
     const chord=mul(adj(R[s]),l);
     return {s,t,dualChord:l,chord:norm(chord)>1e-10?unit(chord):null,tangents,primalPoints};
   });
-  return {...C,phase,kind:'conics',inflate,open,rho,p:P,dual:R.map(normalized),primal:R.map(A=>normalized(adj(A))),rawDual:R,meetings,axis,tangentPairs,contacts,
+  return {...C,phase,kind:'conics',inflate,open,rho,M,p:P,dual:R.map(normalized),primal:R.map(A=>normalized(adj(A))),rawDual:R,meetings,axis,tangentPairs,contacts,
     error:Math.max(...meetings.map(x=>Math.abs(dot(x,axis))))};
 }
 // A regular chart for all eight line-wise conics. Only used away from Salmon.
 function normalizedDual(phase=3,p=defaults()){
   const F=family(phase,p);if(F.kind!=='conics'||F.open<1e-7)throw Error('The regular matrix chart is undefined at the Salmon endpoint.');
-  const M=identity3().map((r,i)=>r.map((_,j)=>i===j?1:F.rho));
+  const M=F.M;
   return Array.from({length:8},(_,s)=>{
     const ix=[0,1,2].filter(i=>s>>i&1),H=E.inverse(ix.map(i=>ix.map(j=>M[i][j]))),A=baseDual();
     for(let i=0;i<3;i++)for(let j=0;j<3;j++)for(let k=0;k<ix.length;k++)for(let l=0;l<ix.length;l++)A[i][j]-=F.p[ix[k]][i]*H[k][l]*F.p[ix[l]][j];

@@ -4,7 +4,7 @@
  */
 (()=>{
 'use strict';
-const E=window.IncidenceMath,G=window.IncidencePGA,N=window.IncidenceNarrative,$=id=>document.getElementById(id);
+const E=window.IncidenceMath,G=window.IncidencePGA,N=window.IncidenceNarrative,W=window.IncidenceModuli,$=id=>document.getElementById(id);
 const C=['#2b414d','#2c5f9e','#507fb2','#168477','#5676af','#44a18b','#80a393','#bb592e'];
 const state={scene:'journey',phase:0,dual:false,conclusion:true,follow:true,p:N.defaults(),playing:false,lift:.82,height:0,proof:3,surface:true,zoom:1,pan:[0,0],yaw:-.3,tilt:.95,selection:'all',edge:0};
 const B=window.IncidenceCube;
@@ -196,7 +196,7 @@ function drawCube(){
 }
 function syncControls(){
  const space=state.scene!=='journey',later=state.phase>2.001;
- $('journey-controls').hidden=space;$('spatial-controls').hidden=!space;$('dual-label').hidden=space;
+ $('moduli-controls').hidden=space;$('journey-controls').hidden=space;$('spatial-controls').hidden=!space;$('dual-label').hidden=space;
  $('proof-steps').hidden=state.scene!=='dandelin';$('inspect-row').hidden=!(later&&!space)&&state.scene!=='extrusion';
  $('journey').value=state.phase;$('lift').value=state.lift;$('lift-value').textContent=Math.round(state.lift*100)+'%';$('height-value').textContent=state.height.toFixed(2);
  $('section-height').value=state.height;$('seed-u').value=state.p.u[0];$('seed-u-value').textContent=state.p.u[0].toFixed(2);
@@ -219,16 +219,16 @@ function render(){
  const svg=R.finish();svg.setAttribute('aria-label',state.scene==='journey'?'Continuous conic and incidence configuration':'Rotatable spatial incidence construction');
  // Move seed labels outward from the carrier, preserving their IDs while dragging.
  svg.querySelectorAll('[data-handle]').forEach(g=>{const t=g.querySelector('text'),c=g.querySelector('circle');if(!t||!c)return;const x=+c.getAttribute('cx'),y=+c.getAttribute('cy'),len=Math.hypot(x,y)||1;t.setAttribute('x',x+(x/len)*.09);t.setAttribute('y',y+(y/len)*.09);});
- host.dataset.scene=state.scene;host.dataset.phase=state.phase.toFixed(5);
+ host.dataset.scene=state.scene;host.dataset.phase=state.phase.toFixed(5);updateModuliReadout();
 }
-function setPhase(t,manual=true){cancelAnimationFrame(liftFrame);if(manual)markManual();stopPlay();state.scene='journey';state.phase=N.clamp(+t,0,3);state.selection='all';schedule();}
+function setPhase(t,manual=true){pauseWalk(true);cancelAnimationFrame(liftFrame);if(manual)markManual();stopPlay();state.scene='journey';state.phase=N.clamp(+t,0,3);state.selection='all';schedule();}
 function animateLift(target){
  cancelAnimationFrame(liftFrame);const start=performance.now(),from=state.lift;
  if(matchMedia('(prefers-reduced-motion: reduce)').matches){state.lift=target;schedule();return;}
  function step(now){const t=N.clamp((now-start)/750);state.lift=from+(target-from)*N.ease(t);render();if(t<1)liftFrame=requestAnimationFrame(step);}
  liftFrame=requestAnimationFrame(step);
 }
-function setScene(scene,manual=true){if(!['journey','dandelin','extrusion'].includes(scene))return;if(manual)markManual();stopPlay();state.scene=scene;state.zoom=1;state.pan=[0,0];if(scene==='extrusion'){state.selection=`edge:${state.edge}`;}schedule();}
+function setScene(scene,manual=true){pauseWalk(true);if(!['journey','dandelin','extrusion'].includes(scene))return;if(manual)markManual();stopPlay();state.scene=scene;state.zoom=1;state.pan=[0,0];if(scene==='extrusion'){state.selection=`edge:${state.edge}`;}schedule();}
 function stopPlay(){state.playing=false;cancelAnimationFrame(playFrame);$('play-journey').textContent='Play the journey';}
 function play(now){if(!state.playing)return;if(lastTime)state.phase=Math.min(3,state.phase+(now-lastTime)/8500);lastTime=now;render();if(state.phase>=3){stopPlay();return;}playFrame=requestAnimationFrame(play);}
 
@@ -236,7 +236,7 @@ $('inspect-cube').innerHTML='<option value="all">Whole configuration</option>'+E
 $('cube-faces').innerHTML=E.FACES.map((f,i)=>`<button type="button" data-cube-face="${i}" aria-label="Select face ${f.map(s=>E.LABELS[s]).join(', ')}" aria-pressed="false">${f.map(s=>E.LABELS[s]).join('·')}</button>`).join('');
 $('chord-sliders').innerHTML=[0,1,2].map(i=>`<div class="chord-row"><strong>h${i+1}</strong><label>Angle <input id="chord-angle-${i}" data-chord-angle="${i}" type="range" min="-180" max="180" step=".2" aria-label="Chord ${i+1} angle"><output id="chord-angle-value-${i}"></output></label><label>Offset <input id="chord-offset-${i}" data-chord-offset="${i}" type="range" min=".12" max=".965" step=".002" aria-label="Chord ${i+1} offset"><output id="chord-offset-value-${i}"></output></label></div>`).join('');
 function editChord(i,angle,distance){
- markManual();stopPlay();
+ pauseWalk(true);markManual();stopPlay();
  try {const next=B.moveChord(state.p,i,angle,distance);N.family(state.phase,next);state.p=next;$('chord-feedback').textContent='Chord changed; all conics and the coefficient-space cube have been recomputed.';schedule();}
  catch(e){$('chord-feedback').textContent=e.message;}
 }
@@ -249,7 +249,7 @@ $('cube-reset').onclick=()=>cube.reset();$('cube-perspective').onchange=e=>cube.
 $('cube-linked').onchange=()=>schedule();$('cube-clear').onclick=()=>{markManual();state.selection='all';schedule();};
 
 $('journey').addEventListener('input',e=>setPhase(e.target.value));
-$('play-journey').onclick=()=>{if(state.playing){stopPlay();return;}markManual();state.scene='journey';if(state.phase>=2.999)state.phase=0;state.playing=true;lastTime=0;$('play-journey').textContent='Pause';playFrame=requestAnimationFrame(play);};
+$('play-journey').onclick=()=>{pauseWalk(true);if(state.playing){stopPlay();return;}markManual();state.scene='journey';if(state.phase>=2.999)state.phase=0;state.playing=true;lastTime=0;$('play-journey').textContent='Pause';playFrame=requestAnimationFrame(play);};
 $('dual-view').onchange=e=>{markManual();state.dual=e.target.checked;schedule();};
 $('show-conclusion').onchange=e=>{markManual();state.conclusion=e.target.checked;schedule();};
 $('follow-story').onchange=e=>{state.follow=e.target.checked;followScroll();};
@@ -259,8 +259,8 @@ $('flat-view').onclick=()=>{markManual();animateLift(0);};$('space-view').onclic
 $('reset-camera').onclick=()=>{markManual();state.yaw=-.3;state.tilt=.95;state.zoom=1;state.pan=[0,0];schedule();};
 $('show-surface').onchange=e=>{state.surface=e.target.checked;markManual();schedule();};
 $('fit-view').onclick=()=>{state.zoom=1;state.pan=[0,0];schedule();};
-$('seed-u').oninput=e=>{markManual();state.p.u[0]=+e.target.value;schedule();};
-$('reset-seeds').onclick=()=>{markManual();state.p=N.defaults();schedule();};
+$('seed-u').oninput=e=>{pauseWalk(true);markManual();state.p.u[0]=+e.target.value;schedule();};
+$('reset-seeds').onclick=()=>{pauseWalk(true);markManual();state.p=N.defaults();schedule();};
 $('inspect-cube').onchange=e=>{markManual();state.selection=e.target.value;if(state.selection.startsWith('edge:'))state.edge=+state.selection.split(':')[1];schedule();};
 document.addEventListener('click',e=>{
  const p=e.target.closest('[data-go]');if(p)setPhase(+p.dataset.go);
@@ -268,20 +268,21 @@ document.addEventListener('click',e=>{
  const pr=e.target.closest('[data-proof]');if(pr){markManual();state.proof=+pr.dataset.proof;schedule();}
 });
 function seedMove(handle,clientX,clientY){
+ pauseWalk(true);stopPlay();
  const [_,i,j]=handle.split(':'),rect=$('drawing').getBoundingClientRect(),x=(clientX-rect.left-view.x)/view.s,y=-(clientY-rect.top-view.y)/view.s;
  const t=state.phase<=1?N.ease(state.phase):1;let z;
  if(t<1e-8)z=2/(Math.abs(y)>.05?y:(y<0?-.05:.05));
  else {const angle=Math.atan2(Math.sqrt(t)*y,x);z=+j?Math.sqrt(t)*Math.tan(angle/2):Math.sqrt(t)/Math.tan(angle/2);}
  if(Number.isFinite(z)&&Math.abs(z)>=.15&&Math.abs(z)<=8){state.p[+j?'v':'u'][+i]=z;schedule();}
 }
-$('drawing').addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;markManual();const h=e.target.closest('[data-handle]');drag={id:e.pointerId,x:e.clientX,y:e.clientY,pan:state.pan.slice(),yaw:state.yaw,tilt:state.tilt,handle:h?.dataset.handle};$('drawing').setPointerCapture(e.pointerId);});
+$('drawing').addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;markManual();const h=e.target.closest('[data-handle]');if(h){pauseWalk(true);stopPlay();}drag={id:e.pointerId,x:e.clientX,y:e.clientY,pan:state.pan.slice(),yaw:state.yaw,tilt:state.tilt,handle:h?.dataset.handle};$('drawing').setPointerCapture(e.pointerId);});
 $('drawing').addEventListener('pointermove',e=>{if(!drag||drag.id!==e.pointerId)return;if(drag.handle?.startsWith('chord:')&&state.scene==='journey'&&!state.dual){
  const i=+drag.handle.split(':')[1],rect=$('drawing').getBoundingClientRect(),x=(e.clientX-rect.left-view.x)/view.s,y=-(e.clientY-rect.top-view.y)/view.s,c=B.chordData(state.p)[i];
  editChord(i,Math.atan2(y,x)*180/Math.PI,e.shiftKey?c.distance:Math.hypot(x,y));
  }else if(drag.handle&&state.scene==='journey'&&!state.dual)seedMove(drag.handle,e.clientX,e.clientY);else if(state.scene==='journey'){state.pan=[drag.pan[0]+e.clientX-drag.x,drag.pan[1]+e.clientY-drag.y];schedule();}else{state.yaw=drag.yaw+(e.clientX-drag.x)/160;state.tilt=N.clamp(drag.tilt+(e.clientY-drag.y)/180,-1.45,1.45);schedule();}});
 for(const event of ['pointerup','pointercancel','lostpointercapture'])$('drawing').addEventListener(event,()=>{drag=null;});
 $('drawing').addEventListener('wheel',e=>{if(!e.shiftKey)return;e.preventDefault();markManual();state.zoom=N.clamp(state.zoom*Math.exp(-e.deltaY*.001),.3,5);schedule();},{passive:false});
-host.addEventListener('keydown',e=>{const h=e.target.closest('[data-handle]');if(!h||!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))return;e.preventDefault();markManual();const [kind,i,j]=h.dataset.handle.split(':');const sign=e.key==='ArrowRight'||e.key==='ArrowUp'?1:-1;if(kind==='chord'){const c=B.chordData(state.p)[+i];editChord(+i,c.angle+(['ArrowRight','ArrowLeft'].includes(e.key)?sign:0),c.distance+(['ArrowUp','ArrowDown'].includes(e.key)?sign*.004:0));}else{state.p[+j?'v':'u'][+i]+=sign*.035;schedule();}});
+host.addEventListener('keydown',e=>{const h=e.target.closest('[data-handle]');if(!h||!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))return;e.preventDefault();pauseWalk(true);stopPlay();markManual();const [kind,i,j]=h.dataset.handle.split(':');const sign=e.key==='ArrowRight'||e.key==='ArrowUp'?1:-1;if(kind==='chord'){const c=B.chordData(state.p)[+i];editChord(+i,c.angle+(['ArrowRight','ArrowLeft'].includes(e.key)?sign:0),c.distance+(['ArrowUp','ArrowDown'].includes(e.key)?sign*.004:0));}else{state.p[+j?'v':'u'][+i]+=sign*.035;schedule();}});
 let panel=null;
 $('panel-grip').addEventListener('pointerdown',e=>{if(innerWidth<=880||e.target.closest('button'))return;panel={x:e.clientX,y:e.clientY,dx:parseFloat($('laboratory').style.getPropertyValue('--drag-x'))||0,dy:parseFloat($('laboratory').style.getPropertyValue('--drag-y'))||0};$('panel-grip').setPointerCapture(e.pointerId);});
 $('panel-grip').addEventListener('pointermove',e=>{if(!panel)return;const lab=$('laboratory'),base=lab.parentElement.getBoundingClientRect(),width=lab.getBoundingClientRect().width;const x=N.clamp(panel.dx+e.clientX-panel.x,12-base.left,innerWidth-12-base.left-width),y=N.clamp(panel.dy+e.clientY-panel.y,-base.top+8,innerHeight-70-base.top);lab.style.setProperty('--drag-x',x+'px');lab.style.setProperty('--drag-y',y+'px');});
@@ -289,7 +290,7 @@ for(const ev of ['pointerup','pointercancel','lostpointercapture'])$('panel-grip
 $('reset-position').onclick=()=>{$('laboratory').style.removeProperty('--drag-x');$('laboratory').style.removeProperty('--drag-y');$('laboratory').style.removeProperty('width');schedule();};
 let scrollFrame=0;
 function followScroll(){
- if(!state.follow)return;const oldScene=state.scene;stopPlay();const sections=[...document.querySelectorAll('.prose section[data-scene]')],marker=innerHeight*.4;
+ if(!state.follow)return;pauseWalk(true);const oldScene=state.scene;stopPlay();const sections=[...document.querySelectorAll('.prose section[data-scene]')],marker=innerHeight*.4;
  let active=sections[0];for(const s of sections)if(s.getBoundingClientRect().top<=marker)active=s;
  if(active.dataset.phase!==undefined){
   const anchors=[...document.querySelectorAll('[data-phase]')],i=+active.dataset.phase;let f=i;
@@ -300,8 +301,96 @@ function followScroll(){
 }
 window.addEventListener('scroll',()=>{if(!scrollFrame)scrollFrame=requestAnimationFrame(()=>{scrollFrame=0;followScroll();});},{passive:true});
 new ResizeObserver(schedule).observe($('drawing'));
-document.addEventListener('visibilitychange',()=>{if(document.hidden)stopPlay();});
-window.incidenceStory={state,render,setPhase,setScene,getData:()=>data,getView:()=>view,cube,editChord};
+document.addEventListener('visibilitychange',()=>{if(document.hidden){stopPlay();if(tour.running)pauseWalk(false,'Paused while the page was hidden. Resume continues the same path.');}});
+// Random destinations are interpolated in a regular parameter chart. The
+// cube camera and selected face survive; changing geometry cancels the route.
+const tour={running:false,loop:false,route:null,anchor:null,progress:0,last:0,steps:0,rng:W.randomSource(20260918),frame:0};
+function walkMessage(text,error=false){$('walk-status').textContent=text;$('walk-status').classList.toggle('error',error);}
+function walkButtons(){
+ $('wander').textContent=tour.running?'Pause':tour.route?'Resume':'Wander';
+ $('wander').setAttribute('aria-pressed',String(tour.running));
+ $('random-target').disabled=tour.running;
+}
+function pauseWalk(clear=false,message=''){
+ tour.running=false;tour.last=0;cancelAnimationFrame(tour.frame);tour.frame=0;
+ if(clear){tour.route=null;tour.anchor=null;tour.progress=0;$('walk-progress').value=0;}
+ walkButtons();if(message)walkMessage(message);
+}
+function prepareWalk(loop){
+ stopPlay();cancelAnimationFrame(liftFrame);markManual();
+ state.scene='journey';state.phase=3;
+ if(!tour.anchor)tour.anchor=W.clone(state.p);
+ try{
+  tour.route=W.plan(state.p,tour.anchor,tour.rng,{lockChords:$('lock-chords').checked,amount:+$('walk-range').value});
+  tour.progress=0;tour.last=0;tour.loop=loop;tour.running=true;walkButtons();
+  const r=tour.route;
+  walkMessage(`Target ${tour.steps+1}: ${r.samples} path positions screened; ${r.realContacts}/12 edges have real two-point contact. ${$('lock-chords').checked?'Seed chords and cube stay fixed.':'Weights, chords and all three couplings may move.'}`);
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){
+   state.p=W.clone(r.to);tour.steps++;tour.route=null;tour.running=false;$('walk-progress').value=1;walkButtons();
+   walkMessage('Random target applied without animation (reduced-motion preference).');render();return true;
+  }
+  tour.frame=requestAnimationFrame(walkFrame);schedule();return true;
+ }catch(e){pauseWalk(true);walkMessage(e.message,true);schedule();return false;}
+}
+function walkFrame(now){
+ if(!tour.running||!tour.route)return;
+ const dt=tour.last?Math.max(0,Math.min(.12,(now-tour.last)/1000)):0;tour.last=now;
+ const duration=+$('walk-duration').value;
+ const t=Math.min(1,tour.progress+dt/duration),next=W.interpolate(tour.route.from,tour.route.to,t);
+ try{
+  const d=W.diagnose(next);
+  if(d.signature!==tour.route.signature)throw Error('The live guard detected a change of real chamber.');
+  // Never commit a bad intermediate state. Pause at the last accepted frame.
+  state.p=next;tour.progress=t;$('walk-progress').value=t;render();
+ }catch(e){pauseWalk(true);walkMessage(`Paused at the last valid configuration: ${e.message}`,true);return;}
+ if(t>=1){
+  const repeat=tour.loop;tour.steps++;tour.route=null;tour.running=false;walkButtons();
+  if(repeat){prepareWalk(true);return;}
+  walkMessage(`Reached target ${tour.steps}. All conics were reconstructed along the path. Choose another target or Wander.`);return;
+ }
+ tour.frame=requestAnimationFrame(walkFrame);
+}
+function randomTarget(){pauseWalk(false);return prepareWalk(false);}
+function wander(){
+ if(tour.running){pauseWalk(false,'Paused. Resume continues the same path.');return;}
+ if(tour.route){tour.running=true;tour.last=0;walkButtons();walkMessage('Continuing the screened path.');tour.frame=requestAnimationFrame(walkFrame);return;}
+ prepareWalk(true);
+}
+$('random-target').onclick=randomTarget;$('wander').onclick=wander;
+$('walk-duration').oninput=()=>{$('walk-duration-value').textContent=$('walk-duration').value+' s';};
+$('lock-chords').onchange=()=>pauseWalk(true,'Exploration paused. The next target uses the new chord-lock setting.');
+$('walk-range').oninput=()=>pauseWalk(true,'The next target uses the selected bounded range.');
+$('walk-reseed').onclick=()=>{
+ const n=Number($('walk-seed').value);
+ if(!Number.isInteger(n)||n<0||n>4294967295){walkMessage('Enter an integer seed from 0 to 4294967295.',true);return;}
+ pauseWalk(true);tour.rng=W.randomSource(n);tour.steps=0;walkMessage(`Random sequence reset to seed ${n}. With the same starting configuration and options, targets are reproducible.`);
+};
+const invariantNames=['G11','G22','G33','G12','G23','G31','ρ12','ρ23','ρ31'];
+$('moduli-invariants').innerHTML=invariantNames.map((n,i)=>`<div class="modulus">${n} <span id="invariant-${i}">—</span></div>`).join('');
+$('moduli-sliders').innerHTML=[0,1,2].map((i)=>`<div class="chord-row"><strong>${i+1}</strong><label>Weight <input type="range" id="weight-${i}" data-weight="${i}" min=".52" max=".965" step=".001" aria-label="Weighted chord ${i+1} strength"><output id="weight-value-${i}"></output></label><label>ρ${['12','23','31'][i]} <input type="range" id="coupling-${i}" data-coupling="${i}" min=".25" max="3" step=".005" aria-label="Face coupling ${['12','23','31'][i]}"><output id="coupling-value-${i}"></output></label></div>`).join('');
+$('moduli-sliders').addEventListener('input',e=>{
+ const wi=e.target.dataset.weight,ci=e.target.dataset.coupling;if(wi===undefined&&ci===undefined)return;
+ pauseWalk(true);stopPlay();markManual();const p=W.clone(state.p);
+ if(wi!==undefined)p.inflation[+wi]=1-(+e.target.value);else p.couplings[+ci]=+e.target.value;
+ try{N.family(state.phase,p);state.p=p;walkMessage('Parameters changed. The seed chords—and therefore the linked cube—have not moved.');schedule();}
+ catch(e){walkMessage(e.message,true);}
+});
+function updateModuliReadout(){
+ const show=state.scene==='journey'&&state.phase>2.999;
+ $('moduli-parameters').hidden=!show;
+ if(!show)return;
+ const rates=state.p.couplings||[1,1,1];
+ for(let i=0;i<3;i++){
+  if(document.activeElement!==$(`weight-${i}`))$(`weight-${i}`).value=1-state.p.inflation[i];
+  $(`weight-value-${i}`).textContent=(1-state.p.inflation[i]).toFixed(3);
+  if(document.activeElement!==$(`coupling-${i}`))$(`coupling-${i}`).value=rates[i];
+  $(`coupling-value-${i}`).textContent=(1+state.p.opening*rates[i]).toFixed(3);
+ }
+ try{const d=W.descriptor(state.p,data?.kind==='conics'?data:undefined);d.values.forEach((v,i)=>$(`invariant-${i}`).textContent=v.toFixed(4));}
+ catch{invariantNames.forEach((_,i)=>$(`invariant-${i}`).textContent='—');}
+}
+
+window.incidenceStory={state,render,setPhase,setScene,getData:()=>data,getView:()=>view,cube,editChord,tour,randomTarget,wander,pauseWalk};
 const entry=new URLSearchParams(location.search).get('stage');
 if(entry==='penrose'){state.phase=3;state.follow=false;$('follow-story').checked=false;}
 render();

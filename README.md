@@ -56,3 +56,9 @@ Open `http://localhost:8000/`. The new suite checks 732 numerical configurations
 - Fomin and Pylyavskyy, [Incidences and tilings](https://arxiv.org/abs/2305.07728).
 - [Albert Chern's project page](https://cseweb.ucsd.edu/~alchern/projects/Penrose/).
 - [Yao Liu's conic-section notebook](https://observablehq.com/@liuyao12/conics-sections).
+
+## Random exploration of Penrose configurations
+
+The main page now has **Random target**, **Wander**, pause/resume, and a **Keep seed chords fixed** option. The latter moves the conics without changing the linked cuboid. Three weights and three independent face couplings are exposed, along with nine regular-chart invariant coordinates. The path is numerically screened, not formally certified or uniformly sampled from the whole moduli space. See [MODULI.md](MODULI.md) for the 17/12/9 parameter counts, the chart, and sampling limitations.
+
+Run `node test-moduli.cjs` and `python scripts/browser_moduli.py --serve` for the added tests.

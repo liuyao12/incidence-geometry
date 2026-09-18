@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "checks": 55140,
+  "configurations": 470,
+  "paths": 36,
+  "seed": 20260918,
+  "jacobianRank": 9,
+  "maxContact": 1.121819652509962e-13,
+  "maxFace": 1.0935696792557792e-14,
+  "maxModel": 1.1234795669271359e-15,
+  "scope": "Numerical software tests; not a formal moduli classification or certified path proof."
+}

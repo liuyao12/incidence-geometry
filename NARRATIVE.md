@@ -69,3 +69,7 @@ The Lean library remains at the previously checked 87 public theorems at `dc01f4
 `node test-narrative.cjs` checks 732 numerical configurations and 23,134 assertions: carrier incidence, conic contact, face concurrence, all twelve spatial contact rings, independent planar/spatial Pascal constructions, chord edits and the cube's defining linear identities. The older engine suites remain separate.
 
 `python scripts/browser_narrative.py --serve` loads the actual assets over HTTP in Chromium and tests the continuous stages, three handles, angle controls, independent cube camera, actual face picking, all six faces, spatial scenes, mobile layouts, Fomin page and research-status wording. Omit `--serve` for offline assembly; its report explicitly distinguishes that method. CI also runs the earlier laboratory's browser suite and the existing Lean build/axiom audit.
+
+## Moduli explorer extension
+
+The original equal-coupling narrative is retained as the default. Random exploration and the advanced controls now vary all three scalar couplings independently, as well as the weighted seeds. All three couplings converge to one at the Salmon stage. See [MODULI.md](MODULI.md) for the division-free top-conic formula and the distinction between a cuboid, a 12-parameter fixed-carrier chart, and nine generic projective moduli.
