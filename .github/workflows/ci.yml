@@ -27,19 +27,38 @@ jobs:
             research/
             scripts/
           retention-days: 7
-      - name: Test independent mathematical engines
+      - name: Test mathematical engines and internal references
         run: |
           node test.cjs
           node test-ganja.cjs
           node test-chern.cjs
+          node test-narrative.cjs
+          python3 scripts/check_site_links.py
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Test HTTP-loaded interactive in Chromium
+      - name: Test both HTTP-loaded interactives in Chromium
+        shell: bash
         run: |
+          set -euo pipefail
           pip install playwright==1.55.0
           python -m playwright install --with-deps chromium
-          python scripts/browser_smoke.py --serve
+          python -m http.server 8000 > /tmp/incidence-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID"' EXIT
+          python - <<'PY'
+          import time, urllib.request
+          for attempt in range(40):
+              try:
+                  urllib.request.urlopen('http://127.0.0.1:8000/lab.html', timeout=2)
+                  break
+              except OSError:
+                  time.sleep(.25)
+          else:
+              raise SystemExit('Local preview server did not start')
+          PY
+          python scripts/browser_smoke.py --url http://127.0.0.1:8000/lab.html
+          python scripts/browser_narrative.py --serve
       - uses: leanprover/lean-action@v1
         with:
           lake-package-directory: formal
@@ -64,6 +83,11 @@ jobs:
             ganja-test-results.json
             chern-test-results.json
             ganja-browser-test-results.json
+            narrative-test-results.json
+            narrative-browser-test-results.json
+            narrative-cube-preview.png
+            narrative-dandelin-preview.png
+            narrative-mobile-preview.png
             ganja-preview.png
             ganja-mobile-preview.png
             chern-eight-preview.png

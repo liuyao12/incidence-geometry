@@ -60,6 +60,8 @@
     return {
       begin(v){view=v;scene=[];},
       line,point,
+      layer(alpha, draw){scene.push(`<g opacity="${alpha}">`);draw();scene.push('</g>');},
+      polygon(ps,c,alpha=.1){if(ps.length<3)return;group(c,alpha,0,[],()=>scene.push(ps.map(p=>G.point([...p.slice(0,2),1]))));},
       path(ps,c,alpha=1,width=1.6,dash=[]){if(!ps?.length)return;group(c,alpha,width,dash,()=>segments(ps.map(p=>G.point([...p.slice(0,2),1])),false));},
       curve(samples,c,alpha=1,width=1.6){group(c,alpha,width,[],()=>segments(samples));},
       conic(Q,c,alpha=1,width=1.6,dash=[]){group(c,alpha,width,dash,()=>segments(G.conicSamples(Q)),dash.length?'data-conic-dash="true"':'');},
