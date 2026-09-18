@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-! Edge-cancellation certificate extracted from an oriented bicolored
 quadrangulation. No topological manifold-recognition theorem is asserted. -/

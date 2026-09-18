@@ -75,7 +75,12 @@ theorem brianchon_dual_conic (a b c d e f : Vec K)
 /-- Admissible Pascal data have actual nonzero constructed intersection points.
 The six input representatives and the relevant joins must then also be nonzero. -/
 structure PascalInput (K : Type*) [Field K] where
-  a b c d e f : Vec K
+  a : Vec K
+  b : Vec K
+  c : Vec K
+  d : Vec K
+  e : Vec K
+  f : Vec K
   onConic : OnCommonConic a b c d e f
   first_ne : pascalX a b d e ≠ 0
   second_ne : pascalX b c e f ≠ 0

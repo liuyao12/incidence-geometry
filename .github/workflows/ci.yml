@@ -6,6 +6,9 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: incidence-geometry-checks-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   checks:
     runs-on: ubuntu-latest
@@ -20,6 +23,7 @@ jobs:
             formal/**/*.lean
             formal/lean-toolchain
             formal/lake-manifest.json
+            formal/README.md
             research/
             scripts/
           retention-days: 7
@@ -43,18 +47,19 @@ jobs:
           build: 'true'
           test: 'false'
           lint: 'false'
-      - name: Audit all implemented theorem dependencies
+      - name: Audit every public theorem against the axiom allowlist
         working-directory: formal
         shell: bash
         run: |
           set -euo pipefail
           lake env lean Audit.lean | tee axiom-audit-current.txt
-          if grep -E 'sorryAx|Lean.ofReduceBool|Lean.trustCompiler' axiom-audit-current.txt; then exit 1; fi
+          python3 ../scripts/audit_axioms.py axiom-audit-current.txt "$GITHUB_SHA" | tee audit-report.json
       - uses: actions/upload-artifact@v4
         with:
           name: incidence-geometry-checks
           path: |
             formal/axiom-audit-current.txt
+            formal/audit-report.json
             test-results.json
             ganja-test-results.json
             chern-test-results.json

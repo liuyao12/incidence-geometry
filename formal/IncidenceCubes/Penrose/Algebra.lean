@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-! Polynomial kernel of Penrose's conic cube. These identities construct
 normalized cubes. The normal-form theorem for arbitrary geometric input and

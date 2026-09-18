@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Tactic
 
 /-! Coordinate coherence. Cross products must separately be nonzero to denote
 projective points and lines. Non-incidence requires all four pairings nonzero. -/

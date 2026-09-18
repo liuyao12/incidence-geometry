@@ -75,3 +75,18 @@ import IncidenceCubes
 #print axioms IncidenceCubes.Connection.penrose_middle_via_symmetric_exchange
 #print axioms IncidenceCubes.Connection.fomin_coherence_via_zero_pivot
 #print axioms IncidenceCubes.Connection.fomin_coherence_iff_classical_collinear
+
+-- Staged determinant expansion and defect-surface calculus.
+#print axioms IncidenceCubes.Classical.det_four_scalar
+#print axioms IncidenceCubes.Classical.det_five_scalar
+#print axioms IncidenceCubes.Classical.det_six_scalar
+#print axioms IncidenceCubes.Connection.DefectSurface.denominator_ne_zero
+#print axioms IncidenceCubes.Connection.DefectSurface.face_ratio
+#print axioms IncidenceCubes.Connection.DefectSurface.total_defect_product
+#print axioms IncidenceCubes.Connection.DefectSurface.factorized_product
+#print axioms IncidenceCubes.Connection.DefectSurface.symmetric_product
+#print axioms IncidenceCubes.Connection.DefectSurface.coherent_iff_defect_zero
+#print axioms IncidenceCubes.Connection.DefectSurface.last_defect_zero
+#print axioms IncidenceCubes.Connection.DefectSurface.last_factor_vanishes
+#print axioms IncidenceCubes.Connection.DefectSurface.last_square_root_zero
+#print axioms IncidenceCubes.Connection.DefectSurface.positive_square_obstruction

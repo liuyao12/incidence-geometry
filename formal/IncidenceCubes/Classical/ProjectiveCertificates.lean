@@ -8,7 +8,12 @@ namespace IncidenceCubes.Classical
 variable {K : Type*} [Field K]
 
 structure DesarguesInput (K : Type*) [Field K] where
-  a b c d e f : Vec K
+  a : Vec K
+  b : Vec K
+  c : Vec K
+  d : Vec K
+  e : Vec K
+  f : Vec K
   firstTriangle : ¬ Collinear a b c
   secondTriangle : ¬ Collinear d e f
   perspective : Concurrent (cross a d) (cross b e) (cross c f)
@@ -29,10 +34,15 @@ theorem DesarguesInput.conclusion (D : DesarguesInput K) :
     ⟨D.intersections_ne.2.1, h2⟩, ⟨D.intersections_ne.2.2, h3⟩⟩
 
 /-- Six actual points on a nonsingular conic, and three actual diagonals of
-the polygon formed by their polar tangents. -/
+ the polygon formed by their polar tangents. -/
 structure BrianchonInput (K : Type*) [Field K] where
   S : Mat3 K
-  a b c d e f : Vec K
+  a : Vec K
+  b : Vec K
+  c : Vec K
+  d : Vec K
+  e : Vec K
+  f : Vec K
   symmetric : ∀ i j, S i j = S j i
   nonsingular : S.det ≠ 0
   two_ne : (2 : K) ≠ 0

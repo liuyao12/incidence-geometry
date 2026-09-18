@@ -5,3 +5,4 @@ import IncidenceCubes.Connection.Veronese
 import IncidenceCubes.Classical
 import IncidenceCubes.Connection.Determinantal
 import IncidenceCubes.Connection.LocalComparison
+import IncidenceCubes.Connection.DefectSurface
