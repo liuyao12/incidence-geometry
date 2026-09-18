@@ -34,6 +34,7 @@ jobs:
           node test-chern.cjs
           node test-narrative.cjs
           node test-moduli.cjs
+          node test-vector-moduli.cjs
           python3 scripts/check_site_links.py
       - uses: actions/setup-python@v5
         with:
@@ -62,6 +63,7 @@ jobs:
           python scripts/browser_narrative.py --serve
           python scripts/browser_moduli.py --serve
           python scripts/browser_focus.py --serve
+          python scripts/browser_vectors.py --serve
       - uses: leanprover/lean-action@v1
         with:
           lake-package-directory: formal
@@ -90,6 +92,10 @@ jobs:
             moduli-browser-test-results.json
             moduli-preview.png
             moduli-mobile-preview.png
+            vector-test-results.json
+            vector-browser-test-results.json
+            vector-controls-preview.png
+            vector-controls-mobile.png
             narrative-test-results.json
             narrative-browser-test-results.json
             focus-test-results.json
