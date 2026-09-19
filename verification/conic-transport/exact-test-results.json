@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "arithmetic": "exact rationals",
+  "checks": 472,
+  "noncoherentSquareHolonomy": "2",
+  "torusCounts": {
+    "conics": 16,
+    "edges": 32,
+    "faces": 16
+  },
+  "realDoubleContacts": 32,
+  "distinctConcurrencePoints": 16,
+  "scope": "Exact rational example/implementation checks, not Lean proof evidence."
+}

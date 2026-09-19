@@ -1,0 +1,52 @@
+{
+  "scope": "Generic results; precise hypotheses and limits are stated in proofs.html. Numerical controls are not formal proofs.",
+  "pages": [
+    {
+      "page": "index.html",
+      "entryPoints": [
+        "IncidenceCubes.Presentation.pappus_via_pascal",
+        "IncidenceCubes.Classical.pascal",
+        "IncidenceCubes.Classical.brianchon",
+        "IncidenceCubes.Presentation.salmon_from_contacts",
+        "IncidenceCubes.Penrose.Theorem.penrose_from_tangencies",
+        "IncidenceCubes.Spatial.plane_section_collinear",
+        "IncidenceCubes.Spatial.lift_rank_one"
+      ]
+    },
+    {
+      "page": "fomin.html",
+      "entryPoints": [
+        "IncidenceCubes.Connection.HyperplaneSurface.hyperplane_surface_last_face",
+        "IncidenceCubes.Classical.desargues_iff"
+      ]
+    },
+    {
+      "page": "connections.html",
+      "entryPoints": [
+        "IncidenceCubes.Connection.ConicTransport.face_concurrent_iff",
+        "IncidenceCubes.Connection.GeometricSurface.conic_surface_last_face",
+        "IncidenceCubes.Connection.SurfaceApplications.conic_surface_from_tangencies",
+        "IncidenceCubes.Connection.TorusExample.sixteenth_face"
+      ]
+    },
+    {
+      "page": "proofs.html",
+      "entryPoints": [
+        "IncidenceCubes.Classical.brianchon",
+        "IncidenceCubes.Classical.desargues_iff",
+        "IncidenceCubes.Classical.pappus",
+        "IncidenceCubes.Classical.pascal",
+        "IncidenceCubes.Connection.ConicTransport.face_concurrent_iff",
+        "IncidenceCubes.Connection.GeometricSurface.conic_surface_last_face",
+        "IncidenceCubes.Connection.GeometricSurface.point_line_surface_last_face",
+        "IncidenceCubes.Connection.HyperplaneSurface.hyperplane_surface_last_face",
+        "IncidenceCubes.Connection.SurfaceApplications.conic_surface_from_tangencies",
+        "IncidenceCubes.Connection.TorusExample.sixteenth_face",
+        "IncidenceCubes.Penrose.Theorem.penrose_from_tangencies",
+        "IncidenceCubes.Penrose.Uniqueness.penrose_generic",
+        "IncidenceCubes.Presentation.pappus_via_pascal",
+        "IncidenceCubes.Presentation.salmon_from_contacts"
+      ]
+    }
+  ]
+}

@@ -21,7 +21,7 @@ derives all rank-one contact relations. See [the precise statement and limitatio
 #check IncidenceCubes.Penrose.Theorem.penrose_from_tangencies
 ```
 
-There are now **181 audited public theorems**, including supporting lemmas. The
+That generic-Penrose milestone brought the inventory to **181 public theorems**. The
 output conic is not required to be nonsingular, and existence of two distinct
 contact section points over the base field remains separate. This does not
 cover all complete-conic degenerations or establish a common Fomin/Penrose master theorem.
@@ -61,4 +61,30 @@ The original `Penrose/Algebra`, `Fomin/Surface`, `Fomin/Coherence`, and `Connect
 
 `Audit.lean` lists every public theorem. The audit script compares it with the source inventory, checks that Lean printed each dependency record, and permits only `propext`, `Classical.choice`, and `Quot.sound`. No CAS or JavaScript output is a trusted proof oracle.
 
-The interactive exposition and its older verification snapshot are intentionally not reorganized around the proposed unification; this directory and the research notes record the newer formal work separately.
+The three result chapters now have a shared statement-and-source appendix at `proofs.html`. Earlier research notes remain dated development records; the appendix distinguishes current theorems from unproved extensions.
+
+
+## 19 September 2026: conic surface transport
+
+The locally checked extension in `Connection/ConicTransport.lean` proves that
+four chords of a proper double-contact conic square are concurrent exactly
+when their relative contact scales have trivial holonomy.
+`GeometricSurface.conic_surface_last_face` proves the resulting all-but-one
+face theorem with arbitrary geometric vertex labels. `HyperplaneSurface`
+proves Fomin's point/hyperplane counterpart in arbitrary ambient vector spaces
+on the same finite gluing structure. `SurfaceApplications` accepts actual
+two-point tangencies and specializes to a cube. `TransportExamples` proves an
+exact contact square whose holonomy is 2 and whose chords are not concurrent.
+
+The initial conic-surface milestone brought the inventory to 209 public theorems (28 added). See
+[the proof and scope](../research/FOMIN_TO_CONICS.md) and
+[local verification](../verification/conic-transport/verification.json).
+This is not a fresh GitHub CI run and has not been pushed by this session.
+The conic surface rule and generic Penrose completion are related but distinct:
+the former assumes all vertex conics are supplied.
+
+## Results-first release
+
+The library now includes **225 audited public theorems**. `Classical/Presentation` derives Pappus from Pascal and formalizes the compatible split-branch Salmon argument; `Classical/Spatial` checks the local ruled-quadric and plane-section identities; `Connection/TorusExample` instantiates the conic surface theorem on exact rational input and deduces the sixteenth face from the other fifteen.
+
+These local spatial lemmas do not replace the independent end-to-end Pascal proof or establish the full eight-quadric extrusion theorem. All new modules are imported by the root library and every public theorem is covered by `Audit.lean`. See [the page-to-theorem map](../theorem-map.json) and [the precise statements](../proofs.html).

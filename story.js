@@ -240,7 +240,7 @@ function reframeVectors(){
 }
 function syncControls(){
  const space=state.scene!=='journey',later=state.phase>2.001;
- $('moduli-controls').hidden=space;$('journey-controls').hidden=space;$('spatial-controls').hidden=!space;$('dual-label').hidden=space;
+ $('moduli-controls').hidden=space||state.phase<2.999;$('journey-controls').hidden=space;$('spatial-controls').hidden=!space;$('dual-label').hidden=space;
  $('proof-steps').hidden=state.scene!=='dandelin';$('inspect-row').hidden=!(later&&!space)&&state.scene!=='extrusion';
  $('journey').value=state.phase;$('lift').value=state.lift;$('lift-value').textContent=Math.round(state.lift*100)+'%';$('height-value').textContent=state.height.toFixed(2);
  $('section-height').value=state.height;$('seed-u').value=state.p.u[0];$('seed-u-value').textContent=state.p.u[0].toFixed(2);

@@ -1,24 +1,18 @@
 # Incidence Geometry
 
-Interactive projective geometry and an independent Lean library.
+Three interactive chapters, with precise theorem statements and Lean sources alongside them.
 
-**[Penrose narrative](https://liuyao12.github.io/incidence-geometry/)** · **[Open the linked conic cube](https://liuyao12.github.io/incidence-geometry/?stage=penrose)** · [Fomin–Pylyavskyy](https://liuyao12.github.io/incidence-geometry/fomin.html) · [Connections](https://liuyao12.github.io/incidence-geometry/connections.html)
+- [The three P’s](https://liuyao12.github.io/incidence-geometry/): a continuous Pappus → Pascal/Brianchon → Salmon → Penrose story, spatial Pascal, and editable framed-vector conic controls.
+- [Incidence on surfaces](https://liuyao12.github.io/incidence-geometry/fomin.html): Fomin–Pylyavskyy’s geometric surface principle and exact scalar cancellation.
+- [Conic contact on surfaces](https://liuyao12.github.io/incidence-geometry/connections.html): a conic-contact counterpart, a linked sixteen-conic torus, and contact-scale transport.
 
-## Interactive pages
+[Theorems and sources](https://liuyao12.github.io/incidence-geometry/proofs.html) gives the hypotheses, attribution, proof entry points and verification scope. The result pages emphasize geometry; development evidence is kept in this appendix and in CI artifacts.
 
-The Penrose page follows the paper's introductory progression through Pappus, Pascal/Brianchon, Salmon and Penrose. One continuous parameter preserves the seed labels while the objects generalize. Duality, contact inspection, a spatial Dandelin/Pascal construction and a worked conic-to-quadric lift accompany the text.
+## Formal results
 
-At the Penrose end, drag the three hollow chord handles h1,h2,h3. They change the original circular seed chords and recompute the entire conic configuration. Shift-drag rotates at fixed chord offset; the angle and offset sliders offer separate controls.
+The pinned Lean 4.19.0/mathlib library has 225 audited public theorems, including supporting lemmas. It contains independent classical results; generic arbitrary-input Penrose completion and projective uniqueness; Fomin’s geometric surface theorem in arbitrary ambient dimension; and the conic-contact surface theorem. An exact rational torus applies the general theorem to deduce its sixteenth concurrence from the other fifteen.
 
-The cube has its own rotatable perspective scene. Its three directions are the current chord covectors in a fixed reference basis. Moving a chord deforms the cube into a parallelepiped; its displayed lengths and angles are coordinate choices, not invariants or hypotheses of the theorem. Click a face to highlight its four conics and contact chords, or an edge for its two conics. The cube camera is independent of the geometry camera. All six faces are also keyboard-accessible through buttons and a selector.
-
-The Fomin–Pylyavskyy page develops point–line coherence and exact scalar edge cancellation separately. The Connections page records checked algebra and the proposed, still unproved common geometric generalization. The [earlier laboratory](https://liuyao12.github.io/incidence-geometry/lab.html) preserves the Chern-inspired all-ellipse preset.
-
-See [NARRATIVE.md](NARRATIVE.md) for exact constructions and limitations.
-
-## Formal verification
-
-The independent project under `formal/` pins Lean/mathlib 4.19.0. The library now contains **181 audited public theorems**, including supporting lemmas. The latest formal milestone proves generic Penrose existence and projective uniqueness from arbitrary seven-conic input, deriving the matrix parameters rather than assuming them. A second entry point starts with two-point tangencies. [Precise hypotheses, proof outline, and limits](formal/PENROSE_GENERIC.md). This is not yet the complete degenerate theorem or a common Penrose/Fomin master theorem.
+This does not claim the full degenerate eight-conic theorem, the complete spatial extrusion proof, or a common existence theorem filling arbitrary partial surface labels. Historical priority of the conic-contact surface formulation has not been settled. See [formal/README.md](formal/README.md), [formal/PENROSE_GENERIC.md](formal/PENROSE_GENERIC.md), and [the conic-surface proof](research/FOMIN_TO_CONICS.md).
 
 ```sh
 cd formal
@@ -28,41 +22,21 @@ lake env lean Audit.lean > axiom-audit-current.txt
 python3 ../scripts/audit_axioms.py axiom-audit-current.txt
 ```
 
-[Formal inventory](formal/README.md) · [Research notes](research/COMMON_GENERALIZATION.md) · [CI](https://github.com/liuyao12/incidence-geometry/actions/workflows/ci.yml)
+Only `propext`, `Classical.choice`, and `Quot.sound` are permitted in theorem dependencies. Every public theorem is in the audit inventory and every implemented module is imported by the root library. Numerical and browser tests are not proof oracles.
 
-Classical Pappus, Desargues, Pascal, Brianchon and the stated converse/duality results are checked under explicit hypotheses. Penrose's polynomial contact identities, surface cancellation, and local determinantal comparisons are also checked. Generic arbitrary-input Penrose normalization and projective completion/uniqueness are now checked. Removing their geometric restrictions, full geometric surface assembly, and a common geometric master theorem remain separate tasks. Numerical animations do not supply Lean evidence.
-
-## Implementation and tests
-
-Rendering and projective algebra use the pinned vendored ganja.js. Conics retain their quadratic-form representation. No external runtime scripts, tracking, accounts or uploads are used.
+## Preview and tests
 
 ```sh
-node test.cjs
-node test-ganja.cjs
-node test-chern.cjs
-node test-narrative.cjs
-python3 scripts/check_site_links.py
-pip install playwright==1.55.0
-python3 -m playwright install chromium
-python3 scripts/browser_narrative.py --serve
 python3 -m http.server 8000
+node test-conic-net.cjs
+python3 scripts/check_site_links.py
+python3 scripts/check_release_sources.py
 ```
 
-Open `http://localhost:8000/`. The new suite checks 732 numerical configurations and 23,134 assertions, independently of the older engine suites and of Lean. Browser tests exercise actual HTTP-loaded assets, chord edits, angle controls, independent cube orbit, actual face picking, duality, spatial scenes and mobile layouts. The earlier laboratory's browser test accepts `--url http://localhost:8000/lab.html`.
+The browser suites require Playwright and Chromium. `python scripts/browser_results.py --serve` exercises the new pages through actual HTTP assets. The older narrative, moduli, vector-editing and focus-regression suites remain in CI. Offline mode is available for local checking without network access, and is labeled separately in its test reports.
 
-## References
+The site uses vendored ganja.js for existing projective-plane constructions and a native canvas surface renderer for torus picking. No external runtime scripts, accounts or telemetry are required. The earlier all-ellipse laboratory remains at [lab.html](lab.html).
 
-- Arnold, Chern, Eide, Gunn, Neukirchner, Penrose, [Penrose's eight-conic theorem](https://arxiv.org/html/2409.17150v8).
-- Fomin and Pylyavskyy, [Incidences and tilings](https://arxiv.org/abs/2305.07728).
-- [Albert Chern's project page](https://cseweb.ucsd.edu/~alchern/projects/Penrose/).
-- [Yao Liu's conic-section notebook](https://observablehq.com/@liuyao12/conics-sections).
+## Publishing
 
-## Random exploration of Penrose configurations
-
-The main page now has **Random target**, **Wander**, pause/resume, and a **Keep seed chords fixed** option. The latter moves the conics without changing the linked cuboid. Three weights and three independent face couplings are exposed, along with nine regular-chart invariant coordinates. The path is numerically screened, not formally certified or uniformly sampled from the whole moduli space. See [MODULI.md](MODULI.md) for the 17/12/9 parameter counts, the chart, and sampling limitations.
-
-Run `node test-moduli.cjs` and `python scripts/browser_moduli.py --serve` for the added tests.
-
-### Control the conics from the cube
-
-At the Penrose endpoint, **Moduli vectors · editable** lets you drag any of the seven hollow non-origin corners to reconstruct the conics. Shift-drag changes depth; dragging a face or the background orbits the camera; clicking a face highlights its conics. Reframe changes only the display; Undo restores the last geometric edit. All nine vector coordinates can be edited directly. The former chord-only cube remains available. [Controls, inverse construction, and limitations](VECTOR_CONTROLS.md).
+GitHub Actions builds and audits the formal library and exercises the browser controls. The Pages workflow publishes the repository’s static source tree. `theorem-map.json` maps chapters to formal entry points; `verification/release-source-hashes.json` fingerprints the implementation and formal source for this release. Fresh run-specific logs are uploaded by CI rather than treated as mathematical content.

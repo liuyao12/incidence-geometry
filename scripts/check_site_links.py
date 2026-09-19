@@ -11,7 +11,7 @@ class Links(HTMLParser):
         for k in ('href','src'):
             if k in a:self.refs.append(a[k])
 missing=[];count=0
-for f in ('index.html','fomin.html','connections.html','lab.html'):
+for f in ('index.html','fomin.html','connections.html','proofs.html','lab.html'):
     h=Links();h.feed((ROOT/f).read_text())
     for ref in h.refs:
         u=urlsplit(ref)

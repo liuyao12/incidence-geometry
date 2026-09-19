@@ -1,0 +1,285 @@
+'IncidenceCubes.Penrose.bottom_edge' depends on axioms: [propext, Quot.sound]
+'IncidenceCubes.Penrose.middle_edge' depends on axioms: [propext, Quot.sound]
+'IncidenceCubes.Penrose.top_edge' depends on axioms: [propext, Quot.sound]
+'IncidenceCubes.Penrose.exists_algebraic_eighth' depends on axioms: [propext, Quot.sound]
+'IncidenceCubes.Penrose.face_pencil_identity' depends on axioms: [propext, Quot.sound]
+'IncidenceCubes.Penrose.top_face_common_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.polar_rank_one_update' depends on axioms: [propext, Quot.sound]
+'IncidenceCubes.Penrose.polar_agrees_on_chord' depends on axioms: [propext, Quot.sound]
+'IncidenceCubes.Fomin.total_product' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Fomin.last_face' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Fomin.cube_last_face' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Fomin.cross_dot_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Fomin.ratio_one_iff_incident' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.eval_doubleLine' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.doubleLine_rescale' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.doubleLine_ne_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.rank_one_pencil' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.pair_comm' depends on axioms: [propext]
+'IncidenceCubes.Classical.cross_left_incident' depends on axioms: [propext, Quot.sound]
+'IncidenceCubes.Classical.cross_right_incident' depends on axioms: [propext, Quot.sound]
+'IncidenceCubes.Classical.bracket_cyclic' depends on axioms: [propext, Quot.sound]
+'IncidenceCubes.Classical.bracket_swap' depends on axioms: [propext, Quot.sound]
+'IncidenceCubes.Classical.bracket_scale' depends on axioms: [propext, Quot.sound]
+'IncidenceCubes.Classical.cross_scale' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.bracket_eq_det' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.det_zero_iff_kernel' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.collinear_iff_bracket' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.concurrent_iff_collinear' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.concurrent_iff_bracket' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.collinear_rescale' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.concurrent_rescale' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.conicEval_matrixCoefficients' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.polars_on_common_conic' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.brianchon' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.onCommonConic_iff_det' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.pascal' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.braikenridge_maclaurin_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.brianchon_dual_conic' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.PascalInput.conclusion' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.pappus_identity' depends on axioms: [propext, Quot.sound]
+'IncidenceCubes.Classical.desargues_identity' depends on axioms: [propext, Quot.sound]
+'IncidenceCubes.Classical.pappus' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.dual_pappus' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.desargues' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.desargues_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.dual_desargues' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.PappusInput.conclusion' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.pascal_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.inverse_polar' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.polar_ne_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.polar_on_dual_quadric' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.inverse_symmetric' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.matrixCoefficients_ne_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.inverse_det_ne_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.polar_tangent_expansion' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.DesarguesInput.conclusion' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.BrianchonInput.conclusion' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.menelaus_identity' depends on axioms: [propext, Quot.sound]
+'IncidenceCubes.Classical.ceva_identity' depends on axioms: [propext, Quot.sound]
+'IncidenceCubes.Classical.menelaus_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.ceva_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.Determinantal.exchange' depends on axioms: [propext, Quot.sound]
+'IncidenceCubes.Connection.Determinantal.bordered_eq_det' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.Determinantal.symmetric_exchange' depends on axioms: [propext, Quot.sound]
+'IncidenceCubes.Connection.Determinantal.eliminate_two' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.Determinantal.elimination_commutes' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Connection.Determinantal.pivot_commutes' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.Determinantal.pivot_preserves_symmetry' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Connection.Determinantal.fomin_face_iff_zero_pivot' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Connection.Determinantal.defect_ratio' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.Determinantal.torus_commutator_counterexample' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Connection.penrose_middle_via_symmetric_exchange' depends on axioms: [propext, Quot.sound]
+'IncidenceCubes.Connection.fomin_coherence_via_zero_pivot' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.fomin_coherence_iff_classical_collinear' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Classical.det_four_scalar' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.det_five_scalar' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Classical.det_six_scalar' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.DefectSurface.denominator_ne_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.DefectSurface.face_ratio' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.DefectSurface.total_defect_product' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Connection.DefectSurface.factorized_product' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.DefectSurface.symmetric_product' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.DefectSurface.coherent_iff_defect_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Connection.DefectSurface.last_defect_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.DefectSurface.last_factor_vanishes' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Connection.DefectSurface.last_square_root_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Connection.DefectSurface.positive_square_obstruction' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Penrose.Completion.middle_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Completion.double_swap' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Completion.triple_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Completion.all_top_identities' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Completion.matrix_diagonal' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Completion.matrix_symmetric' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Completion.matrix_edge' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Completion.pairing_row' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Completion.pairing_middle' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Completion.pairing_last' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Completion.middleChord_ne' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Completion.topChord_ne' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Completion.top_contact' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Completion.contact_target_ne' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Completion.result_ne' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Completion.canonical_middle_contact' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Completion.canonical_upper_contact' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Completion.original_upper_contact' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Completion.original_upper_kernel' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Completion.facePoint_pair' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Completion.facePoint_ne' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Completion.facePoint_upper' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Completion.facePoint_top' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Completion.new_faces_concurrent' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Completion.result_symmetric' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Completion.seven_completion' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.value_square' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.value_combination' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.contact_polar' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.rank_two_determinant' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.contact_coefficient_unique' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.contact_chord_kernel' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.Contact.rescale_left' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.Contact.rescale_right' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.initial_normal_form' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.pull_square' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.pull_smul' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.pull_combination' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.pull_comp' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.pull_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.pullLine_comp' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.pullLine_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.pull_injective' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.pullLine_injective' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.Contact.pull' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.pairing_axis_left' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.pairing_axis_right' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.pairing_scale' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.value_axis' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.value_scale' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.face_axis_coordinates' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.pairing_pull' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.value_pull' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.FaceOff.pull' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.pull_row' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.pull_single' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.pull_double' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.proportional_of_pull' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Geometry.arbitrary_face_normal_form' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Examples.rational_independent_faces' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Examples.rational_completion' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Normalization.binary_normal_form' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Normalization.square_add' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Normalization.face_normal_form' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.GeometricSeven.seven_normal_form' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Tangency.value_add_axes' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Tangency.nonzero_equation' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Tangency.polar_nonzero' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Tangency.tangent_expansion' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Tangency.columns_det' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Tangency.mulVec_axis' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Tangency.pull_symmetric' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Tangency.pull_regular' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Tangency.contact_of_two_tangencies' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Tangency.contact_iff_two_tangencies' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Tangency.generic_nonzero_equation' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Theorem.TwoPointContact.to_contact' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Theorem.penrose_from_tangencies' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Theorem.completion_tangent_at_section' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Penrose.Uniqueness.forced_face_point' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Uniqueness.faceFrame_column' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Uniqueness.matrix_det' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Uniqueness.faceFrame_det' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Uniqueness.fullDet_of_independent_faces' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Penrose.Uniqueness.completion_chord_at_face' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Uniqueness.top_at_other' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Uniqueness.line_through_frame_pair' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Uniqueness.completion_chord_proportional' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Penrose.Uniqueness.square_scale' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Uniqueness.Contact.rescale_chord' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Uniqueness.value_smul' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Uniqueness.two_pencils_unique' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Uniqueness.completion_unique' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Penrose.Uniqueness.penrose_generic' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.ConicTransport.Witness.contact' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.ConicTransport.scale_unique' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.ConicTransport.face_gauge_invariant' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Connection.ConicTransport.det_three_squares' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.ConicTransport.det_single_square' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.ConicTransport.four_squares_concurrent' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Connection.ConicTransport.face_balance' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.ConicTransport.square_mulVec' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.ConicTransport.concurrence_implies_balance' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Connection.ConicTransport.face_concurrent_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Connection.GeometricSurface.ConicNet.coherent_iff_weight' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Connection.GeometricSurface.conic_surface_last_face' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Connection.GeometricSurface.conic_total_holonomy' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Connection.GeometricSurface.PointLineNet.weight_val' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Connection.GeometricSurface.PointLineNet.coherent_iff_weight' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Connection.GeometricSurface.point_line_surface_last_face' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Connection.SurfaceApplications.conic_surface_from_tangencies' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Connection.SurfaceApplications.conic_cube_five_faces' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Connection.SurfaceApplications.point_line_cube_five_faces' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Connection.HyperplaneSurface.coherent_iff_minor' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Connection.HyperplaneSurface.Net.weight_val' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.HyperplaneSurface.Net.coherent_iff_weight' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Connection.HyperplaneSurface.hyperplane_surface_last_face' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Connection.TransportExamples.all_regular' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.TransportExamples.all_symmetric' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.TransportExamples.all_contacts' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.TransportExamples.nontrivial_transport' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Connection.TransportExamples.not_concurrent' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Presentation.linePair_eval' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Presentation.linePair_ne_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Presentation.pappus_via_pascal' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Presentation.contact_split_normalization' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Presentation.salmon_concurrence' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Presentation.salmon_factor' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Presentation.salmon_common_section' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Presentation.salmon_from_contacts' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Spatial.segre_on_quadric' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Spatial.same_ruling_polar' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Spatial.dandelin_tangent_plane' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Spatial.trace_incidence' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Spatial.plane_section_collinear' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Spatial.lift_rank_one' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.TorusExample.fifteen_faces' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.TorusExample.sixteenth_face' depends on axioms: [propext, Classical.choice, Quot.sound]

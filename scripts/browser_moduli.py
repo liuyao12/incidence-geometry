@@ -60,7 +60,7 @@ with sync_playwright() as pw:
     page.locator('[data-cube-face="0"]').click();page.wait_for_timeout(200)
     assert page.evaluate('incidenceStory.tour.running')
     assert page.evaluate('incidenceStory.state.selection')=='face:0'
-    assert 'concurrence residual' in page.locator('#story-readout').inner_text()
+    assert 'concurrence residual' in page.locator('#story-readout').text_content()
     # Cube orbit changes its camera only.
     camera=page.locator('#story-cube').get_attribute('data-camera')
     page.locator('#story-cube').focus();page.keyboard.press('ArrowRight');page.wait_for_timeout(80)

@@ -14,7 +14,7 @@ server=None
 if args.serve:
     server=ThreadingHTTPServer(('127.0.0.1',0),partial(SimpleHTTPRequestHandler,directory=str(ROOT)))
     threading.Thread(target=server.serve_forever,daemon=True).start()
-    base=f'http://127.0.0.1:{server.server_port}/'
+    base=f'http://127.0.0.1:{server.server_port}/lab.html'
 else: base=args.url
 results=[];errors=[];failures=[]
 
@@ -22,7 +22,7 @@ def load(page):
     if base:
         page.goto(base,wait_until='networkidle')
     else:
-        html=re.sub(r'<script\b[^>]*src="[^"]+"[^>]*></script>','',(ROOT/'index.html').read_text())
+        html=re.sub(r'<script\b[^>]*src="[^"]+"[^>]*></script>','',(ROOT/'lab.html').read_text())
         html=html.replace('<link rel="stylesheet" href="style.css">','<style>'+(ROOT/'style.css').read_text()+'</style>')
         page.set_content(html,wait_until='load')
         page.evaluate('v=>{window.fetch=async()=>new Response(JSON.stringify(v),{status:200,headers:{"Content-Type":"application/json"}})}',json.loads((ROOT/'verification.json').read_text()))

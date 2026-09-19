@@ -34,7 +34,8 @@ def load(page,name):
     page.wait_for_timeout(160)
 
 def move_handle(page,name,dx,dy,shift=False):
-    loc=page.locator(f'[data-handle="{name}"] circle');loc.scroll_into_view_if_needed()
+    page.locator('#drawing').scroll_into_view_if_needed();page.wait_for_timeout(100)
+    loc=page.locator(f'[data-handle="{name}"] circle')
     box=loc.bounding_box();assert box,name
     x=box['x']+box['width']/2;y=box['y']+box['height']/2
     if shift:page.keyboard.down('Shift')
@@ -104,7 +105,7 @@ with sync_playwright() as pw:
     for i in range(6):
         page.locator(f'[data-cube-face="{i}"]').click();page.wait_for_timeout(100)
         assert page.evaluate('incidenceStory.state.selection')==f'face:{i}'
-        assert 'concurrence residual' in page.locator('#story-readout').inner_text()
+        assert 'concurrence residual' in page.locator('#story-readout').text_content()
         assert page.locator(f'[data-cube-face="{i}"]').get_attribute('aria-pressed')=='true'
     page.locator('#cube-linked').uncheck();page.wait_for_timeout(120)
     assert '90.0° / 90.0° / 90.0°' in page.locator('#cube-metrics').inner_text()
@@ -144,8 +145,9 @@ with sync_playwright() as pw:
     assert 'All six' in page.locator('#fomin-readout').inner_text()
     checks.append('Separate Fomin page and exact reciprocal edge perturbation')
     load(page,'connections.html')
-    assert 'A full common geometric theorem has not yet been established' in page.locator('body').inner_text()
-    checks.append('Connections page keeps the conjectural status explicit')
+    assert 'Conic-contact surface theorem' in page.locator('body').text_content()
+    assert 'does not claim that every partial conic labeling can be completed' in page.locator('body').text_content()
+    checks.append('Conic-surface chapter states compatibility without overstating completion or novelty')
     assert not errors,errors
     assert not failed,failed
     browser.close()

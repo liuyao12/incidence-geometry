@@ -85,9 +85,9 @@ with sync_playwright() as pw:
  page.mouse.click(r['x']+sum(x for x,y in pts)/4,r['y']+sum(y for x,y in pts)/4);page.wait_for_timeout(90)
  assert page.evaluate('incidenceStory.state.selection')=='face:'+fid
  assert state()==before
- assert 'concurrence residual' in page.locator('#story-readout').inner_text()
+ assert 'concurrence residual' in page.locator('#story-readout').text_content()
  for i in range(6):
-  page.locator(f'[data-cube-face="{i}"]').click();page.wait_for_timeout(55);assert 'concurrence residual' in page.locator('#story-readout').inner_text()
+  page.locator(f'[data-cube-face="{i}"]').click();page.wait_for_timeout(55);assert 'concurrence residual' in page.locator('#story-readout').text_content()
  checks.append('Background orbit and actual face picking do not change conics; all six face highlights work')
  # Wander remains bidirectionally linked. Manual vector editing stops the tour.
  page.locator('#lock-chords').check();page.locator('#random-target').click();page.wait_for_timeout(250)

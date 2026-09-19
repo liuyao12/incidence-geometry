@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "checks": 150043,
+  "configurations": 242,
+  "seed": 20260919,
+  "maxContact": 4.188399794801621e-16,
+  "maxFace": 2.274060308836806e-16,
+  "scope": "Numerical software checks; theorem verification is independent and performed by Lean."
+}

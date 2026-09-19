@@ -8,3 +8,11 @@ import IncidenceCubes.Connection.LocalComparison
 import IncidenceCubes.Connection.DefectSurface
 import IncidenceCubes.Penrose.Theorem
 import IncidenceCubes.Penrose.Examples
+import IncidenceCubes.Connection.ConicTransport
+import IncidenceCubes.Connection.GeometricSurface
+import IncidenceCubes.Connection.SurfaceApplications
+import IncidenceCubes.Connection.HyperplaneSurface
+import IncidenceCubes.Connection.TransportExamples
+import IncidenceCubes.Classical.Presentation
+import IncidenceCubes.Classical.Spatial
+import IncidenceCubes.Connection.TorusExample

@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "publicTheorems": 225,
+  "axiomsObserved": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+  ],
+  "forbiddenAxiomsObserved": [],
+  "sourceInventoryMatches": true
+}

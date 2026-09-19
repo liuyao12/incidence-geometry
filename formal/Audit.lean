@@ -186,3 +186,55 @@ import IncidenceCubes
 #print axioms IncidenceCubes.Penrose.Uniqueness.two_pencils_unique
 #print axioms IncidenceCubes.Penrose.Uniqueness.completion_unique
 #print axioms IncidenceCubes.Penrose.Uniqueness.penrose_generic
+
+-- Fomin-to-conics contact transport and geometric surface theorems.
+#print axioms IncidenceCubes.Connection.ConicTransport.Witness.contact
+#print axioms IncidenceCubes.Connection.ConicTransport.scale_unique
+#print axioms IncidenceCubes.Connection.ConicTransport.face_gauge_invariant
+#print axioms IncidenceCubes.Connection.ConicTransport.det_three_squares
+#print axioms IncidenceCubes.Connection.ConicTransport.det_single_square
+#print axioms IncidenceCubes.Connection.ConicTransport.four_squares_concurrent
+#print axioms IncidenceCubes.Connection.ConicTransport.face_balance
+#print axioms IncidenceCubes.Connection.ConicTransport.square_mulVec
+#print axioms IncidenceCubes.Connection.ConicTransport.concurrence_implies_balance
+#print axioms IncidenceCubes.Connection.ConicTransport.face_concurrent_iff
+#print axioms IncidenceCubes.Connection.GeometricSurface.ConicNet.coherent_iff_weight
+#print axioms IncidenceCubes.Connection.GeometricSurface.conic_surface_last_face
+#print axioms IncidenceCubes.Connection.GeometricSurface.conic_total_holonomy
+#print axioms IncidenceCubes.Connection.GeometricSurface.PointLineNet.weight_val
+#print axioms IncidenceCubes.Connection.GeometricSurface.PointLineNet.coherent_iff_weight
+#print axioms IncidenceCubes.Connection.GeometricSurface.point_line_surface_last_face
+#print axioms IncidenceCubes.Connection.SurfaceApplications.conic_surface_from_tangencies
+#print axioms IncidenceCubes.Connection.SurfaceApplications.conic_cube_five_faces
+#print axioms IncidenceCubes.Connection.SurfaceApplications.point_line_cube_five_faces
+#print axioms IncidenceCubes.Connection.HyperplaneSurface.coherent_iff_minor
+#print axioms IncidenceCubes.Connection.HyperplaneSurface.Net.weight_val
+#print axioms IncidenceCubes.Connection.HyperplaneSurface.Net.coherent_iff_weight
+#print axioms IncidenceCubes.Connection.HyperplaneSurface.hyperplane_surface_last_face
+#print axioms IncidenceCubes.Connection.TransportExamples.all_regular
+#print axioms IncidenceCubes.Connection.TransportExamples.all_symmetric
+#print axioms IncidenceCubes.Connection.TransportExamples.all_contacts
+#print axioms IncidenceCubes.Connection.TransportExamples.nontrivial_transport
+#print axioms IncidenceCubes.Connection.TransportExamples.not_concurrent
+
+-- Classical/Presentation
+#print axioms IncidenceCubes.Presentation.linePair_eval
+#print axioms IncidenceCubes.Presentation.linePair_ne_zero
+#print axioms IncidenceCubes.Presentation.pappus_via_pascal
+#print axioms IncidenceCubes.Presentation.contact_split_normalization
+#print axioms IncidenceCubes.Presentation.salmon_concurrence
+#print axioms IncidenceCubes.Presentation.salmon_factor
+#print axioms IncidenceCubes.Presentation.salmon_common_section
+#print axioms IncidenceCubes.Presentation.salmon_from_contacts
+
+-- Classical/Spatial
+#print axioms IncidenceCubes.Spatial.segre_on_quadric
+#print axioms IncidenceCubes.Spatial.same_ruling_polar
+#print axioms IncidenceCubes.Spatial.dandelin_tangent_plane
+#print axioms IncidenceCubes.Spatial.trace_incidence
+#print axioms IncidenceCubes.Spatial.plane_section_collinear
+#print axioms IncidenceCubes.Spatial.lift_rank_one
+
+-- Connection/TorusExample
+#print axioms IncidenceCubes.Connection.TorusExample.fifteen_faces
+#print axioms IncidenceCubes.Connection.TorusExample.sixteenth_face
