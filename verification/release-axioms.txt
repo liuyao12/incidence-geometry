@@ -283,3 +283,26 @@
 'IncidenceCubes.Spatial.lift_rank_one' depends on axioms: [propext, Classical.choice, Quot.sound]
 'IncidenceCubes.Connection.TorusExample.fifteen_faces' depends on axioms: [propext, Classical.choice, Quot.sound]
 'IncidenceCubes.Connection.TorusExample.sixteenth_face' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.OrientedSurface.total_holonomy' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.OrientedSurface.region_boundary' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.OrientedSurface.internal_edge_cancels' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Connection.OrientedSurface.cyclic_face_concurrent_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Connection.OrientedSurface.ConicNet.side_relation' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Connection.OrientedSurface.ConicNet.coherent_iff_holonomy' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Connection.OrientedSurface.conic_surface_last_face' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Connection.OrientedSurface.coherent_region_boundary' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'IncidenceCubes.Connection.OrientedExample.not_bicolorable' depends on axioms: [propext]
+'IncidenceCubes.Connection.OrientedExample.first_eleven' depends on axioms: [propext, Classical.choice, Quot.sound]
+'IncidenceCubes.Connection.OrientedExample.twelfth_face' depends on axioms: [propext, Classical.choice, Quot.sound]

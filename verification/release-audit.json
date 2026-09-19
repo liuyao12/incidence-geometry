@@ -1,6 +1,6 @@
 {
   "status": "passed",
-  "publicTheorems": 225,
+  "publicTheorems": 236,
   "axiomsObserved": [
     "Classical.choice",
     "Quot.sound",

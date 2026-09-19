@@ -66,7 +66,7 @@ The three result chapters now have a shared statement-and-source appendix at `pr
 
 ## 19 September 2026: conic surface transport
 
-The locally checked extension in `Connection/ConicTransport.lean` proves that
+The extension in `Connection/ConicTransport.lean` proves that
 four chords of a proper double-contact conic square are concurrent exactly
 when their relative contact scales have trivial holonomy.
 `GeometricSurface.conic_surface_last_face` proves the resulting all-but-one
@@ -79,12 +79,40 @@ exact contact square whose holonomy is 2 and whose chords are not concurrent.
 The initial conic-surface milestone brought the inventory to 209 public theorems (28 added). See
 [the proof and scope](../research/FOMIN_TO_CONICS.md) and
 [local verification](../verification/conic-transport/verification.json).
-This is not a fresh GitHub CI run and has not been pushed by this session.
+That milestone is preserved as a dated record; the published release is checked again in GitHub CI.
 The conic surface rule and generic Penrose completion are related but distinct:
 the former assumes all vertex conics are supplied.
 
 ## Results-first release
 
-The library now includes **225 audited public theorems**. `Classical/Presentation` derives Pappus from Pascal and formalizes the compatible split-branch Salmon argument; `Classical/Spatial` checks the local ruled-quadric and plane-section identities; `Connection/TorusExample` instantiates the conic surface theorem on exact rational input and deduces the sixteenth face from the other fifteen.
+The original results-first release included **225 audited public theorems**. `Classical/Presentation` derives Pappus from Pascal and formalizes the compatible split-branch Salmon argument; `Classical/Spatial` checks the local ruled-quadric and plane-section identities; `Connection/TorusExample` instantiates the conic surface theorem on exact rational input and deduces the sixteenth face from the other fifteen.
 
 These local spatial lemmas do not replace the independent end-to-end Pascal proof or establish the full eight-quadric extrusion theorem. All new modules are imported by the root library and every public theorem is covered by `Audit.lean`. See [the page-to-theorem map](../theorem-map.json) and [the precise statements](../proofs.html).
+
+
+## Coloring-free conic surfaces and patch boundaries
+
+The reviewed library has **236 audited public theorems**.
+`Connection/OrientedSurface` removes the vertex-bicoloring restriction on the
+conic surface theorem while retaining its regular contact and distinct-chord
+hypotheses. Its input supplies actual cyclic vertex/edge incidence, not just
+a scalar cancellation condition. `region_boundary` proves the transport
+formula for any selected patch before assuming coherence. With several boundary
+components it controls their combined oriented product, not each separately.
+
+`Connection/OrientedExample` supplies an exact rational twelve-conic torus with
+a horizontal three-cycle, proves that it is not bicolorable, checks eleven
+face hypotheses and derives the twelfth by the new theorem. The generated
+scalar certificates are checked by Lean; no Python computations are trusted.
+
+```lean
+#check IncidenceCubes.Connection.OrientedSurface.conic_surface_last_face
+#check IncidenceCubes.Connection.OrientedSurface.region_boundary
+#check IncidenceCubes.Connection.OrientedSurface.coherent_region_boundary
+#check IncidenceCubes.Connection.OrientedExample.not_bicolorable
+#check IncidenceCubes.Connection.OrientedExample.twelfth_face
+```
+
+See [the strengthening and its scope](../research/ORIENTED_SURFACES.md). This
+is not an arbitrary-surface geometric existence or missing-conic completion
+theorem. No new singular-case claims are made.

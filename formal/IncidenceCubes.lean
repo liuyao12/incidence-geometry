@@ -16,3 +16,5 @@ import IncidenceCubes.Connection.TransportExamples
 import IncidenceCubes.Classical.Presentation
 import IncidenceCubes.Classical.Spatial
 import IncidenceCubes.Connection.TorusExample
+import IncidenceCubes.Connection.OrientedSurface
+import IncidenceCubes.Connection.OrientedExample

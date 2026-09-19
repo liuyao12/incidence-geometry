@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "checks": [
+    "Twelve-conic odd-cycle torus: all faces and contacts, without a vertex coloring",
+    "Cut-open periodic map preserves geometry and supports actual face picking",
+    "Patch selection cancels internal edges; the whole closed torus has empty boundary",
+    "Geometry edits cancel both a running trace and its stale explanatory text",
+    "Motion starts at the current configuration, pauses/resumes continuously, and preserves keyboard focus",
+    "Bookmarked equations, selected face, cut-open view, camera and patch restore exactly",
+    "Malformed bookmarks are rejected without breaking the default scene",
+    "Reduced-motion behavior and responsive layout down to 320px"
+  ],
+  "javascriptErrors": [],
+  "failedRequests": [],
+  "method": "HTTP-loaded actual assets"
+}

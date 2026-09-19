@@ -238,3 +238,16 @@ import IncidenceCubes
 -- Connection/TorusExample
 #print axioms IncidenceCubes.Connection.TorusExample.fifteen_faces
 #print axioms IncidenceCubes.Connection.TorusExample.sixteenth_face
+
+-- Orientation-only surface and boundary extension.
+#print axioms IncidenceCubes.Connection.OrientedSurface.total_holonomy
+#print axioms IncidenceCubes.Connection.OrientedSurface.region_boundary
+#print axioms IncidenceCubes.Connection.OrientedSurface.internal_edge_cancels
+#print axioms IncidenceCubes.Connection.OrientedSurface.cyclic_face_concurrent_iff
+#print axioms IncidenceCubes.Connection.OrientedSurface.ConicNet.side_relation
+#print axioms IncidenceCubes.Connection.OrientedSurface.ConicNet.coherent_iff_holonomy
+#print axioms IncidenceCubes.Connection.OrientedSurface.conic_surface_last_face
+#print axioms IncidenceCubes.Connection.OrientedSurface.coherent_region_boundary
+#print axioms IncidenceCubes.Connection.OrientedExample.not_bicolorable
+#print axioms IncidenceCubes.Connection.OrientedExample.first_eleven
+#print axioms IncidenceCubes.Connection.OrientedExample.twelfth_face

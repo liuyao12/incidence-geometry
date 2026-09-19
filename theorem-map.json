@@ -26,7 +26,12 @@
         "IncidenceCubes.Connection.ConicTransport.face_concurrent_iff",
         "IncidenceCubes.Connection.GeometricSurface.conic_surface_last_face",
         "IncidenceCubes.Connection.SurfaceApplications.conic_surface_from_tangencies",
-        "IncidenceCubes.Connection.TorusExample.sixteenth_face"
+        "IncidenceCubes.Connection.TorusExample.sixteenth_face",
+        "IncidenceCubes.Connection.OrientedSurface.conic_surface_last_face",
+        "IncidenceCubes.Connection.OrientedSurface.region_boundary",
+        "IncidenceCubes.Connection.OrientedSurface.coherent_region_boundary",
+        "IncidenceCubes.Connection.OrientedExample.not_bicolorable",
+        "IncidenceCubes.Connection.OrientedExample.twelfth_face"
       ]
     },
     {
@@ -45,7 +50,12 @@
         "IncidenceCubes.Penrose.Theorem.penrose_from_tangencies",
         "IncidenceCubes.Penrose.Uniqueness.penrose_generic",
         "IncidenceCubes.Presentation.pappus_via_pascal",
-        "IncidenceCubes.Presentation.salmon_from_contacts"
+        "IncidenceCubes.Presentation.salmon_from_contacts",
+        "IncidenceCubes.Connection.OrientedSurface.conic_surface_last_face",
+        "IncidenceCubes.Connection.OrientedSurface.region_boundary",
+        "IncidenceCubes.Connection.OrientedSurface.coherent_region_boundary",
+        "IncidenceCubes.Connection.OrientedExample.not_bicolorable",
+        "IncidenceCubes.Connection.OrientedExample.twelfth_face"
       ]
     }
   ]
