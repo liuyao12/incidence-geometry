@@ -29,7 +29,7 @@ jobs:
             theorem-map.json
             verification/release-source-hashes.json
           retention-days: 7
-      - name: Test mathematical engines, source fingerprints and internal references
+      - name: Test mathematical engines, generated source, fingerprints and references
         run: |
           node test.cjs
           node test-ganja.cjs
@@ -38,6 +38,8 @@ jobs:
           node test-moduli.cjs
           node test-vector-moduli.cjs
           node test-conic-net.cjs
+          node test-oriented-net.cjs
+          python3 scripts/generate_oriented_example.py
           python3 scripts/check_site_links.py
           python3 scripts/check_release_sources.py
       - uses: actions/setup-python@v5
@@ -55,6 +57,7 @@ jobs:
           python scripts/browser_focus.py --serve
           python scripts/browser_vectors.py --serve
           python scripts/browser_results.py --serve
+          python scripts/browser_review.py --serve
       - uses: leanprover/lean-action@v1
         with:
           lake-package-directory: formal
@@ -99,6 +102,10 @@ jobs:
             chern-eight-preview.png
             chern-mobile-preview.png
             conic-net-test-results.json
+            oriented-net-test-results.json
             results-browser-test-results.json
+            review-browser-test-results.json
+            review-surface-desktop.png
+            review-surface-mobile.png
             release-conic-surface-preview.png
             release-conic-surface-mobile.png
