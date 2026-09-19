@@ -12,7 +12,7 @@ concurrency:
 jobs:
   checks:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - name: Record formal source independently of build outcome
@@ -26,8 +26,10 @@ jobs:
             formal/README.md
             research/
             scripts/
+            theorem-map.json
+            verification/release-source-hashes.json
           retention-days: 7
-      - name: Test mathematical engines and internal references
+      - name: Test mathematical engines, source fingerprints and internal references
         run: |
           node test.cjs
           node test-ganja.cjs
@@ -35,35 +37,24 @@ jobs:
           node test-narrative.cjs
           node test-moduli.cjs
           node test-vector-moduli.cjs
+          node test-conic-net.cjs
           python3 scripts/check_site_links.py
+          python3 scripts/check_release_sources.py
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Test both HTTP-loaded interactives in Chromium
+      - name: Test all HTTP-loaded chapters and interaction regressions in Chromium
         shell: bash
         run: |
           set -euo pipefail
           pip install playwright==1.55.0
           python -m playwright install --with-deps chromium
-          python -m http.server 8000 > /tmp/incidence-http.log 2>&1 &
-          SERVER_PID=$!
-          trap 'kill "$SERVER_PID"' EXIT
-          python - <<'PY'
-          import time, urllib.request
-          for attempt in range(40):
-              try:
-                  urllib.request.urlopen('http://127.0.0.1:8000/lab.html', timeout=2)
-                  break
-              except OSError:
-                  time.sleep(.25)
-          else:
-              raise SystemExit('Local preview server did not start')
-          PY
-          python scripts/browser_smoke.py --url http://127.0.0.1:8000/lab.html
+          python scripts/browser_smoke.py --serve
           python scripts/browser_narrative.py --serve
           python scripts/browser_moduli.py --serve
           python scripts/browser_focus.py --serve
           python scripts/browser_vectors.py --serve
+          python scripts/browser_results.py --serve
       - uses: leanprover/lean-action@v1
         with:
           lake-package-directory: formal
@@ -107,3 +98,7 @@ jobs:
             ganja-mobile-preview.png
             chern-eight-preview.png
             chern-mobile-preview.png
+            conic-net-test-results.json
+            results-browser-test-results.json
+            release-conic-surface-preview.png
+            release-conic-surface-mobile.png
