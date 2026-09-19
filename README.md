@@ -18,7 +18,7 @@ See [NARRATIVE.md](NARRATIVE.md) for exact constructions and limitations.
 
 ## Formal verification
 
-The independent project under `formal/` pins Lean/mathlib 4.19.0. The classical and comparison milestone contains **87 audited public theorems**, including supporting lemmas. This visual release does not add formal theorems.
+The independent project under `formal/` pins Lean/mathlib 4.19.0. The library now contains **181 audited public theorems**, including supporting lemmas. The latest formal milestone proves generic Penrose existence and projective uniqueness from arbitrary seven-conic input, deriving the matrix parameters rather than assuming them. A second entry point starts with two-point tangencies. [Precise hypotheses, proof outline, and limits](formal/PENROSE_GENERIC.md). This is not yet the complete degenerate theorem or a common Penrose/Fomin master theorem.
 
 ```sh
 cd formal
@@ -30,7 +30,7 @@ python3 ../scripts/audit_axioms.py axiom-audit-current.txt
 
 [Formal inventory](formal/README.md) · [Research notes](research/COMMON_GENERALIZATION.md) · [CI](https://github.com/liuyao12/incidence-geometry/actions/workflows/ci.yml)
 
-Classical Pappus, Desargues, Pascal, Brianchon and the stated converse/duality results are checked under explicit hypotheses. Penrose's polynomial contact identities, surface cancellation, and local determinantal comparisons are also checked. Arbitrary-input Penrose normalization/completion, full geometric surface assembly, and a common geometric master theorem remain separate tasks. Numerical animations do not supply Lean evidence.
+Classical Pappus, Desargues, Pascal, Brianchon and the stated converse/duality results are checked under explicit hypotheses. Penrose's polynomial contact identities, surface cancellation, and local determinantal comparisons are also checked. Generic arbitrary-input Penrose normalization and projective completion/uniqueness are now checked. Removing their geometric restrictions, full geometric surface assembly, and a common geometric master theorem remain separate tasks. Numerical animations do not supply Lean evidence.
 
 ## Implementation and tests
 

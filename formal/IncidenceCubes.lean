@@ -6,3 +6,5 @@ import IncidenceCubes.Classical
 import IncidenceCubes.Connection.Determinantal
 import IncidenceCubes.Connection.LocalComparison
 import IncidenceCubes.Connection.DefectSurface
+import IncidenceCubes.Penrose.Theorem
+import IncidenceCubes.Penrose.Examples

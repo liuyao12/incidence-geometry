@@ -9,6 +9,23 @@ lake env lean Audit.lean > axiom-audit-current.txt
 python3 ../scripts/audit_axioms.py axiom-audit-current.txt
 ```
 
+## Generic Penrose theorem (19 September 2026)
+
+The library now proves existence and projective uniqueness of an eighth conic
+from arbitrary seven-conic input on an explicit generic locus. Matrix parameters
+are derived, not assumed. A second entry point accepts two-point tangencies and
+derives all rank-one contact relations. See [the precise statement and limitations](PENROSE_GENERIC.md).
+
+```lean
+#check IncidenceCubes.Penrose.Uniqueness.penrose_generic
+#check IncidenceCubes.Penrose.Theorem.penrose_from_tangencies
+```
+
+There are now **181 audited public theorems**, including supporting lemmas. The
+output conic is not required to be nonsingular, and existence of two distinct
+contact section points over the base field remains separate. This does not
+cover all complete-conic degenerations or establish a common Fomin/Penrose master theorem.
+
 ## Classical baseline
 
 The statements use arbitrary homogeneous coordinates over a **commutative field**, independently of either master theorem and independently of the demo's parametrized examples. Polynomial identities also hold over commutative rings. Desargues over arbitrary noncommutative division rings is not claimed.
@@ -36,7 +53,7 @@ The API currently uses homogeneous representatives, not a new quotient datatype.
 
 `Connection/DefectSurface` retains normalized determinant defects in the global surface product, proves factorized and square specializations, and identifies a positivity obstruction to naive square gluing.
 
-The original `Penrose/Algebra`, `Fomin/Surface`, `Fomin/Coherence`, and `Connection/Veronese` remain imported. A full geometric reduction between the two papers is NOT claimed. In particular, arbitrary-input Penrose normalization, full completion/uniqueness, and global minor-chart realizations remain separate tasks. See [the research notes](../research/COMMON_GENERALIZATION.md).
+The original `Penrose/Algebra`, `Fomin/Surface`, `Fomin/Coherence`, and `Connection/Veronese` remain imported. A full geometric reduction between the two papers is NOT claimed. Generic arbitrary-input Penrose normalization and completion/uniqueness are now proved. Removing their explicit geometric restrictions and providing global minor-chart realizations remain separate tasks. See [the research notes](../research/COMMON_GENERALIZATION.md).
 
 ## Reproducibility
 
