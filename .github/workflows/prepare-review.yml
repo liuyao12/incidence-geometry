@@ -1,0 +1,90 @@
+name: Review oriented conic surfaces
+on:
+  push:
+    branches: ['work/oriented-surface-review']
+    paths: ['.release/**', '.github/workflows/prepare-review.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: oriented-surface-review
+  cancel-in-progress: true
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: work/oriented-surface-review
+      - name: Assemble the reviewed source and validate fingerprints
+        run: python3 .release/assemble-review.py
+      - name: Test mathematics and references
+        run: |
+          node test.cjs
+          node test-ganja.cjs
+          node test-chern.cjs
+          node test-narrative.cjs
+          node test-moduli.cjs
+          node test-vector-moduli.cjs
+          node test-conic-net.cjs
+          node test-oriented-net.cjs
+          python3 scripts/generate_oriented_example.py
+          python3 scripts/check_release_sources.py
+          python3 scripts/check_site_links.py
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test all seven browser suites over HTTP
+        run: |
+          pip install playwright==1.55.0
+          python -m playwright install --with-deps chromium
+          python scripts/browser_smoke.py --serve
+          python scripts/browser_narrative.py --serve
+          python scripts/browser_moduli.py --serve
+          python scripts/browser_focus.py --serve
+          python scripts/browser_vectors.py --serve
+          python scripts/browser_results.py --serve
+          python scripts/browser_review.py --serve
+      - uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: formal
+          use-mathlib-cache: 'true'
+          build: 'true'
+          test: 'false'
+          lint: 'false'
+      - name: Audit all public theorems
+        working-directory: formal
+        shell: bash
+        run: |
+          set -euo pipefail
+          lake env lean Audit.lean | tee ../verification/release-axioms.txt
+          python3 ../scripts/audit_axioms.py ../verification/release-axioms.txt | tee ../verification/release-audit.json
+      - name: Commit verified ordinary sources on the development branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          python3 - <<'PY'
+          import json,subprocess
+          paths=json.load(open('.release/paths.json'))
+          subprocess.run(['git','add','--',*paths],check=True)
+          PY
+          git diff --cached --stat
+          git commit -m 'Strengthen conic surfaces without coloring and add boundary exploration'
+          git push origin HEAD:work/oriented-surface-review
+          git rev-parse HEAD > .release/verified-commit.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: oriented-surface-review
+          path: |
+            verification/release-axioms.txt
+            verification/release-audit.json
+            .release/verified-commit.txt
+            *test-results.json
+            *browser-test-results.json
+            review-surface-*.png
+            release-conic-surface-*.png
+            narrative-dandelin-preview.png
