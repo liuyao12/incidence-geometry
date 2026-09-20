@@ -1,0 +1,22 @@
+{
+  "status": "passed",
+  "checks": [
+    "Three prominent theorem statements; all four exposition pages typeset without errors or leftover TeX",
+    "Display equations and expanded hypotheses fit at 1440, 1000, 820, 390 and 360 pixels",
+    "Every formula has assistive MathML; geometry SVG/canvas are not rewritten by MathJax",
+    "Forward/backward continuous geometry and point dragging still work after typesetting",
+    "Fomin exact edge cancellation controls remain independent of LaTeX rendering",
+    "Conic torus face selection, concurrence, odd-cycle example and cut-open view remain interactive"
+  ],
+  "formulas": {
+    "index.html": 50,
+    "fomin.html": 30,
+    "connections.html": 40,
+    "proofs.html": 12
+  },
+  "javascriptErrors": [],
+  "failedRequests": [],
+  "externalRequests": [],
+  "method": "HTTP-loaded actual assets",
+  "scope": "Theorem presentation and math rendering; no mathematical algorithms or Lean statements changed."
+}
