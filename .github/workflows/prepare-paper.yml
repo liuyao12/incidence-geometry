@@ -1,0 +1,92 @@
+name: Validate paper-like continuous journey
+on:
+  push:
+    branches: ['work/paper-journey-20260920']
+    paths: ['.release/paper*', '.github/workflows/prepare-paper.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: prepare-paper-journey
+  cancel-in-progress: true
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: work/paper-journey-20260920
+      - name: Assemble and fingerprint the tested source edits
+        run: python3 .release/paper-assemble.py
+      - name: Check all mathematical engines and internal references
+        run: |
+          node test.cjs
+          node test-ganja.cjs
+          node test-chern.cjs
+          node test-narrative.cjs
+          node test-moduli.cjs
+          node test-vector-moduli.cjs
+          node test-conic-net.cjs
+          node test-oriented-net.cjs
+          node test-journey-view.cjs
+          python3 scripts/generate_oriented_example.py
+          python3 scripts/check_site_links.py
+          python3 scripts/check_release_sources.py
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run all eight suites on real HTTP-loaded pages
+        run: |
+          pip install playwright==1.55.0
+          python -m playwright install --with-deps chromium
+          python scripts/browser_smoke.py --serve
+          python scripts/browser_narrative.py --serve
+          python scripts/browser_moduli.py --serve
+          python scripts/browser_focus.py --serve
+          python scripts/browser_vectors.py --serve
+          python scripts/browser_results.py --serve
+          python scripts/browser_review.py --serve
+          python scripts/browser_journey_view.py --serve
+      - uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: formal
+          use-mathlib-cache: 'true'
+          build: 'true'
+          test: 'false'
+          lint: 'false'
+      - name: Audit every public theorem
+        working-directory: formal
+        shell: bash
+        run: |
+          set -euo pipefail
+          lake env lean Audit.lean | tee axiom-audit-current.txt
+          python3 ../scripts/audit_axioms.py axiom-audit-current.txt | tee audit-report.json
+      - name: Commit only tested ordinary source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          python3 - <<'PY'
+          import json, subprocess
+          paths = [p for p in json.load(open('.release/paper-paths.json')) if not p.startswith('.github/')]
+          subprocess.run(['git','add','--',*paths],check=True)
+          PY
+          git diff --cached --stat
+          git commit -m 'Use paper-like opening geometry and one editable family throughout the journey'
+          git push origin HEAD:work/paper-journey-20260920
+          git rev-parse HEAD > .release/paper-verified-commit.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: paper-journey-verification
+          path: |
+            formal/axiom-audit-current.txt
+            formal/audit-report.json
+            .release/paper-verified-commit.txt
+            *test-results.json
+            *browser-test-results.json
+            paper-stage-*.png
+            paper-journey-*.png
+            narrative-dandelin-preview.png
