@@ -1,0 +1,55 @@
+name: Apply requested chapter title
+on:
+  push:
+    branches: ['work/title-pappus-pascal-penrose']
+    paths: ['.github/workflows/rename-chapter.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  rename:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: work/title-pappus-pascal-penrose
+      - name: Apply exact title without changing the mathematics or interactions
+        run: |
+          python3 scripts/check_release_sources.py
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib, json
+          title = 'From Pappus, to Pascal, to Penrose'
+          names = ['index.html', 'fomin.html', 'connections.html', 'proofs.html', 'README.md']
+          for name in names:
+              path = Path(name)
+              text = path.read_text(encoding='utf-8')
+              assert 'The three P’s' in text, name
+              text = text.replace('The three P’s', title)
+              if name == 'index.html':
+                  old = '<title>From Pappus to Penrose · Incidence Geometry</title>'
+                  assert old in text
+                  text = text.replace(old, f'<title>{title} · Incidence Geometry</title>')
+                  heading = f'<h1>{title}.</h1>'
+                  assert heading in text
+                  text = text.replace(heading, '<h1>From Pappus,<br/>to Pascal,<br/>to Penrose</h1>')
+                  assert 'id="salmon"' in text
+              path.write_text(text, encoding='utf-8')
+          manifest = Path('verification/release-source-hashes.json')
+          data = json.loads(manifest.read_text())
+          for name in names:
+              assert name in data['files']
+              data['files'][name] = hashlib.sha256(Path(name).read_bytes()).hexdigest()
+          manifest.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n')
+          PY
+          python3 scripts/check_site_links.py
+          python3 scripts/check_release_sources.py
+      - name: Commit only the updated labels and source fingerprints
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html fomin.html connections.html proofs.html README.md verification/release-source-hashes.json
+          git diff --cached --stat
+          git commit -m 'Rename chapter to From Pappus, to Pascal, to Penrose'
+          git push origin HEAD:work/title-pappus-pascal-penrose
