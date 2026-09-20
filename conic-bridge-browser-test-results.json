@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "checks": [
+    "Two parent chapters and their precise mathematical roles are linked; completion and compatibility are distinguished",
+    "All six cubical faces and all 24 directed face-edge inspections retain contact and concurrence",
+    "Independent cube camera and actual face picking change only the inspection, not the conics",
+    "Complementary three-face patches have exactly the same six contact edges and opposite boundary orientations",
+    "Cube deformations, equation rescaling, reduced-motion trace and saved-state recovery use the same contact construction",
+    "Old surface examples remain available; new LaTeX, cube and chapter links fit widths from 320 to 1440 pixels"
+  ],
+  "javascriptErrors": [],
+  "failedRequests": [],
+  "method": "Offline-assembled actual local assets",
+  "scope": "Presentation and example checks; no additional Lean claims"
+}

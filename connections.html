@@ -1,8 +1,18 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="A conic-contact surface theorem: double contact along edges, concurrency on all but one face forces the last. Interactive sixteen-conic torus."><title>Conic contact on surfaces · Incidence Geometry</title><link rel="stylesheet" href="narrative.css"><script defer src="vendor/ganja.js"></script><script defer src="engine.js"></script><script defer src="pga.js"></script><script defer src="ganja-view.js"></script><script defer src="narrative-math.js"></script><script defer src="conic-net.js"></script><script defer src="conic-surface-page.js"></script><link rel="stylesheet" href="math.css"><link rel="stylesheet" href="columns.css"><script defer src="columns.js"></script><script defer src="math-config.js"></script><script defer src="vendor/mathjax/tex-svg.js"></script></head><body class="chapter-page"><nav class="site-nav" aria-label="Chapters"><a class="brand" href="index.html">Incidence <span>Geometry</span></a><div><a href="index.html">From Pappus, to Pascal, to Penrose</a><a href="fomin.html">Incidence on surfaces</a><a href="connections.html" aria-current="page">Conic contact on surfaces</a></div><a class="source-nav" href="proofs.html">Theorems &amp; sources ↗</a></nav><main class="narrative"><div class="reading-layout"><article class="prose" id="chapter-text"><header class="hero"><p class="eyebrow">03 / From incidence to contact</p><h1>Conics<br>on a surface.</h1><p class="dek">Local contact.<br>Global concurrence.</p><p class="hero-note">Keep the closed surface. Replace its point–line labels by conics. Double contact supplies the relation on edges; concurrency is forced around the final face.</p><p class="chapter-route"><a href="#main-theorem">Main theorem</a> · Read one face first; then glue the faces.<br><a href="#patches">Boundary formula</a> · <a href="#odd-cycle">Why no vertex coloring is needed</a></p><a class="column-jump" href="#interactive">Back to the interactive ↑</a></header>
-
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Combine Penrose’s conic-contact geometry with Fomin–Pylyavskyy’s surface principle. Explore the same Penrose cube, its complementary patches, and conic-labeled tori."><title>Conic contact on surfaces · Incidence Geometry</title><link rel="stylesheet" href="narrative.css"><script defer src="vendor/ganja.js"></script><script defer src="engine.js"></script><script defer src="pga.js"></script><script defer src="ganja-view.js"></script><script defer src="narrative-math.js"></script><script defer src="journey-view.js"></script><script defer src="conic-cube.js"></script><script defer src="conic-net.js"></script><script defer src="conic-surface-page.js"></script><link rel="stylesheet" href="math.css"><link rel="stylesheet" href="columns.css"><link rel="stylesheet" href="conic-connections.css"><script defer src="columns.js"></script><script defer src="math-config.js"></script><script defer src="vendor/mathjax/tex-svg.js"></script></head><body class="chapter-page"><nav class="site-nav" aria-label="Chapters"><a class="brand" href="index.html">Incidence <span>Geometry</span></a><div><a href="index.html">From Pappus, to Pascal, to Penrose</a><a href="fomin.html">Incidence on surfaces</a><a href="connections.html" aria-current="page">Conic contact on surfaces</a></div><a class="source-nav" href="proofs.html">Theorems &amp; sources ↗</a></nav><main class="narrative"><div class="reading-layout"><article class="prose" id="chapter-text"><header class="hero">
+<p class="eyebrow">03 / Where the two chapters meet</p>
+<h1>Conic contact<br>on surfaces.</h1>
+<p class="dek">Penrose’s local geometry.<br>Fomin’s global principle.</p>
+<p class="hero-note">The first chapter changed the objects, from points and lines to conics. The second changed the organizing diagram, from a cube to a tiled surface. Here we bring those two changes together.</p>
+<div class="parent-chapters" aria-label="Connections to the preceding chapters">
+<a href="index.html#penrose"><span class="mini-label">01 / From Pappus to Penrose</span><strong>Keep the contact geometry.</strong><span>Conics at vertices; double contact along edges; concurrent contact chords around a face.</span></a>
+<a href="fomin.html#main-theorem"><span class="mini-label">02 / Incidence on surfaces</span><strong>Keep the surface principle.</strong><span>A local geometric condition on each tile; all but one tile force the last.</span></a>
+</div>
+<p class="chapter-route"><a href="#main-theorem">Main theorem</a> · <a href="#from-penrose">Penrose’s cube</a> → <a href="#from-fomin">Fomin’s rule</a> → <a href="#conic-torus">Beyond the cube</a><br><a href="#patches">Boundary formula</a> · <a href="#odd-cycle">No coloring required</a></p>
+<a class="column-jump" href="#interactive">Back to the interactive ↑</a>
+</header>
 <section id="main-theorem" class="main-theorem" aria-labelledby="main-theorem-title">
 <p class="chapter-number">The main theorem</p>
-<h2 id="main-theorem-title">The conic-contact surface theorem</h2>
+<h2 id="main-theorem-title">Conic-contact surface theorem</h2>
 <div class="theorem-statement">
 <p>Let \(K\) be a field with \(\operatorname{char}K\ne2\), and let \(\Sigma\) be a finite closed oriented quadrangulated surface. Assign a nonsingular conic \(C_v\subset\mathbb P^2(K)\) to every vertex \(v\). Adjacent conics are in proper contact along a chord \(\ell_e\). On every face, a specified pair of consecutive contact chords is distinct.</p>
 <p>For a face \(f\) with consecutive chords \(\ell_{f,0},\ldots,\ell_{f,3}\), write \(\mathcal C(f)\) for their concurrence:
@@ -29,23 +39,136 @@ The chord is the projective line \(\mathbb P(\ker\ell_e)\). The intersection in 
 </details>
 <p class="theorem-source"><a href="proofs.html#surfaces">Precise scope and formal proof</a> · <a href="formal/IncidenceCubes/Connection/OrientedSurface.lean">Coloring-free surface and boundary theorems</a></p>
 </section>
-
-<section><p class="chapter-number">01 / The surface theorem</p><h2>Four chords per face.<br>One face forced.</h2><div class="result"><span class="result-label">Conic-contact surface theorem</span><p>Assign a nonsingular conic to each vertex of a finite closed oriented quadrangulation. Adjacent conics are in proper double contact. On each face, a specified adjacent pair of contact chords is distinct.</p><p>If the four contact chords are concurrent on every face except one, they are concurrent on the remaining face.</p></div><p>No black–white vertex coloring is needed: both ends of an edge carry conics. This is a theorem about conics and their original contact chords—not arbitrary scalar edge values, and not only conics produced by one global matrix formula.</p><p class="try">Turn the torus. Select a face: its four labels become four conics in the large drawing. Click one edge value to inspect its two contacts. Reveal the concurrence on the selected face.</p></section>
-<section><p class="chapter-number">02 / Read the contact</p><h2>Each edge carries<br>a relative scale.</h2><p>Choose homogeneous quadratic equations for the conics. Proper contact along ℓ means</p><div class="equation">\[
- \begin{gathered}Q_v=\lambda_{uv}Q_u+\mu_{uv}\ell_e\ell_e^{\mathsf T},\\\lambda_{uv},\mu_{uv}\in K^\times.\end{gathered}
-\]</div><p>The coefficient \(\lambda\) is unique. If two choices differed, a nonsingular rank-three matrix would be a difference of two rank-one matrices. That is impossible.</p><p>Reversing the edge replaces \(\lambda_{uv}\) by \(\lambda_{vu}=\lambda_{uv}^{-1}\). Rescaling the equation at a vertex changes neighboring edge values, but does not change the conic. Around a face, the scale changes cancel.</p><p class="try">Change <em>Equation scales</em>. The numbers on the four edges move; the conics, chords, concurrence point and face product do not.</p></section>
-<section><p class="chapter-number">03 / The short proof</p><h2>Travel around<br>one face.</h2><p>Multiply the relative scales along the oriented boundary of a face. Call the product \(H_f\). Returning with \(H_f=1\) is exactly the condition that the four contact chords are concurrent.</p><div class="equation">\[
- \begin{gathered}H_f=\prod_{i=0}^{3}\lambda_{v_iv_{i+1}},\\v_4=v_0,\\H_f=1\quad\Longleftrightarrow\quad\mathcal C(f).\end{gathered}
-\]</div><details class="short-proof"><summary>Why the equivalence holds</summary><p>Substituting the four contact relations around a face gives</p><div class="equation">\[
- \begin{gathered}(1-H_f)Q=\sum_{i=0}^{3}\nu_i\ell_i\ell_i^{\mathsf T},\\\nu_i\in K^\times.\end{gathered}
-\]</div><p>If the chords meet at \([x]\), applying this identity to \(x\) gives \((1-H_f)Qx=0\). Nonsingularity implies \(Qx\ne0\), so \(H_f=1\).</p><p>Conversely, \(H_f=1\) gives a relation among four rank-one squares. Three independent chord covectors would make the sum of their three nonzero weighted squares invertible. But it equals a single rank-one square. Therefore the chords span at most a two-dimensional covector space and have a common nonzero annihilator.</p></details><p>On a closed oriented surface, each edge is traversed once each way:</p><div class="equation">\[
+<section id="from-penrose">
+<p class="chapter-number">01 / From the first chapter</p>
+<h2>Keep Penrose’s face.<br>Change the question.</h2>
+<p>In <a href="index.html#main-theorem">Penrose’s theorem</a>, the cube is partly labeled: seven conics and the contacts between them are given. The theorem supplies the missing conic \(C_{123}\). The four contact chords around each newly completed face are concurrent.</p>
+<p>Now start with <strong>all eight nonsingular conics and all twelve contacts already supplied</strong>. Forget the concurrence on one face. Can the five others recover it? The surface theorem says yes:</p>
+<div class="equation">\[
+ \begin{gathered}
+ H_1H_2H_3H_4H_5H_6=1,\\
+ H_1=\cdots=H_5=1\\
+ \Longrightarrow\quad H_6=1.
+ \end{gathered}
+\]</div>
+<p>This is exactly Penrose’s face geometry, but a different implication: <em>seven conics determine an eighth</em> is a completion theorem; <em>five coherent faces force the sixth</em> is a compatibility theorem.</p>
+<p class="try"><button data-net-example="cube">Inspect the Penrose cube</button> Select any face and reveal its concurrence. The conics use the same opening family and projective viewpoint as chapter 1; the dashed curve is \(C_{123}\). Turn on <em>All conics in context</em> to recognize the whole configuration.</p>
+<p>The cube is a quadrangulation of a sphere. Nothing in the new implication requires this particular sphere: the same face geometry can be organized on other closed oriented quadrangulations.</p>
+<p class="source-line"><a href="index.html?stage=penrose#penrose">Return to the editable Penrose configuration ↗</a></p>
+</section>
+<section id="from-fomin">
+<p class="chapter-number">02 / From the second chapter</p>
+<h2>Keep Fomin’s rule.<br>Change the labels.</h2>
+<p><a href="fomin.html#main-theorem">Fomin–Pylyavskyy’s theorem</a> labels alternating vertices by points and hyperplanes. In the plane, a tile is coherent when the join of its two points contains the intersection of its two lines. Our tile has conics at all four vertices, and its four contact chords must concur.</p>
+<div class="geometry-dictionary">
+<div><h3>Point–line geometry</h3><p>Along an edge: non-incidence, \(\ell(a)\ne0\).</p><p>A coherent face:</p>\[
+ \overline{AB}\ni H_\ell\cap H_m.
+\]<p>The local test:</p>\[
+ r_f=\frac{\ell(a)m(b)}{\ell(b)m(a)}=1.
+\]</div>
+<div><h3>Conic-contact geometry</h3><p>Along an edge: proper double contact.</p><p>A coherent face:</p>\[
+ \bigcap_{i=0}^{3}\ker\ell_{f,i}\ne\{0\}.
+\]<p>The local test:</p>\[
+ H_f=\prod_{i=0}^{3}\lambda_{v_iv_{i+1}}=1.
+\]</div>
+</div>
+<p>For Fomin, a nonzero point–hyperplane pairing supplies the edge value. For conics, double contact supplies a <em>relative scale</em> between the two equations. In either case, reversing the oriented traversal uses the reciprocal. The proof closes by canceling each edge against its reverse.</p>
+<p>The second chapter’s <a href="fomin.html#desargues">Desargues example</a> uses the same six-face sphere as the cube above. Its <a href="fomin.html#pappus">Pappus example</a> instead uses a nine-face torus. Those examples suggest the move beyond the cube; the conic torus below has a different, sixteen-face tiling.</p>
+<p class="note">This is a common compatibility mechanism, not a pointwise conversion of an arbitrary point–line configuration into contacting conics. No such conversion is needed for the surface theorem.</p>
+</section>
+<section id="contact-scale">
+<p class="chapter-number">03 / The new geometric ingredient</p>
+<h2>Contact itself<br>supplies the scale.</h2>
+<p>The rank-one relation from <a href="index.html#contact">the first chapter’s contact rule</a> is</p>
+<div class="equation">\[
+ \begin{gathered}
+ Q_v=\lambda_{uv}Q_u+\mu_{uv}\ell_e\ell_e^{\mathsf T},\\
+ \lambda_{uv},\mu_{uv}\in K^\times.
+ \end{gathered}
+\]</div>
+<p>The coefficient \(\lambda_{uv}\) is unique. Two different choices would express a nonsingular rank-three matrix as a difference of two rank-one matrices. This is impossible. The edge value therefore comes from the conics themselves, not from additional arbitrary weights.</p>
+<p>Reversal gives \(\lambda_{vu}=\lambda_{uv}^{-1}\). Changing representatives by \(Q_v\mapsto s_vQ_v\) changes the value by</p>
+<div class="equation">\[
+ \lambda_{uv}\longmapsto\frac{s_v}{s_u}\lambda_{uv}.
+\]</div>
+<p>All vertex factors cancel around a face. Thus its transport \(H_f\) is independent of the equations chosen to represent the conics—just as Fomin’s ratio \(r_f\) is independent of point and line representatives.</p>
+<p class="try">Move <em>Equation scales</em>, then press <em>Follow scale</em>. Edge values change without moving a conic. The accumulated scale still returns to \(1\).</p>
+</section>
+<section id="local-to-global">
+<p class="chapter-number">04 / The bridge in the proof</p>
+<h2>A conic lemma.<br>A surface cancellation.</h2>
+<p>The local geometric statement is the essential new step:</p>
+<div class="equation">\[
+ \begin{gathered}
+ H_f=1\\
+ \Longleftrightarrow\\
+ \text{the four contact chords concur}.
+ \end{gathered}
+\]</div>
+<details class="short-proof"><summary>Why the equivalence holds</summary>
+<p>Substituting the four contact relations around a face gives</p>
+<div class="equation">\[
+ \begin{gathered}
+ (1-H_f)Q=\sum_{i=0}^{3}\nu_i\ell_i\ell_i^{\mathsf T},\\
+ \nu_i\in K^\times.
+ \end{gathered}
+\]</div>
+<p>If the chords meet at \([x]\), applying this identity to \(x\) gives \((1-H_f)Qx=0\). Nonsingularity implies \(Qx\ne0\), so \(H_f=1\). The concurrence point need not lie off the conic.</p>
+<p>Conversely, \(H_f=1\) gives a relation among four rank-one squares. Three independent chord covectors would make the sum of their three nonzero weighted squares invertible. But the relation makes that sum a single rank-one square. Hence the four covectors span at most a two-dimensional space and have a common nonzero annihilator.</p>
+</details>
+<p>Now the <a href="fomin.html#fomin-surface">second chapter’s proof</a> applies unchanged: orient all faces consistently; each edge occurs once in each direction; hence</p>
+<div class="equation">\[
  \prod_{f\in\mathcal F}H_f=1.
-\]</div><p>If all but one face have \(H_f=1\), so does the last. The local equivalence turns that scalar balance back into geometric concurrence.</p></section>
-<section><p class="chapter-number">04 / More than a cube</p><h2>A torus of<br>contacting conics.</h2><p>The example has sixteen conics and thirty-two contact edges. Every face has four distinct contact chords, and the sixteen faces have distinct concurrence points. All contacts in this chosen real family split into two real points.</p><p>The torus is the gluing diagram. It is not a surface on which the conics are embedded. Moving the controls changes actual quadratic equations and recomputes their contacts; changing the torus camera does neither.</p><p>Fifteen concurrences can be checked directly. The surface theorem proves the sixteenth. Nothing in the proof depends on the torus having been drawn in three-dimensional Euclidean space.</p><p class="try"><button data-net-example="torus">Explore the conic torus</button></p></section>
-<section id="patches"><p class="chapter-number">05 / A boundary formula</p><h2>Cut out a patch.<br>Keep its boundary.</h2><p>The same argument works before the surface closes. Multiply the face transports in any patch: each internal edge cancels with its reverse. Only the boundary remains.</p><div class="equation">\[
- \prod_{f\in\mathcal R}H_f=\prod_{e\in\partial\mathcal R}\lambda_e^{\varepsilon_e}.
-\]</div><p>Here \(\mathcal R\) is the chosen set of faces and \(\varepsilon_e=\pm1\) records the induced boundary orientation. A patch of coherent faces therefore has total boundary transport \(1\). For a patch with several boundary components, the statement concerns their combined oriented product.</p><p class="try">Open <em>Explore the boundary of a patch</em> and choose <em>2 × 2 patch</em>. Four internal edges disappear from the product; eight boundary edges remain. <em>Whole surface</em> leaves no boundary at all.</p></section>
-<section id="odd-cycle"><p class="chapter-number">06 / No coloring required</p><h2>Three steps<br>around the torus.</h2><p>The twelve-conic example has a loop of three edges, so its vertices cannot alternate black and white. Yet its quadrilateral faces obey the same contact and concurrence rule. A separately specified exact rational example is checked in Lean: eleven face conditions are verified, and the twelfth follows from the theorem.</p><p>The cut-open view shows the gluing clearly. Opposite sides with matching colors represent the same edges. The opposite boundary occurrences refer to the same labeled edges.</p><p class="try"><button data-net-example="odd">Explore the odd-cycle torus</button></p></section>
-<section><p class="chapter-number">07 / Why the face condition matters</p><h2>Double contact alone<br>is not enough.</h2><p>Four conics may have double contact around a quadrilateral without their chords meeting. In the second example, the accumulated scale is \(H_f=2\). The first two chords intersect, but the remaining chords do not go through that point.</p><p>This is not a counterexample to the surface theorem: it is one noncoherent face, not a closed surface whose other faces satisfy the hypotheses.</p><p class="try"><button data-net-example="square">See the noncoherent quadrilateral</button></p></section>
-<section><p class="chapter-number">08 / Fomin and Penrose</p><h2>A compatibility law.<br>A completion rule.</h2><p>Fomin–Pylyavskyy’s theorem uses point–hyperplane pairings. The conic theorem uses the scale supplied by double contact. Both turn geometric face conditions into a product equal to \(1\), then use oriented edge cancellation.</p><p>Penrose provides the complementary existence result: on a generic three-face cube patch, construct the missing eighth conic. Where that completion is regular, the opposite three-face patch gives another coherent configuration with the same boundary data.</p><p>The surface theorem assumes its vertex labels are already supplied. It does not claim that every partial conic labeling can be completed, or that every Fomin configuration has already been realized as a degeneration of conics.</p><p><a class="chapter-next" href="index.html?stage=penrose">Return to Penrose’s local completion →</a></p></section>
-<section><h2>Sources and statements.</h2><p>The contact-pencil geometry comes from <a href="https://arxiv.org/html/2409.17150v8">Penrose’s eight-conic theorem</a>; the surface argument follows the framework of <a href="https://arxiv.org/abs/2305.07728">Incidences and tilings</a>.</p><p><a href="proofs.html#surfaces">Formal statements, example data and literature comparison ↗</a></p></section></article><aside class="interactive-column" id="interactive" aria-label="Interactive geometry"><div class="laboratory surface-laboratory" id="surface-laboratory"><header class="lab-title"><div><span class="mini-label">A labeled surface and its conics</span><h3 id="surface-title">One face of a conic torus</h3></div><a class="column-jump" href="#chapter-text">Read the chapter ↓</a></header><div class="surface-toolbar"><select id="surface-example" aria-label="Contact example"><option value="torus">Sixteen-conic torus</option><option value="odd">Twelve-conic torus · odd cycle</option><option value="square">Noncoherent quadrilateral</option></select><button id="reveal-face">Reveal concurrence</button></div><div id="surface-drawing" class="drawing"><div id="surface-geometry"></div><button id="surface-fit">Fit</button></div><div id="surface-legend" class="scene-legend"></div><p id="surface-status" class="readout" role="status"></p><div class="net-layout"><div><div class="topology-actions"><button type="button" id="net-map" aria-pressed="false">Cut open</button><button type="button" id="net-reset">Reset view</button></div><canvas id="net-topology" tabindex="0" aria-label="Rotatable labeled torus. Drag to orbit; click a face to inspect its conics. Arrow keys turn the camera."></canvas><p id="topology-caption" class="net-caption"></p><p id="net-counts" class="net-counts"></p></div><div class="net-inspector"><strong id="face-number"></strong><div id="net-face-buttons" class="net-face-buttons" aria-label="Select any face"></div><button id="clear-contact">Show four chords</button></div></div><details id="patch-controls" class="patch-controls"><summary>Explore the boundary of a patch</summary><div><label><input id="patch-mode" type="checkbox"> Select several faces</label><button type="button" id="patch-four">2 × 2 patch</button><button type="button" id="patch-all">Whole surface</button></div><p id="patch-readout" role="status"></p></details><div class="transport-strip"><div class="transport-heading"><span>Transport around the selected face</span><button type="button" id="trace-scale">Follow scale</button></div><div id="transport-values" class="transport-values"></div><p id="transport-trace" class="transport-trace">Start with scale 1. Each reversed edge uses the inverse factor.</p><div class="transport-total">H = <strong id="holonomy-value">?</strong><span id="global-product">∏ Hf = 1</span></div></div><div id="surface-parameters" class="surface-parameters"><label>Conic spread<input id="net-amount" type="range" min=".3" max="1.8" step=".01" value="1.4"></label><label>Relative direction<input id="net-twist" type="range" min="-.3" max=".3" step=".005" value=".1"></label><label>Equation scales<input id="net-gauge" type="range" min="0" max="2" step=".01" value=".7"></label><div><button id="animate-net">Move the conics</button><label><input id="net-context" type="checkbox"> All sixteen in context</label></div></div><div class="scene-bookmark"><button type="button" id="bookmark-scene">Bookmark this view</button><p id="share-status" role="status"></p></div><details class="scene-diagnostics"><summary>Numerical diagnostics</summary><p id="surface-diagnostic"></p></details><p class="lab-note">The surface glues labels; the large diagram shows their projective geometry. Shift-scroll zooms the conics.</p></div></aside></div></main><footer class="site-footer"><p>Incidence Geometry · Yao Liu</p><p><a href="proofs.html">Precise statements &amp; proofs</a> · <a href="formal/README.md">Lean sources</a> · <a href="https://github.com/liuyao12/incidence-geometry">GitHub ↗</a></p></footer></body></html>
+\]</div>
+<p>When every other face has transport \(1\), the remaining transport is \(1\) too. The conic lemma turns that scalar conclusion into concurrence of the original four chords.</p>
+</section>
+<section id="conic-torus">
+<p class="chapter-number">05 / Beyond Penrose’s cube</p>
+<h2>From six faces<br>to sixteen.</h2>
+<p>The torus has sixteen vertex conics, thirty-two contact edges, and sixteen faces. All its contacts in this chosen real family have two distinct real contact points. Each face has four distinct chords and its own concurrence point.</p>
+<p>The statement now reads: fifteen concurrences imply the sixteenth. Unlike the cube, this surface has a handle. As with <a href="fomin.html#pappus">Pappus’s torus in chapter 2</a>, the topology organizes the proof, not the location of the geometric objects.</p>
+<p>The conics still lie in \(\mathbb P^2(K)\), not on the torus in space. Its three-dimensional rendering is only a gluing diagram; <em>Cut open</em> shows the same identifications in a periodic rectangle.</p>
+<p class="try"><button data-net-example="torus">Explore the sixteen-conic torus</button> Select a face, inspect its four contacts, then reveal the concurrence forced by the other fifteen.</p>
+</section>
+<section id="patches">
+<p class="chapter-number">06 / A local and global connection</p>
+<h2>Exchange a cube patch.<br>Keep its boundary.</h2>
+<p>Penrose’s cube has two complementary three-face patches. One surrounds \(C_{\varnothing}\), the other \(C_{123}\). Their common boundary has the six conics \(C_1,C_2,C_3,C_{12},C_{13},C_{23}\) and the same six contact edges.</p>
+<p>Under the generic hypotheses of chapter 1, Penrose constructs the second patch from the first. When the resulting conic is nonsingular, both patches are admissible for this chapter’s theorem. The boundary formula explains the compatibility they share:</p>
+<div class="equation">\[
+ \begin{gathered}
+ \prod_{f\in\mathcal R}H_f\\
+ =\prod_{e\in\partial\mathcal R}\lambda_e^{\varepsilon_e}.
+ \end{gathered}
+\]</div>
+<p>Interior edges cancel. A coherent patch has total boundary transport \(1\). The two cube patches traverse their common boundary in opposite directions, so their boundary products are reciprocal—and both equal \(1\).</p>
+<p class="try"><button data-net-example="cube">Compare the cube patches</button> Below the cube, choose <em>Around the base</em> and <em>Around the eighth</em>. Each has three internal edges and the same six boundary edges. This switches the inspected patch; it does not perform a new completion computation.</p>
+<p>The same formula works for any selected face patch, including torus patches. For several boundary components it controls their combined oriented product, not each component separately. Choosing <em>Whole surface</em> leaves no boundary and recovers the main theorem.</p>
+</section>
+<section id="odd-cycle">
+<p class="chapter-number">07 / A difference from point–line labels</p>
+<h2>No alternating<br>vertex types.</h2>
+<p>Fomin’s labeling requires black–white vertices because points and hyperplanes alternate. Here every vertex carries a conic. Reversal is already built into contact transport, so no vertex coloring is required.</p>
+<p>The twelve-conic torus has a three-edge cycle and cannot be two-colored. Its faces nevertheless obey the same theorem: eleven concurrences imply the twelfth. The exact rational instance is checked in Lean.</p>
+<p class="try"><button data-net-example="odd">Explore the odd-cycle torus</button> Open the periodic map to see the three-step loop across the identified sides.</p>
+</section>
+<section id="noncoherent">
+<p class="chapter-number">08 / Why coherence is additional geometry</p>
+<h2>Contact alone<br>is not enough.</h2>
+<p>Four conics can be in proper contact around a quadrilateral without their chords being concurrent. In this example the transport is \(H_f=2\), not \(1\). Two chords intersect, but the other two do not pass through that point.</p>
+<p>This is a single noncoherent face, not a closed surface with every other face coherent. It shows why the local face condition matters, on top of the edge contacts.</p>
+<p class="try"><button data-net-example="square">See the noncoherent quadrilateral</button></p>
+</section>
+<section id="connections-summary">
+<p class="chapter-number">09 / The three results together</p>
+<h2>Completion and compatibility<br>are complementary.</h2>
+<p><strong>Penrose:</strong> construct a missing conic in a generic cube. <strong>Fomin–Pylyavskyy:</strong> propagate point–hyperplane incidence around a closed surface. <strong>The conic-contact theorem:</strong> propagate Penrose’s face-concurrence condition around such a surface, without needing an alternating vertex coloring.</p>
+<p>What is proved here is the third statement and its boundary law. It does not claim that every partial conic labeling can be completed, nor that all of Fomin’s geometric configurations arise as degenerations of conic nets. The new connection is the geometric interpretation of the surface transport.</p>
+<p><a href="index.html#penrose">Revisit the local completion</a> · <a href="fomin.html#desargues">Revisit the classical surface proofs</a> · <a href="#main-theorem">Return to the conic theorem</a></p>
+</section>
+<section id="references">
+<h2>Sources and statements.</h2>
+<p>Arnold, Chern, Eide, Gunn, Neukirchner and Penrose, <a href="https://arxiv.org/html/2409.17150v8">Penrose’s eight-conic theorem</a>, especially the contact-pencil relation and cube-face geometry in §§3–4. Fomin and Pylyavskyy, <a href="https://arxiv.org/abs/2305.07728v2">Incidences and tilings</a>, Proposition 2.5, Theorem 2.6, and the classical surface examples in §3.</p>
+<p><a href="proofs.html#surfaces">Formal statements, exact examples and literature comparison ↗</a></p>
+</section>
+</article><aside class="interactive-column" id="interactive" aria-label="Interactive geometry"><div class="laboratory surface-laboratory" id="surface-laboratory"><header class="lab-title"><div><span class="mini-label">A labeled surface and its conics</span><h3 id="surface-title">One face of a conic torus</h3></div><a class="column-jump" href="#chapter-text">Read the chapter ↓</a></header><div class="surface-toolbar"><select id="surface-example" aria-label="Contact example"><option value="cube">Penrose cube · six-face sphere</option><option value="torus" selected>Sixteen-conic torus</option><option value="odd">Twelve-conic torus · odd cycle</option><option value="square">Noncoherent quadrilateral</option></select><button id="reveal-face">Reveal concurrence</button></div><div id="surface-drawing" class="drawing"><div id="surface-geometry"></div><button id="surface-fit">Fit</button></div><div id="surface-legend" class="scene-legend"></div><p id="surface-status" class="readout" role="status"></p><div class="net-layout"><div><div class="topology-actions"><button type="button" id="net-map" aria-pressed="false">Cut open</button><button type="button" id="net-reset">Reset view</button></div><canvas id="net-topology" tabindex="0" aria-label="Rotatable labeled torus. Drag to orbit; click a face to inspect its conics. Arrow keys turn the camera."></canvas><p id="topology-caption" class="net-caption"></p><p id="net-counts" class="net-counts"></p></div><div class="net-inspector"><strong id="face-number"></strong><div id="net-face-buttons" class="net-face-buttons" aria-label="Select any face"></div><button id="clear-contact">Show four chords</button></div></div><div id="cube-patches" class="cube-patches" hidden><span class="mini-label">Two patches, one boundary</span><button id="cube-base-patch" type="button">Around the base</button><button id="cube-opposite-patch" type="button">Around the eighth</button><p>Each patch has three faces and the same six boundary edges, with opposite induced orientations. <a href="index.html?stage=penrose#penrose">Penrose’s completion ↗</a> · <a href="fomin.html#desargues">Desargues’s sphere ↗</a></p></div><details id="patch-controls" class="patch-controls"><summary>Explore the boundary of a patch</summary><div><label><input id="patch-mode" type="checkbox"> Select several faces</label><button type="button" id="patch-four">2 × 2 patch</button><button type="button" id="patch-all">Whole surface</button></div><p id="patch-readout" role="status"></p></details><div class="transport-strip"><div class="transport-heading"><span>Transport around the selected face</span><button type="button" id="trace-scale">Follow scale</button></div><div id="transport-values" class="transport-values"></div><p id="transport-trace" class="transport-trace">Start with scale 1. Each reversed edge uses the inverse factor.</p><div class="transport-total">H = <strong id="holonomy-value">?</strong><span id="global-product">∏ Hf = 1</span></div></div><div id="surface-parameters" class="surface-parameters"><label>Conic spread<input id="net-amount" type="range" min=".3" max="1.8" step=".01" value="1.4"></label><label>Relative direction<input id="net-twist" type="range" min="-.3" max=".3" step=".005" value=".1"></label><label>Equation scales<input id="net-gauge" type="range" min="0" max="2" step=".01" value=".7"></label><div><button id="animate-net">Move the conics</button><label><input id="net-context" type="checkbox"> All conics in context</label></div></div><div class="scene-bookmark"><button type="button" id="bookmark-scene">Bookmark this view</button><p id="share-status" role="status"></p></div><details class="scene-diagnostics"><summary>Numerical diagnostics</summary><p id="surface-diagnostic"></p></details><p class="lab-note">The surface glues labels; the large diagram shows their projective geometry. Shift-scroll zooms the conics.</p></div></aside></div></main><footer class="site-footer"><p>Incidence Geometry · Yao Liu</p><p><a href="proofs.html">Precise statements &amp; proofs</a> · <a href="formal/README.md">Lean sources</a> · <a href="https://github.com/liuyao12/incidence-geometry">GitHub ↗</a></p></footer></body></html>

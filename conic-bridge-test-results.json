@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "configurations": 121,
+  "patches": 7744,
+  "checks": 21789,
+  "largestContact": 5.026218484403858e-13,
+  "largestConcurrence": 1.6417811680134113e-14,
+  "scope": "Numerical tests of a worked Penrose surface example and its match to chapter 1; no new formal theorem."
+}
