@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "checks": [
+    "All 24 paper tiles select their matching incidence; all four scenes, duality, hide/reveal, pointer drags and keyboard edits work",
+    "Actual SVG picking includes the spherical outside face and both halves of the concluding Pappus tile",
+    "Continuous common-line release and return preserve the same nine-tile proof while genuinely removing total collinearity",
+    "Main theorem first, then actual scroll-driven Desargues, Pappus, quadrangle and its generalization, forwards and backwards",
+    "Existing exact BigInt cancellation remains distinct from and compatible with geometric examples",
+    "Theorems, maps and input controls fit desktop, tablet and mobile down to 320px, including expanded LaTeX proofs"
+  ],
+  "javascriptErrors": [],
+  "failedRequests": [],
+  "method": "HTTP-loaded actual assets",
+  "scope": "Presentation and software tests, not new Lean proofs."
+}

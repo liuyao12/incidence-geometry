@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "configurations": 2001,
+  "rejectedNearDegeneracy": 0,
+  "checks": 36841,
+  "models": [
+    "Figure 5: Desargues sphere",
+    "Figure 9: Pappus torus",
+    "Figure 15: quadrangle sphere; Theorems 3.3 and 3.4"
+  ],
+  "scope": "Numerical and combinatorial software checks, not new Lean proofs."
+}

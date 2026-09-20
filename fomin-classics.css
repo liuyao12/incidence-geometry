@@ -1,0 +1,40 @@
+/* A proof map accompanies the actual geometry, within the existing column. */
+.fomin-chapter #fomin-drawing{height:clamp(300px,34dvh,380px)}
+.example-controls{display:flex;gap:8px;align-items:center;padding:8px 20px 12px;font-size:11px}
+.example-controls select{flex:1;min-width:0;font-size:11px}.example-controls button{font-size:11px}
+.geometry-actions{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:11px}
+.fomin-chapter #geometric-controls{padding-block:10px 8px}.fomin-chapter .range-row{padding-block:6px}
+.diagram-caption{position:absolute;top:10px;left:16px;font-size:10px;color:var(--muted);pointer-events:none}
+#fomin-fit{position:absolute;bottom:10px;right:12px;font-size:10px;background:var(--panel);padding:5px 7px}
+#proof-map{border-top:1px solid var(--line);padding:12px 18px 0;background:#fafbf5}
+.proof-map-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:11px}
+.proof-map-heading button{font-size:10px;padding:5px 7px}
+#fomin-tiling{display:block;width:100%;height:270px;touch-action:pan-y;font:12px Georgia,serif}
+#fomin-tiling .tile-polygon{fill:#e7ede4;stroke:none;cursor:pointer}
+#fomin-tiling .tile-conclusion{fill:#f5e5d4}
+#fomin-tiling [data-face].selected .tile-polygon{fill:#c5dfd1}
+#fomin-tiling [data-face].selected .tile-conclusion{fill:#edd0af}
+#fomin-tiling [data-face]:hover .tile-polygon{fill:#d8e6df}
+#fomin-tiling [data-face]:focus{outline:none}
+#fomin-tiling [data-face]:focus .tile-polygon{stroke:#bd743e;stroke-width:2}
+#fomin-tiling .map-edge{stroke:#899b95;stroke-width:1.2;pointer-events:none}
+#fomin-tiling .map-node,#fomin-tiling .map-label,#fomin-tiling .face-number{pointer-events:none}
+#fomin-tiling .map-label{paint-order:stroke;stroke:#fafbf5;stroke-width:4;stroke-linejoin:round;fill:#23343d}
+#fomin-tiling .map-seam{stroke:#9ba7a2;stroke-width:1.2;stroke-dasharray:3 4;pointer-events:none}
+#fomin-tiling .face-number{font:10px system-ui,sans-serif;fill:#677974}
+#fomin-map-caption{margin:0 2px 10px;line-height:1.6;font-size:10px}
+.fomin-chapter #face-ratios{grid-template-columns:repeat(3,minmax(0,1fr));padding:10px 18px;gap:5px}
+.fomin-chapter #face-ratios button{min-width:0;text-align:left;font-size:10px;padding:7px 9px;border-radius:3px}
+.fomin-chapter #face-ratios button strong{float:right;font-variant-numeric:tabular-nums;font-weight:500}
+.fomin-chapter #face-ratios button[aria-pressed=true]{border-color:#668d80}
+.fomin-chapter #face-ratios button.last{border-color:#c99163;color:#99512b}
+#tile-reading{padding:8px 20px 14px;border-block:1px solid var(--line);font-size:12px;line-height:1.65}
+#tile-formula{font-size:13px;min-height:40px;overflow:auto}#tile-formula mjx-container{margin:5px 0!important}
+#tile-reason{margin:6px 0}#tile-ratio{font:10px/1.6 system-ui,sans-serif;color:var(--muted);margin:7px 0 0}
+.fomin-chapter .interaction-hint{margin:6px 0 0}
+@media(max-width:500px){.example-controls{padding-inline:14px;gap:5px}.example-controls>label{display:none}#proof-map{padding-inline:10px}#fomin-tiling{height:235px}#tile-reading{padding-inline:14px}.fomin-chapter #fomin-drawing{height:305px}.fomin-chapter .equation{padding-inline:8px;font-size:15px}}
+
+.proof-map-layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:8px;align-items:center}
+.proof-map-layout #tile-reading{border:0;padding:8px 6px;font-size:11px;line-height:1.7}
+.proof-map-layout #fomin-tiling{height:250px}
+@media(max-width:500px){.proof-map-layout{display:block}.proof-map-layout #fomin-tiling{height:235px}.proof-map-layout #tile-reading{padding:0 8px 10px}#tile-formula{min-height:30px}}
