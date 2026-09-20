@@ -1,0 +1,153 @@
+/* The three chapters share an in-flow reading column and an interactive rail.
+ * Only the content INSIDE the rail is sticky. It cannot move over the prose.
+ * The older standalone laboratory and the theorem appendix keep their layout.
+ */
+.chapter-page {
+  --chapter-nav-height: 80px;
+  --column-inset: clamp(24px, 3.4vw, 60px);
+}
+.chapter-page .site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--paper);
+  padding: 20px var(--column-inset);
+  gap: 18px;
+}
+.chapter-page .site-nav > div { flex-wrap: wrap; gap: 12px 22px; }
+.chapter-page .narrative { max-width: 1680px; padding: 0; }
+.chapter-page .reading-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr);
+  gap: 0;
+  padding: 0;
+  align-items: stretch;
+}
+.chapter-page .reading-layout > .prose {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  margin: 0;
+  padding: 44px var(--column-inset) 0;
+}
+.chapter-page .prose > .hero { padding-top: 0; }
+.chapter-page .prose section,
+.chapter-page #chapter-text,
+.chapter-page #interactive {
+  scroll-margin-top: calc(var(--chapter-nav-height) + 24px);
+}
+.chapter-page .interactive-column {
+  min-width: 0;
+  align-self: stretch;
+  border-left: 1px solid var(--line);
+  background: var(--panel);
+}
+.chapter-page .interactive-column > .laboratory {
+  position: sticky;
+  top: var(--chapter-nav-height);
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  height: calc(100vh - var(--chapter-nav-height));
+  height: calc(100dvh - var(--chapter-nav-height));
+  max-height: none;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  transform: none;
+  resize: none;
+  z-index: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  /* Let wheel scrolling continue onto the page at either end of the rail. */
+  overscroll-behavior-y: auto;
+}
+.chapter-page .laboratory .lab-title {
+  cursor: default;
+  touch-action: auto;
+  padding: 20px 22px 14px;
+  min-height: 86px;
+}
+.chapter-page .laboratory .lab-title h3 { font-size: 25px; }
+.chapter-page .laboratory .lab-options { padding-block: 12px; }
+.chapter-page #laboratory #drawing,
+.chapter-page #surface-drawing {
+  height: clamp(290px, 36vh, 430px);
+  height: clamp(290px, 36dvh, 430px);
+}
+.chapter-page #fomin-drawing {
+  height: clamp(340px, 47vh, 550px);
+  height: clamp(340px, 47dvh, 550px);
+}
+.chapter-page .cube-laboratory { padding: 14px 20px 10px; }
+.chapter-page .cube-layout { grid-template-columns: minmax(0, 1.35fr) minmax(150px, 1fr); }
+.chapter-page .cube-scene { height: 230px; }
+.chapter-page .net-layout { padding-inline: 20px; }
+.chapter-page #net-topology { height: 210px; }
+.chapter-page .site-footer { max-width: 1680px; margin-top: 0; }
+.column-jump { display: none; }
+
+/* Phones and portrait tablets use ordinary document flow, never an overlay. */
+@media (max-width: 959px) {
+  .chapter-page .site-nav { position: relative; padding: 18px 22px; }
+  .chapter-page .reading-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .chapter-page .interactive-column {
+    order: -1;
+    width: 100%;
+    border-left: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .chapter-page .interactive-column > .laboratory {
+    position: static;
+    height: auto;
+    max-height: none;
+    max-width: 720px;
+    margin-inline: auto;
+    overflow: visible;
+    scrollbar-gutter: auto;
+  }
+  .chapter-page .reading-layout > .prose {
+    max-width: 720px;
+    padding: 36px 24px 0;
+    margin-inline: auto;
+  }
+  .chapter-page .prose section,
+  .chapter-page #chapter-text,
+  .chapter-page #interactive { scroll-margin-top: 18px; }
+  .chapter-page .laboratory .lab-title { padding: 18px 20px 12px; }
+  .chapter-page .laboratory .lab-title h3 { font-size: 23px; }
+  .chapter-page #laboratory #drawing,
+  .chapter-page #surface-drawing,
+  .chapter-page #fomin-drawing { height: clamp(285px, 58vw, 430px); }
+  .chapter-page .cube-laboratory { padding-inline: 16px; }
+  .chapter-page .net-layout { padding-inline: 14px; }
+  .column-jump { display: inline-block; font: 12px/1.5 var(--sans); }
+  .lab-title .column-jump { max-width: 100px; text-align: right; margin-left: 14px; }
+  .prose > .hero .column-jump { margin-top: 10px; }
+}
+@media (max-width: 500px) {
+  .chapter-page .site-nav { padding-inline: 18px; }
+  .chapter-page .site-nav > div { gap: 12px; }
+  .chapter-page .reading-layout > .prose { padding-inline: 18px; }
+  .chapter-page .cube-layout { grid-template-columns: minmax(148px, 1.2fr) minmax(120px, 1fr); }
+  .chapter-page .cube-laboratory { padding-inline: 10px; }
+  .chapter-page .net-layout { padding-inline: 10px; }
+  .chapter-page .face-ratios { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .chapter-page #net-topology { height: 170px; }
+  .chapter-page .laboratory .lab-title { padding-inline: 16px; }
+  .chapter-page .laboratory .lab-title h3 { font-size: 21px; }
+  .lab-title .column-jump { font-size: 10px; }
+}
+@media print {
+  .chapter-page .site-nav { position: static; }
+  .chapter-page .reading-layout { display: block; }
+  .chapter-page .interactive-column > .laboratory { position: static; height: auto; overflow: visible; }
+  .chapter-page .interactive-column { border-left: 0; break-before: page; }
+  .column-jump { display: none; }
+}
