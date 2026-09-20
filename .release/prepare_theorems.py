@@ -27,5 +27,29 @@ for name,source in data['files'].items():
  assert not p.exists(),name
  p.parent.mkdir(parents=True,exist_ok=True)
  p.write_text(source)
+# Keep quantified implications legible without horizontal scrolling on narrow
+# displays, including the wider system-font metrics of the Ubuntu CI runner.
+old=r'''\bigl(\forall f\in\mathcal F\setminus\{f_0\},\;\mathcal C(f)\bigr)
+ \;\Longrightarrow\;\mathcal C(f_0)'''
+new=r'''\begin{gathered}
+ \bigl(\forall f\in\mathcal F\setminus\{f_0\},\;\mathcal C(f)\bigr)\\
+ \Longrightarrow\quad\mathcal C(f_0)
+ \end{gathered}'''
+for name in ['fomin.html','connections.html']:
+ p=R/name
+ source=p.read_text()
+ assert source.count(old)==1,name
+ p.write_text(source.replace(old,new))
+p=R/'connections.html'
+source=p.read_text()
+a=r'H_f=\prod_{i=0}^{3}\lambda_{v_iv_{i+1}},\qquad v_4=v_0,'
+b=r'H_f=\prod_{i=0}^{3}\lambda_{v_iv_{i+1}},\\v_4=v_0,'
+assert source.count(a)==1
+p.write_text(source.replace(a,b))
+hp=R/'verification/release-source-hashes.json'
+h=json.loads(hp.read_text())
+for name in ['fomin.html','connections.html']:
+ h['files'][name]=hashlib.sha256((R/name).read_bytes()).hexdigest()
+hp.write_text(json.dumps(h,indent=2)+'\n')
 (R/'.release/paths.json').write_text(json.dumps(paths+['vendor/mathjax/tex-svg.js','vendor/mathjax/LICENSE','theorem-browser-test-results.json']))
 print('Exact LaTeX and theorem-source edits assembled; no mathematical engine or Lean source changed.')
