@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "checks": [
+    "All three chapters: separate in-flow columns, pinned rail, no window drag/resize, and no text overlap",
+    "Long controls scroll independently; wrapped navigation and all equations fit 960\u20131440px desktop widths",
+    "320\u2013959px layouts stack in normal flow; chapter/interactive jump links work without overlays",
+    "Actual forward/backward page scrolling drives the continuous journey while the interactive stays in its column",
+    "Point dragging changes geometry, not the page columns; existing suites cover cube/torus edits and cameras"
+  ],
+  "javascriptErrors": [],
+  "failedRequests": [],
+  "method": "HTTP-loaded actual assets",
+  "scope": "Page layout and interaction, not new mathematical proofs."
+}
