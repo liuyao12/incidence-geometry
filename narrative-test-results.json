@@ -1,9 +1,9 @@
 {
   "status": "passed",
   "cases": 732,
-  "checks": 23134,
+  "checks": 23160,
   "seed": 20260918,
-  "maxIncidence": 8.049116928532385e-16,
-  "maxContact": 1.6643474838549556e-13,
+  "maxIncidence": 2.498001805406602e-16,
+  "maxContact": 1.6030766234296775e-13,
   "scope": "Numerical implementation tests of continuous families, spatial sections, all contact edges, face concurrency, chord edits and coefficient-space cube. Not new Lean proofs."
 }

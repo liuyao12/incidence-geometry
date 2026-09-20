@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "checks": [
+    "One opening family; same cube, parameters, camera and drawing position throughout a forward/backward sweep",
+    "All six point handles use the inverse display chart; edits survive travel to Penrose and back",
+    "Cube edits at Pappus/Pascal select a new whole family; all stages retain it and Undo restores it",
+    "Play reverses smoothly at both ends without resetting to a default or jumping back to Pappus",
+    "Dual view and the flat/spatial Pascal construction retain their incidence checks",
+    "Responsive opening with no horizontal overflow on desktop, tablet and mobile"
+  ],
+  "javascriptErrors": [],
+  "failedRequests": [],
+  "method": "HTTP-loaded actual assets",
+  "scope": "Presentation/interaction tests, not new Lean proofs."
+}

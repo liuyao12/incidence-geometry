@@ -34,7 +34,7 @@ function projected(S,c,w=290,h=200,radiusOverride=null){
 // orientation and offset. Preserve endpoint order by matching to the old pair.
 function moveChord(p,i,angle,distance){
   if(!Number.isInteger(i)||i<0||i>2||!Number.isFinite(angle)||!Number.isFinite(distance))throw Error('Invalid chord edit.');
-  const a=angle*Math.PI/180,d=N.clamp(distance,.12,.965),n=[Math.cos(a),Math.sin(a)],v=[-n[1],n[0]],h=Math.sqrt(1-d*d);
+  const a=angle*Math.PI/180,d=N.clamp(distance,.005,.985),n=[Math.cos(a),Math.sin(a)],v=[-n[1],n[0]],h=Math.sqrt(1-d*d);
   let P=E.add(E.scale(n,d),E.scale(v,h)),Q=E.add(E.scale(n,d),E.scale(v,-h));
   const old=N.affine(N.seedPairs(1,p)[i][0]);if(E.norm(N.sub(P,old))>E.norm(N.sub(Q,old)))[P,Q]=[Q,P];
   const u=Math.abs(P[1])>.2?(1+P[0])/P[1]:P[1]/(1-P[0]);

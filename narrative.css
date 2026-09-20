@@ -55,3 +55,5 @@
 @media(max-width:500px){.scene-bookmark{align-items:flex-start;flex-wrap:wrap}.topology-actions button{font-size:9px}.net-caption{font-size:8px}}
 
 :root{--sans:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+
+.path-note{margin:2px 14px 10px;font:11px/1.5 var(--sans);color:var(--muted)}

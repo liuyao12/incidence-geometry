@@ -1,12 +1,12 @@
 {
   "status": "passed",
-  "checks": 55140,
+  "checks": 55144,
   "configurations": 470,
   "paths": 36,
   "seed": 20260918,
   "jacobianRank": 9,
-  "maxContact": 1.121819652509962e-13,
-  "maxFace": 1.0935696792557792e-14,
-  "maxModel": 1.1234795669271359e-15,
+  "maxContact": 9.092396062955393e-14,
+  "maxFace": 2.3203661214665772e-14,
+  "maxModel": 5.99684245912506e-15,
   "scope": "Numerical software tests; not a formal moduli classification or certified path proof."
 }

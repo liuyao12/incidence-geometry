@@ -77,3 +77,13 @@ The original equal-coupling narrative is retained as the default. Random explora
 ## Editable moduli vectors
 
 The regular Penrose endpoint now defaults to a second, bidirectional cube model: three framed vectors encode the nine normalized moduli. Hollow vector endpoints change the conics, whereas dragging faces/background changes only the camera. The original unweighted seed-chord model remains selectable and continues to be used at earlier stages and in spatial views. See [VECTOR_CONTROLS.md](VECTOR_CONTROLS.md) for the calibrated matrix chart and its inverse, corner-distribution rule, and numerical guards. This does not add Lean theorem coverage.
+
+## The opening arrangement and a fixed family controller
+
+The opening now follows the composition of the paper's introductory Pappus–Pascal–Salmon–Penrose strip: nearly horizontal carrier lines, a horizontal ellipse, three slender contacting ellipses, and a real central completing ellipse. These are parameters selected by eye, not the authors' numerical coordinates. There is one default, not a preset menu.
+
+`journey-view.js` applies one fixed nonsingular homography to **every** point, line and conic through the entire story. Its inverse is applied to pointer coordinates. The canonical construction and its conic equations are unchanged by this display choice. The negative `opening` and unequal positive rates select a real twelve-contact branch; the former positive-opening family remains supported by the mathematical API, but is not another user-facing preset. Tests cover both signs.
+
+The cube represents the regular Penrose endpoint of the **whole chosen family**. It is computed from the family parameters, not from the transition slider. Those parameters, its reference frame, its camera and a selected face are retained when sweeping forward/backward. Cube editing is therefore available while viewing Pappus or Pascal too. This is deliberately not a nine-dimensional moduli chart of a degenerate Pappus configuration: some family parameters first affect the later conics. Point edits and vector edits both choose a new entire path. Play travels back and forth rather than jumping from the end to an unrelated start.
+
+The default is a displayed member of the existing determinantal model. No individual conic is relocated, fitted to an image, or interpolated independently. No new Lean theorem is claimed by this presentation change.

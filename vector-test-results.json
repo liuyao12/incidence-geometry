@@ -3,8 +3,8 @@
   "checks": 28020,
   "configurations": 166,
   "roundTrips": 88,
-  "maxContact": 4.440892098500626e-14,
-  "maxFace": 3.781947188083234e-14,
+  "maxContact": 4.1389114358025836e-13,
+  "maxFace": 1.1562628014998171e-14,
   "seed": 482123,
   "scope": "Numerical implementation tests of a local inverse, not a Lean moduli classification or certified path proof."
 }

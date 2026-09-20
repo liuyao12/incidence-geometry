@@ -83,3 +83,7 @@ No Lean source is changed by this visual release; the formal library remains at 
 ## Bidirectional framed-vector chart
 
 The full Penrose endpoint now also has an editable cube model encoding **all nine** coordinates via A=GM^-1. It is different from the original unweighted chord cube discussed above. The inverse recovers the unit-diagonal symmetric M from AM=MA^T, then recovers G and a continuous local representative P. All seven non-origin corners can drive the conics. The fixed frame, local magnification, inverse-chart exclusions, controls and numerical safety qualifications are detailed in [VECTOR_CONTROLS.md](VECTOR_CONTROLS.md).
+
+## Presentation update: fixed family through the narrative
+
+The paper-like opening arrangement now uses a negative opening and unequal rates. The regular matrix formulas and their inverse accept either nonzero sign; the earlier equal positive-opening example is not a second preset. The cube represents the regular endpoint of the chosen family at every planar stage, so it stays fixed when only the transition slider moves. See `NARRATIVE.md` for the display homography and the distinction between a controller of a family and moduli coordinates of an intermediate degeneration.

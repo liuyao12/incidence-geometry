@@ -23,7 +23,11 @@ const identity3=()=>[[1,0,0],[0,1,0],[0,0,1]];
 const baseDual=()=>[[1,0,0],[0,1,0],[0,0,-1]];
 const pairIndices=[[0,1],[1,2],[2,0]], masks=[3,6,5];
 const names=['A','A′','B','B′','C','C′'];
-const defaults=()=>({u:[2.13,-2.49,1.60],v:[1.47,-2.54,2.89],inflation:[.17,.12,.21],opening:.12,couplings:[1,1,1]});
+// Arranged by eye after the paper's opening strip. The display homography in
+// journey-view.js puts the carrier lines almost horizontal and the circle in
+// a horizontal ellipse. Negative opening selects a REAL central completing
+// ellipse; unequal rates are necessary for this branch. No curves are fitted.
+const defaults=()=>({u:[1.84,10,-2.60],v:[3,15,-2.35],inflation:[.035,.045,.035],opening:-.045,couplings:[.3,.3,2.5]});
 function validate(p){
   for(const key of ['u','v','inflation'])if(!Array.isArray(p[key])||p[key].length!==3||!p[key].every(Number.isFinite))throw Error('Invalid seed parameters.');
   if(p.couplings&&(!Array.isArray(p.couplings)||p.couplings.length!==3||!p.couplings.every(Number.isFinite)))throw Error('Invalid face couplings.');
@@ -129,7 +133,7 @@ function family(phase,p=defaults()){
 }
 // A regular chart for all eight line-wise conics. Only used away from Salmon.
 function normalizedDual(phase=3,p=defaults()){
-  const F=family(phase,p);if(F.kind!=='conics'||F.open<1e-7)throw Error('The regular matrix chart is undefined at the Salmon endpoint.');
+  const F=family(phase,p);if(F.kind!=='conics'||Math.abs(F.open)<1e-7)throw Error('The regular matrix chart is undefined at the Salmon endpoint.');
   const M=F.M;
   return Array.from({length:8},(_,s)=>{
     const ix=[0,1,2].filter(i=>s>>i&1),H=E.inverse(ix.map(i=>ix.map(j=>M[i][j]))),A=baseDual();

@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "checks": 6520,
+  "phases": 220,
+  "realContacts": 12,
+  "scope": "Fixed paper-like chart, incidence and pointer inverses, signed regular openings, phase-independent family controller and reversible edited paths. Numerical software tests, not Lean proofs."
+}

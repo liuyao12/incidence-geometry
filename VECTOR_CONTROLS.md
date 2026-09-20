@@ -10,7 +10,7 @@ Ordinary dragging moves in the camera's view plane through the initial point. Sh
 
 **Undo edit** restores the exact parameter state from before the last drag, keyboard move, or numeric edit. **Reframe as cube** makes the current moduli the unit-cube reference without changing the conics. The original index directions and face labels are preserved; geometric lengths and angles of this display are not invariants of the theorem.
 
-A random tour updates the moduli cube even when its seed chords are locked. Starting a geometric vector edit stops that tour; merely orbiting, inspecting a face, or reframing does not. The editable controls are active only at the full regular Penrose endpoint; other narrative stages and spatial views retain the non-editable chord cube.
+A random tour updates the moduli cube even when its seed chords are locked. Starting a geometric vector edit stops that tour; merely orbiting, inspecting a face, or reframing does not. The editable cube now controls the entire family at every planar narrative stage. It is encoded using that family’s regular Penrose endpoint and stays fixed as the transition slider moves. Spatial views retain the non-editable chord cube. Some family coordinates affect only the later conics; this is not a nine-dimensional parametrization of Pappus or Pascal themselves.
 
 ## Forward map
 

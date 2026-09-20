@@ -45,7 +45,7 @@ function liftGram(G,P){
 }
 function toParameters(P,M,old){
  const p=W.clone(old),oldPairs=N.seedPairs(1,old);
- if(!(p.opening>1e-7))throw Error('Open the regular Penrose configuration before editing its vectors.');
+ if(!(Math.abs(p.opening)>1e-7))throw Error('Open the regular Penrose configuration before editing its vectors.');
  P.forEach((v,i)=>{
   const w2=E.quad(J,v);if(w2<1e-6)throw Error('A weighted chord is approaching the real-contact boundary.');
   const w=Math.sqrt(w2),l=E.mul(J,v),n=l[0]*l[0]+l[1]*l[1],h2=1-l[2]*l[2]/n;

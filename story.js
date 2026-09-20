@@ -6,9 +6,9 @@
 'use strict';
 const E=window.IncidenceMath,G=window.IncidencePGA,N=window.IncidenceNarrative,W=window.IncidenceModuli,VM=window.IncidenceVectors,$=id=>document.getElementById(id);
 const C=['#2b414d','#2c5f9e','#507fb2','#168477','#5676af','#44a18b','#80a393','#bb592e'];
-const state={scene:'journey',phase:0,dual:false,conclusion:true,follow:true,p:N.defaults(),playing:false,lift:.82,height:0,proof:3,surface:true,zoom:1,pan:[0,0],yaw:-.3,tilt:.95,selection:'all',edge:0};
+const state={scene:'journey',phase:0,dual:false,conclusion:true,follow:true,p:N.defaults(),playing:false,direction:1,lift:.82,height:0,proof:3,surface:true,zoom:1,pan:[0,0],yaw:-.3,tilt:.95,selection:'all',edge:0};
 const B=window.IncidenceCube;
-const host=$('story-geometry'),R=window.createGanjaView(host);
+const host=$('story-geometry'),chart=window.IncidenceJourneyView,R=chart.wrap(window.createGanjaView(host));
 const cube=B.create($('story-cube'),key=>{markManual();state.selection=key;if(key.startsWith('edge:'))state.edge=+key.split(':')[1];schedule();},{onEdit:editVectors,onEditStart:beginVectorEdit,onEditEnd:endVectorEdit});let view={s:1,x:0,y:0,w:0,h:0},data,drag=null,frame=0,playFrame=0,lastTime=0,liftFrame=0;
 const vectorState={reference:VM.copy(VM.defaultReference),gain:1000,undo:[],snapshot:null,active:false};
 const sci=x=>Number.isFinite(x)?x.toExponential(1):'not defined';
@@ -18,7 +18,7 @@ const normalLabel=['Pappus','Pascal','Salmon','Penrose'];
 function markManual(){state.follow=false;$('follow-story').checked=false;}
 function schedule(){if(!frame)frame=requestAnimationFrame(()=>{frame=0;render();});}
 function getView(){
- const r=$('drawing').getBoundingClientRect();view={w:r.width,h:r.height,s:Math.min(r.width,r.height)/4.7*state.zoom,x:r.width/2+state.pan[0],y:r.height*.52+state.pan[1]};R.begin(view);
+ const r=$('drawing').getBoundingClientRect();view={w:r.width,h:r.height,s:Math.min(r.width,r.height)/3.5*state.zoom,x:r.width/2+state.pan[0],y:r.height*.52+state.pan[1]};R.begin(view);
 }
 function regularConic(Q,c,alpha=1,width=1.7,dash=[]){if(Q)R.conic(Q,c,alpha,width,dash);}
 function drawSeeds(pairs,alpha=1){R.layer(alpha,()=>pairs.forEach((pair,i)=>pair.forEach((P,j)=>{
@@ -30,11 +30,21 @@ function drawSeeds(pairs,alpha=1){R.layer(alpha,()=>pairs.forEach((pair,i)=>pair
    const n=P[0]*P[0]+P[1]*P[1];if(n>1e-9)R.point([-P[2]*P[0]/n,-P[2]*P[1]/n,1],C[1<<i],name.toLowerCase(),true,2);
  }
 })));}
+// Extend the visible construction only a little beyond its defining points.
+// Projective points at infinity fall back to the actual full line.
+function traceLine(l,points,c,alpha=1,width=1.2,dash=[],margin=.12){
+ const a=points.map(P=>N.affine(P));
+ if(a.some(P=>!P)){R.line(l,c,alpha,width,dash);return;}
+ const u=N.unit([-l[1],l[0],0]).slice(0,2),values=a.map(P=>E.dot(P,u));
+ const min=Math.min(...values),max=Math.max(...values),pad=Math.max(.1,(max-min)*margin);
+ const origin=a[0],offset=E.dot(origin,u);
+ R.path([min-pad,max+pad].map(t=>E.add(origin,E.scale(u,t-offset))),c,alpha,width,dash);
+}
 function drawEarly(F){
  if(!state.dual){
-  if(F.t===0){R.line([1,0,-1],C[0],1,2.5);R.line([1,0,1],C[0],1,2.5);}else regularConic(F.Q,C[0],1,2.5);
-  F.lines.forEach(ls=>ls.forEach(l=>R.line(l,'#648b85',.67,1.15)));
-  if(state.conclusion){R.line(F.axis,C[7],.85,2);F.meetings.forEach((P,i)=>R.point(P,C[7],['X','Y','Z'][i],false,4));}
+  if(F.t===0){traceLine([1,0,-1],F.pairs.map(p=>p[0]),C[0],1,2.2);traceLine([1,0,1],F.pairs.map(p=>p[1]),C[0],1,2.2);}else regularConic(F.Q,C[0],1,2.5);
+  F.lines.forEach((ls,k)=>{const [i,j]=N.pairIndices[k];ls.forEach((l,b)=>traceLine(l,[F.pairs[i][b],F.pairs[j][1-b],F.meetings[k]],'#648b85',.72,1.05,[],.035));});
+  if(state.conclusion){traceLine(F.axis,F.meetings,C[7],.95,2,[3,4],.3);F.meetings.forEach((P,i)=>R.point(P,C[7],['X','Y','Z'][i],false,4));}
  }else{
   if(F.t===0){R.point([1,0,-1],C[0],'L',false,5);R.point([1,0,1],C[0],'L′',false,5);}
   else regularConic(N.adj(F.Q),C[0],1,2.4);
@@ -50,11 +60,11 @@ function drawConics(F){
  const conics=state.dual?F.dual:F.primal,open=F.open;
  regularConic(conics[0],C[0],vertices.size&&!vertices.has(0)?.15:1,2.5);
  [1,2,4].forEach((s,i)=>regularConic(conics[s],C[s],vertices.size&&!vertices.has(s)?.15:1,1.9));
- if(open<1e-7){
+ if(Math.abs(open)<1e-7){
   if(!state.dual){
-   F.tangentPairs.forEach(ls=>ls.forEach(l=>R.line(l,'#638a84',.67,1.15)));
+   F.tangentPairs.forEach((ls,k)=>{const [i,j]=N.pairIndices[k];ls.forEach(l=>traceLine(l,[E.mul(F.rawDual[1<<i],l),E.mul(F.rawDual[1<<j],l),F.meetings[k]],'#638a84',.72,1.1,[],.1));});
    F.meetings.forEach((P,i)=>R.point(P,C[3],['X','Y','Z'][i],false,4));
-   if(state.conclusion)R.line(F.axis,C[7],1,2.3);
+   if(state.conclusion)traceLine(F.axis,F.meetings,C[7],1,2.2,[3,4],.28);
   }else{
    F.tangentPairs.flat().forEach(l=>R.point(l,'#638a84','',false,2.8));
    F.meetings.forEach(P=>R.line(P,C[3],.85,1.6));
@@ -86,7 +96,7 @@ function drawConics(F){
    const chords=selected.map(i=>state.dual?F.contacts[i].dualChord:F.contacts[i].chord).filter(Boolean);
    if(chords.length===4){const X=E.cross(chords[0],chords[1]);if(E.norm(X)>1e-10){const U=N.unit(X);faceError=Math.max(...chords.map(l=>Math.abs(E.dot(l,U))));R.point(U,C[7],'Ω',false,5);}}
  }
- let text=open<1e-7?`Compatible common-tangent branches: ${F.tangentPairs.map(x=>x.length).join(' / ')} real tangents. Collinearity residual ${sci(F.error)}.`:`${state.conclusion?'Eight':'Seven'} conics in one determinantal family. Solid = given; dashed orange = completion.`;
+ let text=Math.abs(open)<1e-7?`Compatible common-tangent branches: ${F.tangentPairs.map(x=>x.length).join(' / ')} real tangents. Collinearity residual ${sci(F.error)}.`:`${state.conclusion?'Eight':'Seven'} conics in one determinantal family. Solid = given; dashed orange = completion.`;
  if(selected.length===1)text+=real?` Selected edge: ${real} real contact points.`:' Selected edge: no real contact points in this chart; the rank-one relation still holds.';
  if(faceError!==null)text+=` Four-chord concurrence residual ${sci(faceError)}.`;
  $('story-readout').textContent=text;
@@ -189,7 +199,7 @@ function drawExtrusion(){
 }
 function drawCube(){
  try {
-  const useModuli=$('cube-model').value==='moduli'&&state.scene==='journey'&&state.phase>2.999,linked=$('cube-linked').checked;
+  const useModuli=$('cube-model').value==='moduli'&&state.scene==='journey',linked=$('cube-linked').checked;
   let opts={};vectorState.active=false;
   if(useModuli){
     const encoded=VM.encode(state.p,vectorState.reference);
@@ -200,7 +210,7 @@ function drawCube(){
   }
   $('vector-controls').hidden=!vectorState.active;
   $('cube-linked-text').textContent=useModuli?'Link shape to configuration':'Link shape to chords';
-  $('cube-explanation').textContent=useModuli?'Hollow vertices control the conics. Shift-drag moves in depth; dragging a face or the background only rotates the camera. Dashed e₁, e₂, e₃ are the fixed reference frame. Click a face to inspect its conics.':'Directions follow the unweighted seed chords. Drag to orbit; click a face to inspect. Editable moduli vectors are available at the regular Penrose endpoint.';
+  $('cube-explanation').textContent=useModuli?'This cube controls the entire family and stays fixed while the transition slider moves. Drag a hollow corner to edit the family; Shift-drag changes depth. Some parameters become visible only in the later conics. Drag a face to orbit; click to inspect.':'Directions follow the unweighted seed chords. Drag to orbit; click a face to inspect. The editable model controls the regular Penrose endpoint of the family, even while viewing Pappus or Pascal.';
   const S=cube.update(state.p,state.selection,state.conclusion,linked,opts);
   if(vectorState.active)S.basis.forEach((v,i)=>v.forEach((x,j)=>{const el=$(`vector-${i}-${j}`);if(document.activeElement!==el)el.value=x.toFixed(5);}));
   $('cube-metrics').textContent=`Edge lengths: ${S.lengths.map(x=>x.toFixed(2)).join(' · ')}. Angles 12 / 23 / 31: ${S.angles.map(x=>x.toFixed(1)+'°').join(' / ')}${S.volume<1e-4?' · The displayed frame is nearly flat. Reframe to restore a cube.':''}`;
@@ -229,7 +239,7 @@ function editVectors(basis){
   const from=VM.encode(state.p,vectorState.reference).V;
   const result=VM.move(from,to,state.p,vectorState.reference);
   state.p=result.p;
-  $('vector-feedback').textContent=result.limited?'Stopped at the last valid point: '+result.reason:'Conics reconstructed from the vectors. All contact and face relations are retained.';
+  $('vector-feedback').textContent=result.limited?'Stopped at the last valid point: '+result.reason:'Family reconstructed from the vectors. Sweep the slider forward or backward: your edit is retained.';
   $('vector-feedback').classList.toggle('limited',result.limited);
   render();return !result.limited;
  }catch(e){$('vector-feedback').textContent='No change applied: '+e.message;$('vector-feedback').classList.add('limited');return false;}
@@ -241,7 +251,7 @@ function reframeVectors(){
 function syncControls(){
  const space=state.scene!=='journey',later=state.phase>2.001;
  $('moduli-controls').hidden=space||state.phase<2.999;$('journey-controls').hidden=space;$('spatial-controls').hidden=!space;$('dual-label').hidden=space;
- $('proof-steps').hidden=state.scene!=='dandelin';$('inspect-row').hidden=!(later&&!space)&&state.scene!=='extrusion';
+ $('proof-steps').hidden=state.scene!=='dandelin';$('inspect-row').hidden=space&&state.scene!=='extrusion';
  $('journey').value=state.phase;$('lift').value=state.lift;$('lift-value').textContent=Math.round(state.lift*100)+'%';$('height-value').textContent=state.height.toFixed(2);
  $('section-height').value=state.height;$('seed-u').value=state.p.u[0];$('seed-u-value').textContent=state.p.u[0].toFixed(2);
  $('inspect-cube').value=state.selection;
@@ -265,7 +275,7 @@ function render(){
  svg.querySelectorAll('[data-handle]').forEach(g=>{const t=g.querySelector('text'),c=g.querySelector('circle');if(!t||!c)return;const x=+c.getAttribute('cx'),y=+c.getAttribute('cy'),len=Math.hypot(x,y)||1;t.setAttribute('x',x+(x/len)*.09);t.setAttribute('y',y+(y/len)*.09);});
  host.dataset.scene=state.scene;host.dataset.phase=state.phase.toFixed(5);updateModuliReadout();
 }
-function setPhase(t,manual=true){pauseWalk(true);cancelAnimationFrame(liftFrame);if(manual)markManual();stopPlay();state.scene='journey';state.phase=N.clamp(+t,0,3);state.selection='all';schedule();}
+function setPhase(t,manual=true){pauseWalk(true);cancelAnimationFrame(liftFrame);if(manual)markManual();stopPlay();state.scene='journey';state.phase=N.clamp(+t,0,3);schedule();}
 function animateLift(target){
  cancelAnimationFrame(liftFrame);const start=performance.now(),from=state.lift;
  if(matchMedia('(prefers-reduced-motion: reduce)').matches){state.lift=target;schedule();return;}
@@ -274,11 +284,17 @@ function animateLift(target){
 }
 function setScene(scene,manual=true){pauseWalk(true);if(!['journey','dandelin','extrusion'].includes(scene))return;if(manual)markManual();stopPlay();state.scene=scene;state.zoom=1;state.pan=[0,0];if(scene==='extrusion'){state.selection=`edge:${state.edge}`;}schedule();}
 function stopPlay(){state.playing=false;cancelAnimationFrame(playFrame);$('play-journey').textContent='Play the journey';}
-function play(now){if(!state.playing)return;if(lastTime)state.phase=Math.min(3,state.phase+(now-lastTime)/8500);lastTime=now;render();if(state.phase>=3){stopPlay();return;}playFrame=requestAnimationFrame(play);}
+function play(now){
+ if(!state.playing)return;
+ if(lastTime)state.phase=N.clamp(state.phase+state.direction*Math.min(now-lastTime,120)/8500,0,3);
+ lastTime=now;
+ if(state.phase>=3)state.direction=-1;else if(state.phase<=0)state.direction=1;
+ render();playFrame=requestAnimationFrame(play);
+}
 
 $('inspect-cube').innerHTML='<option value="all">Whole configuration</option>'+E.EDGES.map(([a,b],i)=>`<option value="edge:${i}">Edge ${E.LABELS[a]}–${E.LABELS[b]}</option>`).join('')+E.FACES.map((f,i)=>`<option value="face:${i}">Face ${f.map(s=>E.LABELS[s]).join(' · ')}</option>`).join('');
 $('cube-faces').innerHTML=E.FACES.map((f,i)=>`<button type="button" data-cube-face="${i}" aria-label="Select face ${f.map(s=>E.LABELS[s]).join(', ')}" aria-pressed="false">${f.map(s=>E.LABELS[s]).join('·')}</button>`).join('');
-$('chord-sliders').innerHTML=[0,1,2].map(i=>`<div class="chord-row"><strong>h${i+1}</strong><label>Angle <input id="chord-angle-${i}" data-chord-angle="${i}" type="range" min="-180" max="180" step=".2" aria-label="Chord ${i+1} angle"><output id="chord-angle-value-${i}"></output></label><label>Offset <input id="chord-offset-${i}" data-chord-offset="${i}" type="range" min=".12" max=".965" step=".002" aria-label="Chord ${i+1} offset"><output id="chord-offset-value-${i}"></output></label></div>`).join('');
+$('chord-sliders').innerHTML=[0,1,2].map(i=>`<div class="chord-row"><strong>h${i+1}</strong><label>Angle <input id="chord-angle-${i}" data-chord-angle="${i}" type="range" min="-180" max="180" step=".2" aria-label="Chord ${i+1} angle"><output id="chord-angle-value-${i}"></output></label><label>Offset <input id="chord-offset-${i}" data-chord-offset="${i}" type="range" min=".005" max=".985" step=".002" aria-label="Chord ${i+1} offset"><output id="chord-offset-value-${i}"></output></label></div>`).join('');
 function editChord(i,angle,distance){
  pauseWalk(true);markManual();stopPlay();
  try {const next=B.moveChord(state.p,i,angle,distance);N.family(state.phase,next);state.p=next;$('chord-feedback').textContent='Chord changed; all conics and the coefficient-space cube have been recomputed.';schedule();}
@@ -298,7 +314,7 @@ $('vector-coordinates').addEventListener('change',e=>{
  // Blur commits the accepted rather than the rejected input value.
  e.target.value=displayedVectors()[i][j].toFixed(5);
 });
-$('cube-model').onchange=()=>{markManual();if($('cube-model').value==='moduli'&&state.phase>2.999)reframeVectors();schedule();};
+$('cube-model').onchange=()=>{markManual();if($('cube-model').value==='moduli'&&state.scene==='journey')reframeVectors();schedule();};
 $('vector-reframe').onclick=reframeVectors;
 $('vector-gain').oninput=e=>{vectorState.gain=+e.target.value;$('vector-gain-value').textContent='×'+e.target.value;schedule();};
 $('vector-undo').onclick=()=>{if(!vectorState.undo.length)return;pauseWalk(true);stopPlay();markManual();state.p=vectorState.undo.pop();$('vector-undo').disabled=!vectorState.undo.length;$('vector-feedback').textContent='Previous configuration restored.';$('vector-feedback').classList.remove('limited');schedule();};
@@ -306,7 +322,7 @@ $('cube-reset').onclick=()=>cube.reset();$('cube-perspective').onchange=e=>cube.
 $('cube-linked').onchange=()=>schedule();$('cube-clear').onclick=()=>{markManual();state.selection='all';schedule();};
 
 $('journey').addEventListener('input',e=>setPhase(e.target.value));
-$('play-journey').onclick=()=>{pauseWalk(true);if(state.playing){stopPlay();return;}markManual();state.scene='journey';if(state.phase>=2.999)state.phase=0;state.playing=true;lastTime=0;$('play-journey').textContent='Pause';playFrame=requestAnimationFrame(play);};
+$('play-journey').onclick=()=>{pauseWalk(true);if(state.playing){stopPlay();return;}markManual();state.scene='journey';if(state.phase>=2.999)state.direction=-1;else if(state.phase<=.001)state.direction=1;state.playing=true;lastTime=0;$('play-journey').textContent='Pause';playFrame=requestAnimationFrame(play);};
 $('dual-view').onchange=e=>{markManual();state.dual=e.target.checked;schedule();};
 $('show-conclusion').onchange=e=>{markManual();state.conclusion=e.target.checked;schedule();};
 $('follow-story').onchange=e=>{state.follow=e.target.checked;followScroll();};
@@ -326,15 +342,15 @@ document.addEventListener('click',e=>{
 });
 function seedMove(handle,clientX,clientY){
  pauseWalk(true);stopPlay();
- const [_,i,j]=handle.split(':'),rect=$('drawing').getBoundingClientRect(),x=(clientX-rect.left-view.x)/view.s,y=-(clientY-rect.top-view.y)/view.s;
+ const [_,i,j]=handle.split(':'),rect=$('drawing').getBoundingClientRect(),raw=chart.fromDiagram([(clientX-rect.left-view.x)/view.s,-(clientY-rect.top-view.y)/view.s,1]),P=N.affine(raw);if(!P)return;const [x,y]=P;
  const t=state.phase<=1?N.ease(state.phase):1;let z;
  if(t<1e-8)z=2/(Math.abs(y)>.05?y:(y<0?-.05:.05));
  else {const angle=Math.atan2(Math.sqrt(t)*y,x);z=+j?Math.sqrt(t)*Math.tan(angle/2):Math.sqrt(t)/Math.tan(angle/2);}
- if(Number.isFinite(z)&&Math.abs(z)>=.15&&Math.abs(z)<=8){state.p[+j?'v':'u'][+i]=z;schedule();}
+ if(Number.isFinite(z)&&Math.abs(z)>=.15&&Math.abs(z)<=100){state.p[+j?'v':'u'][+i]=z;schedule();}
 }
 $('drawing').addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;markManual();const h=e.target.closest('[data-handle]');if(h){pauseWalk(true);stopPlay();}drag={id:e.pointerId,x:e.clientX,y:e.clientY,pan:state.pan.slice(),yaw:state.yaw,tilt:state.tilt,handle:h?.dataset.handle};$('drawing').setPointerCapture(e.pointerId);});
 $('drawing').addEventListener('pointermove',e=>{if(!drag||drag.id!==e.pointerId)return;if(drag.handle?.startsWith('chord:')&&state.scene==='journey'&&!state.dual){
- const i=+drag.handle.split(':')[1],rect=$('drawing').getBoundingClientRect(),x=(e.clientX-rect.left-view.x)/view.s,y=-(e.clientY-rect.top-view.y)/view.s,c=B.chordData(state.p)[i];
+ const i=+drag.handle.split(':')[1],rect=$('drawing').getBoundingClientRect(),P=N.affine(chart.fromDiagram([(e.clientX-rect.left-view.x)/view.s,-(e.clientY-rect.top-view.y)/view.s,1]));if(!P)return;const [x,y]=P,c=B.chordData(state.p)[i];
  editChord(i,Math.atan2(y,x)*180/Math.PI,e.shiftKey?c.distance:Math.hypot(x,y));
  }else if(drag.handle&&state.scene==='journey'&&!state.dual)seedMove(drag.handle,e.clientX,e.clientY);else if(state.scene==='journey'){state.pan=[drag.pan[0]+e.clientX-drag.x,drag.pan[1]+e.clientY-drag.y];schedule();}else{state.yaw=drag.yaw+(e.clientX-drag.x)/160;state.tilt=N.clamp(drag.tilt+(e.clientY-drag.y)/180,-1.45,1.45);schedule();}});
 for(const event of ['pointerup','pointercancel','lostpointercapture'])$('drawing').addEventListener(event,()=>{drag=null;});
@@ -352,7 +368,7 @@ function followScroll(){
  if(active.dataset.phase!==undefined){
   const anchors=[...document.querySelectorAll('[data-phase]')],i=+active.dataset.phase;let f=i;
   if(i<3){const y0=anchors[i].getBoundingClientRect().top,y1=anchors[i+1].getBoundingClientRect().top;f=i+N.clamp((marker-y0)/(y1-y0));}
-  state.scene='journey';state.phase=f;state.selection='all';
+  state.scene='journey';state.phase=f;
  }else{state.scene=active.dataset.scene;if(active.dataset.fixedPhase)state.phase=+active.dataset.fixedPhase;if(active.dataset.edge!==undefined){state.edge=+active.dataset.edge;state.selection='edge:'+state.edge;}}
  if(oldScene!==state.scene){state.zoom=1;state.pan=[0,0];}schedule();
 }
@@ -447,7 +463,7 @@ function updateModuliReadout(){
  catch{invariantNames.forEach((_,i)=>$(`invariant-${i}`).textContent='—');}
 }
 
-window.incidenceStory={state,render,setPhase,setScene,getData:()=>data,getView:()=>view,cube,editChord,vectorState,displayedVectors,beginVectorEdit,endVectorEdit,editVectors,reframeVectors,tour,randomTarget,wander,pauseWalk};
+window.incidenceStory={state,chart,render,setPhase,setScene,getData:()=>data,getView:()=>view,cube,editChord,vectorState,displayedVectors,beginVectorEdit,endVectorEdit,editVectors,reframeVectors,tour,randomTarget,wander,pauseWalk};
 const entry=new URLSearchParams(location.search).get('stage');
 if(entry==='penrose'){state.phase=3;state.follow=false;$('follow-story').checked=false;}
 render();
