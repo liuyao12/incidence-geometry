@@ -1,0 +1,28 @@
+/* Mathematical statements share the chapter's typographic hierarchy. */
+.prose .main-theorem{margin:2rem 0 3.5rem;scroll-margin-top:5.5rem}
+.prose .main-theorem h2{font-size:clamp(25px,2.8vw,35px);line-height:1.2;margin:0 0 1.15rem}
+.theorem-statement{padding:1.25rem 1.3rem .35rem;border-left:3px solid var(--accent,#247a71);background:#f0f4ee;border-radius:0 6px 6px 0}
+.prose .theorem-statement p{font-size:17px;line-height:1.8;margin:0 0 1rem}
+.prose .theorem-statement .theorem-qualification{font-size:14px;line-height:1.7;color:var(--muted,#596c69);border-top:1px solid #d6e0d8;padding-top:.9rem}
+.prose .theorem-source{font-family:var(--sans,system-ui);font-size:12px;line-height:1.8;margin-top:1rem}
+.theorem-hypotheses li{margin:.65rem 0;padding-left:.15rem;font-size:16px;line-height:1.75}
+.theorem-hypotheses ol{padding-left:1.4rem}
+.prose mjx-container[jax="SVG"]{font-size:103%!important}
+.prose mjx-container[jax="SVG"][display="true"]{max-width:100%;overflow-x:auto;overflow-y:hidden;padding:.2rem 0;margin:.85em 0}
+.prose .equation{font-size:19px;overflow:visible;white-space:normal}
+.prose .equation mjx-container[jax="SVG"][display="true"]{margin:.1em 0}
+.prose mjx-container[jax="SVG"] svg{max-width:none}
+@media(max-width:600px){
+  .theorem-statement{padding:1rem 1rem .15rem}
+  .prose .theorem-statement p{font-size:16px}
+  .prose .main-theorem{margin:1.5rem 0 3rem}
+  .prose .equation{font-size:17px}
+  .theorem-hypotheses li{font-size:15px}
+}
+@media print{
+  .theorem-statement{background:none;border:1px solid #777}
+  .main-theorem .theorem-statement{break-inside:avoid}
+  .theorem-hypotheses{display:block}
+}
+@media(max-width:880px){.reading-layout>.prose{width:100%;max-width:660px}}
+@media(max-width:380px){.prose .theorem-statement mjx-container[jax="SVG"][display="true"]{font-size:97%!important}}
