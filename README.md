@@ -2,7 +2,7 @@
 
 Three interactive chapters, with precise theorem statements and Lean sources alongside them.
 
-- [The three P’s](https://liuyao12.github.io/incidence-geometry/): a continuous Pappus → Pascal/Brianchon → Salmon → Penrose story, spatial Pascal, and editable framed-vector conic controls.
+- [From Pappus, to Pascal, to Penrose](https://liuyao12.github.io/incidence-geometry/): a continuous Pappus → Pascal/Brianchon → Salmon → Penrose story, spatial Pascal, and editable framed-vector conic controls.
 - [Incidence on surfaces](https://liuyao12.github.io/incidence-geometry/fomin.html): Fomin–Pylyavskyy’s geometric surface principle and exact scalar cancellation.
 - [Conic contact on surfaces](https://liuyao12.github.io/incidence-geometry/connections.html): a conic-contact counterpart, linked sixteen- and twelve-conic tori, contact-scale transport, and oriented patch boundaries.
 
