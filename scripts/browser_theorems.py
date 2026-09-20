@@ -95,6 +95,41 @@ try:
         checks.append('Every formula has assistive MathML; geometry SVG/canvas are not rewritten by MathJax')
 
         load(page,'index.html')
+        # The full Penrose theorem is the culmination, not an opening detour.
+        order=page.locator('.prose > section').evaluate_all('(es)=>es.map(e=>e.id)')
+        assert order[:4]==['pappus','pascal','salmon','penrose'],order
+        assert page.locator('#penrose > #main-theorem').count()==1
+        assert page.locator('#penrose .theorem-hypotheses').count()==1
+        assert page.locator('#penrose .result').count()==0
+        assert page.locator('.chapter-route a').all_text_contents()[:4]==[
+            'Pappus','Pascal & Brianchon','Salmon','Penrose']
+        initial=page.evaluate('JSON.stringify(incidenceStory.state.p)')
+        assert page.evaluate('incidenceStory.state.phase')==0
+        # Actual document scrolling, never setPhase: intermediate pictures must
+        # progress and reverse with the text, while the chosen family stays fixed.
+        for t in [0,.3,.7,1,1.4,1.8,2,2.4,2.8,3,2.4,1.6,.6,0]:
+            page.evaluate('''t=>{
+              const ids=['pappus','pascal','salmon','penrose'], i=Math.min(3,Math.floor(t));
+              const y=j=>document.getElementById(ids[j]).getBoundingClientRect().top+scrollY;
+              const top=i===3?y(3):y(i)+(t-i)*(y(i+1)-y(i));
+              scrollTo({top:top-innerHeight*.4+.5,behavior:'instant'});
+            }''',t)
+            page.wait_for_function('t=>incidenceStory.state.scene==="journey" && Math.abs(incidenceStory.state.phase-t)<.006',arg=t)
+            assert page.evaluate('JSON.stringify(incidenceStory.state.p)')==initial
+            assert not page.locator('#story-readout').evaluate('e=>e.classList.contains("error")')
+        page.locator('.chapter-route a[href="#main-theorem"]').click()
+        page.wait_for_function('incidenceStory.state.scene==="journey" && incidenceStory.state.phase===3')
+        assert page.locator('#scene-title').inner_text()=='Penrose'
+        page.locator('#main-theorem .theorem-hypotheses summary').click()
+        page.wait_for_timeout(120)
+        assert page.evaluate('incidenceStory.state.phase')==3
+        page.screenshot(path=str(ROOT/'theorem-penrose-progression.png'))
+        if server:
+            # Bookmarked main-theorem links also arrive at the matching visual.
+            load(page,'index.html#main-theorem')
+            page.wait_for_function('incidenceStory.state.scene==="journey" && incidenceStory.state.phase===3')
+        checks.append('Pappus, Pascal, Salmon, then the full Penrose theorem; actual scrolling and direct theorem links select the matching visual without changing the family')
+        load(page,'index.html')
         page.locator('#follow-story').uncheck()
         initial=page.evaluate('JSON.stringify(incidenceStory.state.p)')
         for t in [0,.4,1,1.6,2,2.6,3,2,1,0]:

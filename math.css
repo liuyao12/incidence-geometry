@@ -26,3 +26,8 @@
 }
 @media(max-width:880px){.reading-layout>.prose{width:100%;max-width:660px}}
 @media(max-width:380px){.prose .theorem-statement mjx-container[jax="SVG"][display="true"]{font-size:97%!important}}
+
+/* The Penrose statement concludes its chapter, inside the phase-three section. */
+.prose #penrose > .main-theorem{margin:2rem 0;scroll-margin-top:calc(var(--chapter-nav-height,64px) + 24px)}
+.prose #penrose > .main-theorem h3{font:400 clamp(25px,2.8vw,35px)/1.2 Georgia,"Times New Roman",serif;letter-spacing:-1px;margin:0 0 1.15rem}
+@media(max-width:959px){.prose #penrose > .main-theorem{scroll-margin-top:18px}}
