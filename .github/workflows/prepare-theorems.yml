@@ -61,21 +61,16 @@ jobs:
           set -euo pipefail
           lake env lean Audit.lean | tee axiom-audit-current.txt
           python3 ../scripts/audit_axioms.py axiom-audit-current.txt | tee audit-report.json
-      - name: Commit the tested ordinary sources and retain regression coverage
+      - name: Commit only the tested ordinary sources
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
           import json, subprocess
           from pathlib import Path
-          ci=Path('.github/workflows/ci.yml')
-          s=ci.read_text()
-          s=s.replace('          python3 scripts/check_release_sources.py\n','          python3 scripts/check_release_sources.py\n          python3 scripts/check_math_assets.py\n')
-          s=s.replace('          python scripts/browser_journey_view.py --serve\n','          python scripts/browser_journey_view.py --serve\n          python scripts/browser_theorems.py --serve\n')
-          s+='            theorem-browser-test-results.json\n            theorem-*-desktop.png\n            theorem-*-mobile.png\n'
-          ci.write_text(s)
           paths=json.loads(Path('.release/paths.json').read_text())
-          subprocess.run(['git','add','--',*paths,'.github/workflows/ci.yml'],check=True)
+          assert all(not p.startswith(('.github/','.git/','.release/')) for p in paths)
+          subprocess.run(['git','add','--',*paths],check=True)
           PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
