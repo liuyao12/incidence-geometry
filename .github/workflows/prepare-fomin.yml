@@ -1,0 +1,93 @@
+name: Validate classical incidence applications
+on:
+  push:
+    branches: ['work/fomin-applications-20260920']
+    paths: ['.release/**', '.github/workflows/prepare-fomin.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: prepare-fomin-applications
+  cancel-in-progress: true
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: work/fomin-applications-20260920
+      - name: Assemble the hash-checked classical-application sources
+        run: python3 .release/assemble_fomin.py
+      - name: Check every mathematical engine and the paper's proof surfaces
+        run: |
+          node test.cjs
+          node test-ganja.cjs
+          node test-chern.cjs
+          node test-narrative.cjs
+          node test-moduli.cjs
+          node test-vector-moduli.cjs
+          node test-conic-net.cjs
+          node test-oriented-net.cjs
+          node test-journey-view.cjs
+          node test-fomin-classics.cjs
+          python3 scripts/generate_oriented_example.py
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Exercise all eleven HTTP-loaded browser suites
+        shell: bash
+        run: |
+          set -euo pipefail
+          pip install playwright==1.55.0
+          python -m playwright install --with-deps chromium
+          python scripts/browser_fomin_classics.py --serve
+          python scripts/browser_smoke.py --serve
+          python scripts/browser_narrative.py --serve
+          python scripts/browser_moduli.py --serve
+          python scripts/browser_focus.py --serve
+          python scripts/browser_vectors.py --serve
+          python scripts/browser_results.py --serve
+          python scripts/browser_review.py --serve
+          python scripts/browser_journey_view.py --serve
+          python scripts/browser_theorems.py --serve
+          python scripts/browser_columns.py --serve
+      - uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: formal
+          use-mathlib-cache: 'true'
+          build: 'true'
+          test: 'false'
+          lint: 'false'
+      - name: Audit the unchanged 236-theorem library
+        working-directory: formal
+        shell: bash
+        run: |
+          set -euo pipefail
+          lake env lean Audit.lean | tee axiom-audit-current.txt
+          python3 ../scripts/audit_axioms.py axiom-audit-current.txt | tee audit-report.json
+      - name: Commit only tested ordinary source files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          python3 - <<'PY'
+          import json, subprocess
+          paths = json.load(open('.release/paths.json'))
+          subprocess.run(['git', 'add', '--', *paths], check=True)
+          PY
+          git diff --cached --stat
+          git commit -m 'Illustrate classical incidence theorems using the original Fomin proof tilings'
+          git push origin HEAD:work/fomin-applications-20260920
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fomin-applications-verification
+          path: |
+            formal/axiom-audit-current.txt
+            formal/audit-report.json
+            *test-results.json
+            fomin-applications-*.png
+            theorem-*-desktop.png
+            columns-*-desktop.png
