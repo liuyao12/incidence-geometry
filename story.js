@@ -356,11 +356,7 @@ $('drawing').addEventListener('pointermove',e=>{if(!drag||drag.id!==e.pointerId)
 for(const event of ['pointerup','pointercancel','lostpointercapture'])$('drawing').addEventListener(event,()=>{drag=null;});
 $('drawing').addEventListener('wheel',e=>{if(!e.shiftKey)return;e.preventDefault();markManual();state.zoom=N.clamp(state.zoom*Math.exp(-e.deltaY*.001),.3,5);schedule();},{passive:false});
 host.addEventListener('keydown',e=>{const h=e.target.closest('[data-handle]');if(!h||!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))return;e.preventDefault();pauseWalk(true);stopPlay();markManual();const [kind,i,j]=h.dataset.handle.split(':');const sign=e.key==='ArrowRight'||e.key==='ArrowUp'?1:-1;if(kind==='chord'){const c=B.chordData(state.p)[+i];editChord(+i,c.angle+(['ArrowRight','ArrowLeft'].includes(e.key)?sign:0),c.distance+(['ArrowUp','ArrowDown'].includes(e.key)?sign*.004:0));}else{state.p[+j?'v':'u'][+i]+=sign*.035;schedule();}});
-let panel=null;
-$('panel-grip').addEventListener('pointerdown',e=>{if(innerWidth<=880||e.target.closest('button'))return;panel={x:e.clientX,y:e.clientY,dx:parseFloat($('laboratory').style.getPropertyValue('--drag-x'))||0,dy:parseFloat($('laboratory').style.getPropertyValue('--drag-y'))||0};$('panel-grip').setPointerCapture(e.pointerId);});
-$('panel-grip').addEventListener('pointermove',e=>{if(!panel)return;const lab=$('laboratory'),base=lab.parentElement.getBoundingClientRect(),width=lab.getBoundingClientRect().width;const x=N.clamp(panel.dx+e.clientX-panel.x,12-base.left,innerWidth-12-base.left-width),y=N.clamp(panel.dy+e.clientY-panel.y,-base.top+8,innerHeight-70-base.top);lab.style.setProperty('--drag-x',x+'px');lab.style.setProperty('--drag-y',y+'px');});
-for(const ev of ['pointerup','pointercancel','lostpointercapture'])$('panel-grip').addEventListener(ev,()=>panel=null);
-$('reset-position').onclick=()=>{$('laboratory').style.removeProperty('--drag-x');$('laboratory').style.removeProperty('--drag-y');$('laboratory').style.removeProperty('width');schedule();};
+// The interactive is an in-flow page column; only its geometry can be dragged.
 let scrollFrame=0;
 function followScroll(){
  if(!state.follow)return;pauseWalk(true);const oldScene=state.scene;stopPlay();const sections=[...document.querySelectorAll('.prose section[data-scene]')],marker=innerHeight*.4;
