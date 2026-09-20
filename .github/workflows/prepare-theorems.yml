@@ -1,0 +1,94 @@
+name: Validate theorem statements and LaTeX
+on:
+  push:
+    branches: ['work/latex-theorems-20260920']
+    paths: ['.release/**', '.github/workflows/prepare-theorems.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: prepare-latex-theorems
+  cancel-in-progress: true
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: work/latex-theorems-20260920
+      - name: Assemble the tested text edits
+        run: python3 .release/prepare_theorems.py
+      - name: Vendor the pinned SVG typesetter and check its exact bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix "$RUNNER_TEMP/theorem-mathjax" --ignore-scripts --no-audit --no-fund --package-lock=false --no-save mathjax-full@3.2.1
+          cp "$RUNNER_TEMP/theorem-mathjax/node_modules/mathjax-full/es5/tex-svg.js" vendor/mathjax/tex-svg.js
+          cp "$RUNNER_TEMP/theorem-mathjax/node_modules/mathjax-full/LICENSE" vendor/mathjax/LICENSE
+          python3 scripts/check_math_assets.py
+          python3 scripts/check_release_sources.py
+          python3 scripts/check_site_links.py
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check the four typeset pages and all eight existing browser suites
+        shell: bash
+        run: |
+          set -euo pipefail
+          pip install playwright==1.55.0
+          python -m playwright install --with-deps chromium
+          python scripts/browser_theorems.py --serve
+          python scripts/browser_smoke.py --serve
+          python scripts/browser_narrative.py --serve
+          python scripts/browser_moduli.py --serve
+          python scripts/browser_focus.py --serve
+          python scripts/browser_vectors.py --serve
+          python scripts/browser_results.py --serve
+          python scripts/browser_review.py --serve
+          python scripts/browser_journey_view.py --serve
+      - uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: formal
+          use-mathlib-cache: 'true'
+          build: 'true'
+          test: 'false'
+          lint: 'false'
+      - name: Audit the unchanged mathematical library
+        working-directory: formal
+        shell: bash
+        run: |
+          set -euo pipefail
+          lake env lean Audit.lean | tee axiom-audit-current.txt
+          python3 ../scripts/audit_axioms.py axiom-audit-current.txt | tee audit-report.json
+      - name: Commit the tested ordinary sources and retain regression coverage
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          ci=Path('.github/workflows/ci.yml')
+          s=ci.read_text()
+          s=s.replace('          python3 scripts/check_release_sources.py\n','          python3 scripts/check_release_sources.py\n          python3 scripts/check_math_assets.py\n')
+          s=s.replace('          python scripts/browser_journey_view.py --serve\n','          python scripts/browser_journey_view.py --serve\n          python scripts/browser_theorems.py --serve\n')
+          s+='            theorem-browser-test-results.json\n            theorem-*-desktop.png\n            theorem-*-mobile.png\n'
+          ci.write_text(s)
+          paths=json.loads(Path('.release/paths.json').read_text())
+          subprocess.run(['git','add','--',*paths,'.github/workflows/ci.yml'],check=True)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git diff --cached --stat
+          git commit -m 'Add precise main theorems and locally rendered LaTeX to the geometry chapters'
+          git push origin HEAD:work/latex-theorems-20260920
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: latex-theorem-verification
+          path: |
+            theorem-browser-test-results.json
+            theorem-*-desktop.png
+            theorem-*-mobile.png
+            formal/axiom-audit-current.txt
+            formal/audit-report.json
