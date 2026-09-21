@@ -4,7 +4,7 @@
 const E=IncidenceMath,G=IncidencePGA,N=IncidenceNarrative,Net=ConicNet,$=id=>document.getElementById(id);
 const host=$('surface-geometry'),R=createGanjaView(host),canvas=$('net-topology'),ctx=canvas.getContext('2d');
 const colors=['#315f9c','#168477','#9b5b90','#bb592e'];
-const state={amount:1.4,twist:.1,gauge:.7,face:5,edge:-1,reveal:false,context:false,kind:'torus',yaw:.55,tilt:.7,zoom:1,pan:[0,0],animate:false,map:false,patch:false,region:[5]};
+const state={amount:1.4,twist:.1,gauge:.7,face:5,edge:-1,reveal:false,context:false,kind:'torus',yaw:.55,tilt:.7,zoom:1,pan:[0,0],animate:false,map:true,patch:false,region:[5]};
 let data,frame=0,view,polygons=[],drag=null,diagramDrag=null,last=0,anim=0,traceTimer=null,motion=null;
 const isNet=()=>state.kind!=='square';
 const isCube=()=>state.kind==='cube';
@@ -94,9 +94,9 @@ function render(){
   $('surface-status').textContent=state.kind==='square'?'All four adjacent pairs have double contact, but the scale returns multiplied by 2. The chords are not concurrent.':state.reveal?`The four contact chords meet at Ω. This face follows from the other ${data.faces.length-1}.`:`${data.Q.length} conics, ${data.edges.length} contacts. ${isCube()?'The same Penrose family as chapter 1. All eight conics are supplied here.':state.kind==='odd'?'The 3-edge loop prevents any black–white coloring.':'Select a face and reveal its concurrence.'}`;
   $('surface-diagnostic').textContent=`Largest contact residual ${data.maxEdge.toExponential(2)}; selected face residual ${data.faces[state.face].error.toExponential(2)}. These are drawing diagnostics, not proof evidence.`;
   $('surface-parameters').hidden=!isNet();$('net-face-buttons').hidden=!isNet();$('patch-controls').hidden=!isNet();$('net-map').hidden=!isNet()||isCube();$('cube-patches').hidden=!isCube();$('patch-four').hidden=isCube();
-  canvas.setAttribute('aria-label',isCube()?'Rotatable Penrose cube. Drag to orbit; click a face to inspect its four conics. Arrow keys turn the camera.':'Rotatable labeled torus. Drag to orbit; click a face to inspect its conics. Arrow keys turn the camera.');$('net-counts').textContent=isNet()?`${data.Q.length} conics · ${data.edges.length} contacts · ${data.faces.length} faces`:'4 conics · 4 contacts · H = 2';
-  $('topology-caption').textContent=!isNet()?'A single face; no gluing is asserted.':isCube()?'The cube is a six-face sphere, as in the Desargues example. Its vertices now carry conics.':state.map?'Matching colored sides are identified. Orange marks the patch boundary.':'Drag to turn the gluing diagram; click a face.';
-  $('net-map').textContent=state.map?'Show torus':'Cut open';$('net-map').setAttribute('aria-pressed',String(state.map));
+  canvas.setAttribute('aria-label',!isNet()?'A single quadrilateral with four conics.':isCube()?'Rotatable Penrose cube. Drag to orbit; click a face to inspect its four conics. Arrow keys turn the camera.':state.map?'Flat torus with matching opposite sides identified. Click a face to inspect its four conics, or use the numbered face buttons.':'Rotatable labeled torus. Drag to orbit; click a face to inspect its conics. Arrow keys turn the camera.');$('net-counts').textContent=isNet()?`${data.Q.length} conics · ${data.edges.length} contacts · ${data.faces.length} faces`:'4 conics · 4 contacts · H = 2';
+  $('topology-caption').textContent=!isNet()?'A single face; no gluing is asserted.':isCube()?'The cube is a six-face sphere, as in the Desargues example. Its vertices now carry conics.':state.map?'Flat torus: matching colored sides are identified. Click a face to inspect its conics; orange marks the selected face or patch boundary.':'Drag to turn the gluing diagram; click a face.';
+  $('net-map').textContent=state.map?'Show 3D torus':'Cut open';$('net-map').setAttribute('aria-pressed',String(state.map));
   $('face-number').textContent=isNet()?`Face ${state.face+1} / ${data.faces.length}`:'A noncoherent quadrilateral';
   $('reveal-face').textContent=state.reveal?'Hide concurrence':'Reveal concurrence';$('reveal-face').disabled=state.kind==='square';
   // Keep buttons in the DOM: keyboard focus must survive moving geometry.
@@ -139,7 +139,7 @@ $('net-context').onchange=e=>{state.context=e.target.checked;schedule();};
 $('reveal-face').onclick=()=>{state.reveal=!state.reveal;schedule();};$('clear-contact').onclick=()=>{state.edge=-1;schedule();};
 $('net-face-buttons').addEventListener('click',e=>{const b=e.target.closest('[data-face]');if(b)selectFace(+b.dataset.face);});
 $('transport-values').addEventListener('click',e=>{const b=e.target.closest('[data-contact]');if(b){state.edge=+b.dataset.contact;schedule();}});
-$('surface-example').onchange=e=>{stop(true);state.kind=e.target.value;state.face=state.kind==='odd'?10:state.kind==='torus'?5:0;state.region=[state.face];state.edge=-1;state.reveal=state.kind==='square';if(isCube())state.map=false;state.zoom=1;state.pan=[0,0];schedule();};
+$('surface-example').onchange=e=>{stop(true);state.kind=e.target.value;state.face=state.kind==='odd'?10:state.kind==='torus'?5:0;state.region=[state.face];state.edge=-1;state.reveal=state.kind==='square';state.map=isNet()&&!isCube();state.zoom=1;state.pan=[0,0];schedule();};
 function cubePatch(faces){
  stop(true);state.kind='cube';state.face=faces[0];state.region=faces.slice();state.patch=true;state.edge=-1;state.map=false;state.reveal=false;state.zoom=1;state.pan=[0,0];
  $('surface-example').value='cube';$('patch-mode').checked=true;$('patch-controls').open=true;render();
