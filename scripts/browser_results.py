@@ -8,6 +8,7 @@ from functools import partial
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 import argparse, json, os, re, threading
 from playwright.sync_api import sync_playwright
+from surface_test_ui import select_surface_face
 
 ROOT=Path(__file__).resolve().parents[1]
 parser=argparse.ArgumentParser();parser.add_argument('--serve',action='store_true');args=parser.parse_args()
@@ -52,11 +53,11 @@ with sync_playwright() as p:
     checks.append('Pappus/Pascal remain uncluttered; Penrose retains editable vectors and random motion')
 
     load(page,'connections.html')
-    assert page.locator('#net-face-buttons button').count()==16
+    assert page.evaluate('conicSurface.getData().faces.length')==16
     assert page.locator('#holonomy-value').text_content()=='?'
     assert not page.locator('#surface-status').evaluate('e=>e.classList.contains("error")')
     for i in range(16):
-        page.locator(f'[data-face="{i}"]').click();page.wait_for_timeout(45)
+        select_surface_face(page, i);page.wait_for_timeout(45)
         assert page.evaluate('conicSurface.state.face')==i
         assert page.locator('#holonomy-value').text_content()=='?'
         page.locator('#reveal-face').click();page.wait_for_timeout(45)

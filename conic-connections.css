@@ -21,3 +21,13 @@
  .geometry-dictionary>div+div { border-left:0; border-top:1px solid var(--line); }
  .parent-chapters a { padding:14px 16px; }
 }
+
+/* Select faces on the diagram itself; no duplicate numbered-button column. */
+#surface-laboratory .net-layout { grid-template-columns:minmax(0,1fr); gap:0; }
+#surface-laboratory #net-topology { height:clamp(230px,24vw,300px); }
+#surface-laboratory #net-topology:focus-visible { outline:2px solid var(--blue); outline-offset:3px; }
+#surface-laboratory .transport-heading { flex-wrap:wrap; gap:8px; }
+#surface-laboratory .transport-actions { display:flex; flex-wrap:wrap; gap:6px; }
+@media (max-width:500px) {
+ #surface-laboratory #net-topology { height:240px; }
+}

@@ -8,6 +8,7 @@ from functools import partial
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 import argparse, json, os, re, threading
 from playwright.sync_api import sync_playwright
+from surface_test_ui import select_surface_face
 
 ROOT=Path(__file__).resolve().parents[1]
 ap=argparse.ArgumentParser();ap.add_argument('--serve',action='store_true');args=ap.parse_args()
@@ -58,12 +59,12 @@ try:
         checks.append('Two parent chapters and their precise mathematical roles are linked; completion and compatibility are distinguished')
         page.locator('#from-penrose [data-net-example="cube"]').click();page.wait_for_timeout(100)
         assert page.evaluate('conicSurface.state.kind')=='cube'
-        assert page.locator('#net-face-buttons button').count()==6
+        assert page.evaluate('conicSurface.getData().faces.length')==6
         assert page.locator('#net-map').is_hidden()
         assert page.locator('#cube-patches').is_visible()
         assert page.evaluate('conicSurface.getData().maxEdge<1e-8 && conicSurface.getData().maxFace<1e-8')
         for f in range(6):
-            page.locator(f'[data-face="{f}"]').click();page.wait_for_timeout(40)
+            select_surface_face(page, f);page.wait_for_timeout(40)
             assert page.locator('#holonomy-value').inner_text()=='?'
             page.locator('#reveal-face').click();page.wait_for_timeout(40)
             assert page.locator('#holonomy-value').inner_text()=='1'

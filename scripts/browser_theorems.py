@@ -8,6 +8,7 @@ from functools import partial
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 import argparse, json, os, re, threading
 from playwright.sync_api import sync_playwright
+from surface_test_ui import select_surface_face
 
 ROOT = Path(__file__).resolve().parents[1]
 ap = argparse.ArgumentParser()
@@ -151,12 +152,12 @@ try:
         checks.append('Fomin exact edge cancellation controls remain independent of LaTeX rendering')
 
         load(page,'connections.html')
-        page.locator('#net-face-buttons [data-face="3"]').click();page.wait_for_timeout(100)
+        select_surface_face(page, 3);page.wait_for_timeout(100)
         assert page.evaluate('conicSurface.state.face')==3
         page.locator('#reveal-face').click();page.wait_for_timeout(100)
         assert page.locator('#holonomy-value').inner_text()=='1'
         page.locator('#surface-example').select_option('odd');page.wait_for_timeout(100)
-        assert page.locator('#net-face-buttons button').count()==12
+        assert page.evaluate('conicSurface.getData().faces.length')==12
         assert page.locator('#net-topology').get_attribute('data-view')=='flat'
         page.locator('#net-map').click();page.wait_for_timeout(100)
         assert page.locator('#net-map').get_attribute('aria-pressed')=='true'

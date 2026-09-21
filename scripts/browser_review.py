@@ -7,6 +7,7 @@ from functools import partial
 from http.server import ThreadingHTTPServer,SimpleHTTPRequestHandler
 import argparse,json,os,re,threading
 from playwright.sync_api import sync_playwright
+from surface_test_ui import select_surface_face
 ROOT=Path(__file__).resolve().parents[1]
 ap=argparse.ArgumentParser();ap.add_argument('--serve',action='store_true');args=ap.parse_args()
 server=None;errors=[];failures=[];checks=[]
@@ -38,6 +39,16 @@ with sync_playwright() as p:
  page.on('pageerror',lambda e:errors.append(str(e)));page.on('requestfailed',lambda r:failures.append(r.url))
  if server:page.on('response',lambda r:failures.append(f'HTTP {r.status}: {r.url}')if r.status>=400 else None)
  load(page)
+ assert page.locator('#net-face-buttons').count()==0
+ assert page.locator('#face-number').count()==0
+ assert page.locator('.net-inspector').count()==0
+ assert page.locator('#net-topology').evaluate("e => e.getBoundingClientRect().width > e.closest('.net-layout').clientWidth - 45")
+ select_surface_face(page,0)
+ c=page.locator('#net-topology')
+ for key,face in [('ArrowLeft',12),('ArrowRight',0),('ArrowUp',3),('ArrowDown',0),('End',15),('Home',0)]:
+  c.press(key);page.wait_for_timeout(30)
+  assert page.evaluate('conicSurface.state.face')==face
+ checks.append('Numbered face blocks and counter are removed; full-width map and keyboard seam navigation select faces directly')
  assert page.evaluate('conicSurface.state.map')
  assert page.locator('#net-map').get_attribute('aria-pressed')=='false'
  assert 'Flattened periodic' in page.locator('#net-topology').get_attribute('aria-label')
@@ -84,10 +95,10 @@ with sync_playwright() as p:
  page.locator('#net-map').click();page.wait_for_timeout(60)
  page.locator('#surface-example').select_option('odd');page.wait_for_timeout(100)
  checks.append('Switching through Penrose keeps the flat torus; existing wrapped-view bookmarks still restore exactly')
- assert page.locator('#net-face-buttons button').count()==12
+ assert page.evaluate('conicSurface.getData().faces.length')==12
  assert page.evaluate('!ConicNet.isBicolorable(conicSurface.getData())')
  for i in range(12):
-  page.locator(f'[data-face="{i}"]').click();page.locator('#reveal-face').click();page.wait_for_timeout(30)
+  select_surface_face(page, i);page.locator('#reveal-face').click();page.wait_for_timeout(30)
   assert page.locator('#holonomy-value').text_content()=='1'
   assert page.evaluate('conicSurface.getData().maxFace')<1e-8
  checks.append('Twelve-conic odd-cycle torus: all faces and contacts, without a vertex coloring')
@@ -106,6 +117,20 @@ with sync_playwright() as p:
  assert '0 boundary edges' in page.locator('#patch-readout').inner_text()
  page.locator('#patch-mode').uncheck();page.wait_for_timeout(80)
  checks.append('Patch selection cancels internal edges; the whole closed torus has empty boundary')
+ page.locator('#patch-mode').check();page.wait_for_timeout(50)
+ c=page.locator('#net-topology');c.scroll_into_view_if_needed();c.focus()
+ region=page.evaluate('conicSurface.state.region.slice()')
+ c.press('ArrowRight');page.wait_for_timeout(40)
+ assert page.evaluate('conicSurface.state.region')==region
+ target=page.evaluate('conicSurface.state.face')
+ c.press('Space');page.wait_for_timeout(40)
+ expected=sorted(set(region)^{target})
+ assert sorted(page.evaluate('conicSurface.state.region'))==expected
+ c.press('Enter');page.wait_for_timeout(40)
+ assert sorted(page.evaluate('conicSurface.state.region'))==sorted(region)
+ page.locator('#patch-mode').uncheck()
+ checks.append('Keyboard inspection does not modify a patch; Space and Enter toggle the focused face explicitly')
+
  page.locator('#trace-scale').click();page.wait_for_timeout(110)
  slider(page,'net-gauge',1.3)
  page.wait_for_timeout(900)

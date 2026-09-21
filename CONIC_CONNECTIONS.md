@@ -74,3 +74,19 @@ Cube inspection does not overwrite that choice. Version-1 bookmarks retain
 an explicitly saved flat or wrapped view. The review suite checks all 28
 flat faces, seam-crossing patches, view round trips and bookmark compatibility.
 No conic equations, contacts, transport calculations or Lean source changed.
+
+
+## Direct face selection
+
+The diagram is the face selector. The separate numbered button grid and its
+"Face n / N" counter are removed. The full-width map retains numbered cells,
+linked vertex colors, seam identifications and patch highlights. The contact
+reset ("Show four chords") sits beside the scale trace controls instead.
+
+In the flat map, arrow keys select neighboring faces across periodic seams.
+Home/End choose the first/last face and Page Up/Down cycle faces in either the
+flat or 3D views; ordinary 3D arrow keys still rotate the camera. Keyboard
+inspection does not change patch membership: Space/Enter toggles the focused
+face, with a dashed outline showing the focus. Existing pointer selection,
+bookmarks, cube patches and conic calculations are unchanged. Browser tests
+now use these real canvas controls instead of the removed button grid.
