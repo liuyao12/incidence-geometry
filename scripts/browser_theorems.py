@@ -157,8 +157,12 @@ try:
         assert page.locator('#holonomy-value').inner_text()=='1'
         page.locator('#surface-example').select_option('odd');page.wait_for_timeout(100)
         assert page.locator('#net-face-buttons button').count()==12
+        assert page.locator('#net-topology').get_attribute('data-view')=='flat'
         page.locator('#net-map').click();page.wait_for_timeout(100)
         assert page.locator('#net-map').get_attribute('aria-pressed')=='true'
+        assert page.locator('#net-topology').get_attribute('data-view')=='wrapped'
+        page.locator('#net-map').click();page.wait_for_timeout(100)
+        assert page.locator('#net-topology').get_attribute('data-view')=='flat'
         checks.append('Conic torus face selection, concurrence, odd-cycle example and cut-open view remain interactive')
         assert not errors,errors
         assert not failed,failed

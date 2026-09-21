@@ -38,7 +38,52 @@ with sync_playwright() as p:
  page.on('pageerror',lambda e:errors.append(str(e)));page.on('requestfailed',lambda r:failures.append(r.url))
  if server:page.on('response',lambda r:failures.append(f'HTTP {r.status}: {r.url}')if r.status>=400 else None)
  load(page)
+ assert page.evaluate('conicSurface.state.map')
+ assert page.locator('#net-map').get_attribute('aria-pressed')=='false'
+ assert 'Flattened periodic' in page.locator('#net-topology').get_attribute('aria-label')
+ assert 'matching arrows' in page.locator('#topology-caption').inner_text()
+ # Every face, including both seams and the corner, is pickable in the flat map.
+ for kind,rows in [('torus',4),('odd',3)]:
+  page.locator('#surface-example').select_option(kind);page.wait_for_timeout(80)
+  assert page.locator('#net-topology').get_attribute('data-view')=='flat'
+  geometry=page.evaluate('JSON.stringify(conicSurface.getData().Q)')
+  c=page.locator('#net-topology');c.scroll_into_view_if_needed();b=c.bounding_box()
+  cell=min((b['width']-42)/rows,(b['height']-30)/4)
+  x0=(b['width']-rows*cell)/2;y0=(b['height']-4*cell)/2
+  for i in range(rows):
+   for j in range(4):
+    page.mouse.click(b['x']+x0+(i+.5)*cell,b['y']+y0+(j+.5)*cell);page.wait_for_timeout(25)
+    assert page.evaluate('conicSurface.state.face')==4*i+j
+  assert geometry==page.evaluate('JSON.stringify(conicSurface.getData().Q)')
+  old=page.evaluate('conicSurface.snapshot()')
+  # A drag on the map must not rotate a hidden camera or select a different face.
+  page.mouse.move(b['x']+20,b['y']+20);page.mouse.down();page.mouse.move(b['x']+60,b['y']+45,steps=5);page.mouse.up()
+  assert old==page.evaluate('conicSurface.snapshot()')
+  page.locator('#net-map').click();page.wait_for_timeout(60)
+  assert page.locator('#net-topology').get_attribute('data-view')=='wrapped'
+  assert page.locator('#net-map').get_attribute('aria-pressed')=='true'
+  page.locator('#net-map').click();page.wait_for_timeout(60)
+  assert old==page.evaluate('conicSurface.snapshot()')
+  assert geometry==page.evaluate('JSON.stringify(conicSurface.getData().Q)')
+ checks.append('Both tori open flat; all 28 numbered faces are directly pickable; view toggles preserve equations, selection and camera')
+ # A cube remains rotatable without overwriting the chosen torus presentation.
+ page.locator('#surface-example').select_option('cube');page.wait_for_timeout(60)
+ assert page.locator('#net-topology').get_attribute('data-view')=='cube'
+ page.locator('#cube-base-patch').click();page.wait_for_timeout(60)
+ assert page.evaluate('conicSurface.state.map')
+ page.locator('#surface-example').select_option('torus');page.wait_for_timeout(60)
+ assert page.locator('#net-topology').get_attribute('data-view')=='flat'
+ page.locator('#patch-mode').uncheck();page.wait_for_timeout(60)
+ # Retain explicitly saved 3D views, including existing version-1 bookmarks.
+ page.locator('#net-map').click();page.wait_for_timeout(60)
+ saved=page.evaluate('conicSurface.snapshot()');assert saved['map'] is False
+ page.locator('#bookmark-scene').click();fragment=page.evaluate('location.hash')
+ load(page,fragment)
+ assert page.evaluate('conicSurface.snapshot()')==saved
+ assert page.locator('#net-topology').get_attribute('data-view')=='wrapped'
+ page.locator('#net-map').click();page.wait_for_timeout(60)
  page.locator('#surface-example').select_option('odd');page.wait_for_timeout(100)
+ checks.append('Switching through Penrose keeps the flat torus; existing wrapped-view bookmarks still restore exactly')
  assert page.locator('#net-face-buttons button').count()==12
  assert page.evaluate('!ConicNet.isBicolorable(conicSurface.getData())')
  for i in range(12):
@@ -46,7 +91,8 @@ with sync_playwright() as p:
   assert page.locator('#holonomy-value').text_content()=='1'
   assert page.evaluate('conicSurface.getData().maxFace')<1e-8
  checks.append('Twelve-conic odd-cycle torus: all faces and contacts, without a vertex coloring')
- page.locator('#net-map').click();page.wait_for_timeout(100)
+ assert page.evaluate('conicSurface.state.map')
+ assert page.locator('#net-topology').get_attribute('data-view')=='flat'
  geometry=page.evaluate('JSON.stringify(conicSurface.getData().Q)')
  assert page.evaluate('conicSurface.state.map')
  c=page.locator('#net-topology');c.scroll_into_view_if_needed();b=c.bounding_box()
@@ -92,7 +138,7 @@ with sync_playwright() as p:
  page.emulate_media(reduced_motion='reduce');page.locator('#animate-net').click();page.wait_for_timeout(60)
  assert not page.evaluate('conicSurface.state.animate')
  slider(page,'net-amount',1.4);slider(page,'net-twist',.1)
- page.locator('#surface-example').select_option('odd');page.locator('#net-map').click()
+ page.locator('#surface-example').select_option('odd')
  page.locator('#surface-laboratory').evaluate('e=>e.scrollTop=0');page.evaluate('window.scrollTo(0,0)');page.wait_for_timeout(70)
  page.screenshot(path=str(ROOT/'review-surface-desktop.png'))
  for width in [1100,820,390,320]:
@@ -100,6 +146,19 @@ with sync_playwright() as p:
   assert not page.evaluate('document.documentElement.scrollWidth>innerWidth'),width
  page.set_viewport_size({'width':390,'height':844});page.evaluate('window.scrollTo(0,0)');page.wait_for_timeout(70)
  page.screenshot(path=str(ROOT/'review-surface-mobile.png'))
+ # Check cancellation across the cut, not only a patch away from the seam.
+ page.locator('#patch-controls').evaluate('e=>e.open=true')
+ for rows,kind in [(3,'odd'),(4,'torus')]:
+  page.locator('#surface-example').select_option(kind);page.wait_for_timeout(60)
+  page.evaluate('(rows)=>{conicSurface.state.patch=true;conicSurface.state.region=[0,3,4*(rows-1),4*(rows-1)+3];conicSurface.render();}',rows)
+  assert '4 internal edges cancel' in page.locator('#patch-readout').inner_text(), (page.locator('#patch-readout').inner_text(), page.locator('#surface-status').inner_text(), page.evaluate('conicSurface.snapshot()'))
+  assert '8 boundary edges' in page.locator('#patch-readout').inner_text()
+  assert page.locator('#net-topology').get_attribute('data-view')=='flat'
+ for width,height,suffix in [(1440,1100,'desktop'),(390,844,'mobile')]:
+  page.set_viewport_size({'width':width,'height':height});page.wait_for_timeout(60)
+  page.locator('#net-topology').scroll_into_view_if_needed();page.wait_for_timeout(60)
+  page.locator('.net-layout').screenshot(path=str(ROOT/f'review-flat-torus-{suffix}.png'))
+ checks.append('Periodic seam-crossing patches cancel four internal edges and keep eight boundary edges in both tori')
  checks.append('Reduced-motion behavior and responsive layout down to 320px')
  assert not errors,errors
  assert not failures,failures
