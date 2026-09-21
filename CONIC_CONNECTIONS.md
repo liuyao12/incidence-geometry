@@ -42,7 +42,8 @@ the boundary theorem gives the resulting compatibility when the completion is
 regular.
 
 `connections.html?example=cube` opens this example directly. The existing
-opening torus and torus bookmarks remain unchanged. Cube bookmarks use the
+opening torus now uses a flat periodic map, as on the Fomin page. Explicit
+bookmarks preserve their saved flat or wrapped view. Cube bookmarks use the
 same validated saved-view schema, extended with the cube example type.
 
 ## Verification boundary
@@ -62,3 +63,19 @@ complementary patches, across 121 configurations.
 24 directed contact inspections, actual cube picking, independent camera,
 patch switching, geometry and gauge controls, bookmark recovery, reduced
 motion, and typesetting down to 320px. CI also retains every earlier test.
+
+## Flat torus presentation
+
+Both the sixteen-conic and twelve-conic torus open cut open as periodic grids.
+Matching arrow pairs identify opposite sides by translation. The selected
+vertex colors and labels match the four conics; repeated boundary occurrences
+are the same vertex. Orange edges display the selected patch boundary and are
+not overwritten by the identification marks. Arrow keys select adjacent faces,
+wrapping across the seams, without turning the camera.
+
+The view toggle explicitly offers **Show torus in 3D** or **Show flat map**.
+Changing the display preserves conic equations, face/contact selection, patch,
+and camera. Visiting the Penrose cube does not overwrite the torus preference;
+the cube remains independently rotatable. Reset view restores the flat torus.
+Existing saved views with `map: false` still reopen in 3D. No mathematical
+construction or Lean source changes.

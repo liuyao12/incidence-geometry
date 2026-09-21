@@ -1,6 +1,9 @@
 {
   "status": "passed",
   "checks": [
+    "Both torus grids open flat; actual canvas clicks select all 28 faces and arrow keys wrap across both seams",
+    "Flat/wrapped switching preserves equations, chosen contact, concurrence, patch, and camera",
+    "Cube remains rotatable; returning to a torus preserves its view; old wrapped bookmarks load and Reset restores the flat default",
     "Twelve-conic odd-cycle torus: all faces and contacts, without a vertex coloring",
     "Cut-open periodic map preserves geometry and supports actual face picking",
     "Patch selection cancels internal edges; the whole closed torus has empty boundary",

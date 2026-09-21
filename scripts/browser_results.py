@@ -85,6 +85,9 @@ with sync_playwright() as p:
     page.emulate_media(reduced_motion='no-preference')
     checks.append('Equation rescaling changes transports but preserves conics and holonomy; scale trace closes')
 
+    assert page.evaluate('conicSurface.state.map'), 'Torus opens flat'
+    page.locator('#net-map').click();page.wait_for_timeout(80)
+    assert not page.evaluate('conicSurface.state.map'), '3D orbit remains available explicitly'
     canvas=page.locator('#net-topology');canvas.scroll_into_view_if_needed();r=canvas.bounding_box()
     camera=canvas.get_attribute('data-camera');geometry=page.evaluate('JSON.stringify(conicSurface.getData().Q)')
     page.mouse.move(r['x']+30,r['y']+30);page.mouse.down();page.mouse.move(r['x']+65,r['y']+48,steps=5);page.mouse.up()

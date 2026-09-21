@@ -38,6 +38,59 @@ with sync_playwright() as p:
  page.on('pageerror',lambda e:errors.append(str(e)));page.on('requestfailed',lambda r:failures.append(r.url))
  if server:page.on('response',lambda r:failures.append(f'HTTP {r.status}: {r.url}')if r.status>=400 else None)
  load(page)
+ assert page.evaluate('conicSurface.state.map'), 'New torus visits must open flat'
+ assert page.locator('#net-topology').get_attribute('data-view')=='flat'
+ assert page.locator('#net-map').inner_text()=='Show torus in 3D'
+ assert 'Flat periodic' in page.locator('#net-topology').get_attribute('aria-label')
+ for kind,rows in [('torus',4),('odd',3)]:
+  page.locator('#surface-example').select_option(kind);page.wait_for_timeout(60)
+  assert page.evaluate('conicSurface.state.map')
+  geometry=page.evaluate('JSON.stringify(conicSurface.getData().Q)')
+  c=page.locator('#net-topology');c.scroll_into_view_if_needed();box=c.bounding_box()
+  cell=min((box['width']-64)/rows,(box['height']-48)/4)
+  x0=(box['width']-rows*cell)/2;y0=(box['height']-4*cell)/2
+  for i in range(rows):
+   for j in range(4):
+    page.mouse.click(box['x']+x0+(i+.5)*cell,box['y']+y0+(j+.5)*cell);page.wait_for_timeout(25)
+    assert page.evaluate('conicSurface.state.face')==4*i+j
+    assert page.evaluate('JSON.stringify(conicSurface.getData().Q)')==geometry
+    assert page.evaluate('conicSurface.getData().faces[conicSurface.state.face].error')<1e-8
+  page.locator('[data-face="0"]').click();c.focus()
+  for key,expected in [('ArrowLeft',4*(rows-1)),('ArrowRight',0),('ArrowUp',3),('ArrowDown',0)]:
+   page.keyboard.press(key);page.wait_for_timeout(30)
+   assert page.evaluate('conicSurface.state.face')==expected
+  before=page.evaluate('conicSurface.snapshot()')
+  page.mouse.move(box['x']+30,box['y']+30);page.mouse.down();page.mouse.move(box['x']+60,box['y']+48,steps=5);page.mouse.up()
+  assert page.evaluate('conicSurface.snapshot()')==before, 'Flat-map drag must not rotate or change labels'
+ checks.append('Both torus grids open flat; actual canvas clicks select all 28 faces and arrow keys wrap across both seams')
+ # Switching views preserves both the geometry and the complete inspection.
+ page.locator('#patch-controls summary').click();page.locator('#patch-four').click();page.wait_for_timeout(60)
+ page.locator('[data-contact="1"]').click();page.locator('#reveal-face').click();page.wait_for_timeout(60)
+ before=page.evaluate('conicSurface.snapshot()');geometry=page.evaluate('JSON.stringify(conicSurface.getData().Q)')
+ for flat in [False,True]:
+  page.locator('#net-map').click();page.wait_for_timeout(60)
+  after=page.evaluate('conicSurface.snapshot()')
+  assert after=={**before,'map':flat}
+  assert page.locator('#net-topology').get_attribute('data-view')==('flat' if flat else 'wrapped')
+  assert page.evaluate('JSON.stringify(conicSurface.getData().Q)')==geometry
+ checks.append('Flat/wrapped switching preserves equations, chosen contact, concurrence, patch, and camera')
+ page.locator('#surface-example').select_option('cube');page.wait_for_timeout(60)
+ assert page.locator('#net-topology').get_attribute('data-view')=='cube'
+ assert page.locator('#net-map').is_hidden()
+ page.locator('#cube-base-patch').click();page.locator('#surface-example').select_option('torus');page.wait_for_timeout(60)
+ assert page.evaluate('conicSurface.state.map'), 'Cube patch inspection must not erase the flat-torus preference'
+ page.locator('#patch-mode').uncheck();page.wait_for_timeout(30)
+ # A deliberately saved 3D view remains 3D after reloading an old-schema link.
+ page.locator('#net-map').click();page.wait_for_timeout(60)
+ saved=page.evaluate('conicSurface.snapshot()');assert saved['map'] is False
+ page.locator('#bookmark-scene').click();fragment=page.evaluate('location.hash');load(page,fragment)
+ assert page.evaluate('conicSurface.snapshot()')==saved
+ assert page.locator('#net-topology').get_attribute('data-view')=='wrapped'
+ page.locator('#net-reset').click();page.wait_for_timeout(60)
+ assert page.evaluate('conicSurface.state.map')
+ assert page.evaluate('conicSurface.state.face')==saved['face']
+ checks.append('Cube remains rotatable; returning to a torus preserves its view; old wrapped bookmarks load and Reset restores the flat default')
+ load(page)
  page.locator('#surface-example').select_option('odd');page.wait_for_timeout(100)
  assert page.locator('#net-face-buttons button').count()==12
  assert page.evaluate('!ConicNet.isBicolorable(conicSurface.getData())')
@@ -46,7 +99,7 @@ with sync_playwright() as p:
   assert page.locator('#holonomy-value').text_content()=='1'
   assert page.evaluate('conicSurface.getData().maxFace')<1e-8
  checks.append('Twelve-conic odd-cycle torus: all faces and contacts, without a vertex coloring')
- page.locator('#net-map').click();page.wait_for_timeout(100)
+ assert page.evaluate('conicSurface.state.map'), 'Both torus examples open flat'
  geometry=page.evaluate('JSON.stringify(conicSurface.getData().Q)')
  assert page.evaluate('conicSurface.state.map')
  c=page.locator('#net-topology');c.scroll_into_view_if_needed();b=c.bounding_box()
@@ -92,7 +145,8 @@ with sync_playwright() as p:
  page.emulate_media(reduced_motion='reduce');page.locator('#animate-net').click();page.wait_for_timeout(60)
  assert not page.evaluate('conicSurface.state.animate')
  slider(page,'net-amount',1.4);slider(page,'net-twist',.1)
- page.locator('#surface-example').select_option('odd');page.locator('#net-map').click()
+ page.locator('#surface-example').select_option('odd');page.wait_for_timeout(80)
+ assert page.evaluate('conicSurface.state.map')
  page.locator('#surface-laboratory').evaluate('e=>e.scrollTop=0');page.evaluate('window.scrollTo(0,0)');page.wait_for_timeout(70)
  page.screenshot(path=str(ROOT/'review-surface-desktop.png'))
  for width in [1100,820,390,320]:

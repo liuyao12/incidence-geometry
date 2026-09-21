@@ -157,6 +157,9 @@ try:
         assert page.locator('#holonomy-value').inner_text()=='1'
         page.locator('#surface-example').select_option('odd');page.wait_for_timeout(100)
         assert page.locator('#net-face-buttons button').count()==12
+        assert page.evaluate('conicSurface.state.map')
+        page.locator('#net-map').click();page.wait_for_timeout(100)
+        assert page.locator('#net-map').get_attribute('aria-pressed')=='false'
         page.locator('#net-map').click();page.wait_for_timeout(100)
         assert page.locator('#net-map').get_attribute('aria-pressed')=='true'
         checks.append('Conic torus face selection, concurrence, odd-cycle example and cut-open view remain interactive')
