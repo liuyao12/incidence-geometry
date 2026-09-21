@@ -38,7 +38,13 @@ with sync_playwright() as p:
  page.on('pageerror',lambda e:errors.append(str(e)));page.on('requestfailed',lambda r:failures.append(r.url))
  if server:page.on('response',lambda r:failures.append(f'HTTP {r.status}: {r.url}')if r.status>=400 else None)
  load(page)
+ assert page.evaluate('conicSurface.state.map')
+ assert page.locator('#net-topology').get_attribute('aria-label').startswith('Flat torus')
+ page.locator('#surface-example').select_option('cube');page.wait_for_timeout(100)
+ assert not page.evaluate('conicSurface.state.map')
  page.locator('#surface-example').select_option('odd');page.wait_for_timeout(100)
+ assert page.evaluate('conicSurface.state.map')
+ checks.append('Both tori open flat by default, including after switching from the cube')
  assert page.locator('#net-face-buttons button').count()==12
  assert page.evaluate('!ConicNet.isBicolorable(conicSurface.getData())')
  for i in range(12):
@@ -46,9 +52,14 @@ with sync_playwright() as p:
   assert page.locator('#holonomy-value').text_content()=='1'
   assert page.evaluate('conicSurface.getData().maxFace')<1e-8
  checks.append('Twelve-conic odd-cycle torus: all faces and contacts, without a vertex coloring')
- page.locator('#net-map').click();page.wait_for_timeout(100)
  geometry=page.evaluate('JSON.stringify(conicSurface.getData().Q)')
  assert page.evaluate('conicSurface.state.map')
+ page.locator('#net-map').click();page.wait_for_timeout(100)
+ assert not page.evaluate('conicSurface.state.map')
+ assert geometry==page.evaluate('JSON.stringify(conicSurface.getData().Q)')
+ page.locator('#net-map').click();page.wait_for_timeout(100)
+ assert page.evaluate('conicSurface.state.map')
+ assert geometry==page.evaluate('JSON.stringify(conicSurface.getData().Q)')
  c=page.locator('#net-topology');c.scroll_into_view_if_needed();b=c.bounding_box()
  page.mouse.click(b['x']+b['width']*.5,b['y']+b['height']*.36);page.wait_for_timeout(80)
  assert geometry==page.evaluate('JSON.stringify(conicSurface.getData().Q)')
@@ -92,7 +103,8 @@ with sync_playwright() as p:
  page.emulate_media(reduced_motion='reduce');page.locator('#animate-net').click();page.wait_for_timeout(60)
  assert not page.evaluate('conicSurface.state.animate')
  slider(page,'net-amount',1.4);slider(page,'net-twist',.1)
- page.locator('#surface-example').select_option('odd');page.locator('#net-map').click()
+ page.locator('#surface-example').select_option('odd');page.wait_for_timeout(80)
+ assert page.evaluate('conicSurface.state.map')
  page.locator('#surface-laboratory').evaluate('e=>e.scrollTop=0');page.evaluate('window.scrollTo(0,0)');page.wait_for_timeout(70)
  page.screenshot(path=str(ROOT/'review-surface-desktop.png'))
  for width in [1100,820,390,320]:
