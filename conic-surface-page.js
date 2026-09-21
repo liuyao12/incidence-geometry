@@ -13,7 +13,7 @@ function schedule(){if(!frame)frame=requestAnimationFrame(()=>{frame=0;render();
 function project(x){const c=Math.cos(state.yaw),s=Math.sin(state.yaw),a=c*x[0]-s*x[1],b=s*x[0]+c*x[1],t=state.tilt;return [a,Math.cos(t)*b-Math.sin(t)*x[2],Math.sin(t)*b+Math.cos(t)*x[2]];}
 function torusPoint(u,v){return [(1.45+.57*Math.cos(v))*Math.cos(u),(1.45+.57*Math.cos(v))*Math.sin(u),.57*Math.sin(v)];}
 function topology(){
- const rect=canvas.getBoundingClientRect(),w=rect.width,h=rect.height,dpr=Math.min(devicePixelRatio||1,2);canvas.width=w*dpr;canvas.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);polygons=[];
+ const rect=canvas.getBoundingClientRect(),w=rect.width,h=rect.height,dpr=Math.min(devicePixelRatio||1,2);canvas.width=w*dpr;canvas.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);polygons=[];canvas.dataset.view=state.kind==='square'?'square':isCube()?'cube':state.map?'flat':'wrapped';
  const screen=p=>{const q=project(p),s=Math.min(w/4.6,h/3.5);return [w/2+q[0]*s,h/2-q[1]*s,q[2]];};
  if(state.kind==='square'){
   const pts=[[w*.25,h*.25],[w*.75,h*.25],[w*.75,h*.75],[w*.25,h*.75]];ctx.strokeStyle='#96a6a1';ctx.lineWidth=2;ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.closePath();ctx.stroke();pts.forEach((p,i)=>{ctx.beginPath();ctx.arc(...p,6,0,7);ctx.fillStyle=colors[i];ctx.fill();ctx.font='12px system-ui';ctx.fillText('Q'+i,p[0]+10,p[1]+4);});return;
@@ -50,7 +50,27 @@ function topology(){
   for(const [color,lines] of [['#168477',[[x0,y0,x0,y0+4*cell],[x0+rows*cell,y0,x0+rows*cell,y0+4*cell]]],['#315f9c',[[x0,y0,x0+rows*cell,y0],[x0,y0+4*cell,x0+rows*cell,y0+4*cell]]]]){
    ctx.strokeStyle=color;for(const [a,b,c,d]of lines){ctx.beginPath();ctx.moveTo(a,b);ctx.lineTo(c,d);ctx.stroke();}
   }
-  ctx.setLineDash([]);ctx.textAlign='left';canvas.dataset.camera=JSON.stringify([state.yaw,state.tilt]);return;
+  ctx.setLineDash([]);
+  // Same-direction arrows identify opposite sides by translation, not reflection.
+  // One arrowhead pairs top/bottom; two pair left/right (also readable without color).
+  function arrows(x,y,dx,dy,count,color){
+   ctx.strokeStyle=color;ctx.lineWidth=2;
+   for(let k=0;k<count;k++){const a=x+(k-(count-1)/2)*7*dx,b=y+(k-(count-1)/2)*7*dy;
+    ctx.beginPath();ctx.moveTo(a-4*dx+3*dy,b-4*dy-3*dx);ctx.lineTo(a,b);ctx.lineTo(a-4*dx-3*dy,b-4*dy+3*dx);ctx.stroke();}
+  }
+  for(const y of [y0,y0+4*cell])arrows(x0+cell*.5,y,1,0,1,'#315f9c');
+  for(const x of [x0,x0+rows*cell])arrows(x,y0+cell*.5,0,1,2,'#168477');
+  // Repeated boundary labels are the same vertex conic after gluing.
+  const selected=data.faces[state.face].vertices;
+  const sub=n=>String(n).replace(/\d/g,d=>'₀₁₂₃₄₅₆₇₈₉'[+d]);
+  for(let i=0;i<=rows;i++)for(let j=0;j<=4;j++){
+   const v=4*(i%rows)+j%4,k=selected.indexOf(v),x=x0+i*cell,y=y0+j*cell;
+   ctx.beginPath();ctx.arc(x,y,k<0?2:4,0,2*Math.PI);ctx.fillStyle=k<0?'#78958a':colors[k];ctx.fill();
+   if(k<0)continue;
+   const label='Q'+sub(i%rows)+','+sub(j%4),tx=x+(i===rows?-6:6),ty=y+(j===0?13:-6);
+   ctx.font='11px Georgia';ctx.textAlign=i===rows?'right':'left';ctx.lineWidth=3;ctx.strokeStyle='#f7faf3';ctx.strokeText(label,tx,ty);ctx.fillStyle=colors[k];ctx.fillText(label,tx,ty);
+  }
+  ctx.textAlign='left';canvas.dataset.camera=JSON.stringify([state.yaw,state.tilt]);return;
  }
  for(let i=0;i<rows;i++)for(let j=0;j<4;j++)for(let a=0;a<7;a++)for(let b=0;b<7;b++){
   const at=(a,b)=>screen(torusPoint((i+a/7)*2*Math.PI/rows,(j+b/7)*Math.PI/2)),pts=[at(a,b),at(a+1,b),at(a+1,b+1),at(a,b+1)];polygons.push({pts,z:pts.reduce((s,p)=>s+p[2],0)/4,face:4*i+j});
@@ -94,9 +114,10 @@ function render(){
   $('surface-status').textContent=state.kind==='square'?'All four adjacent pairs have double contact, but the scale returns multiplied by 2. The chords are not concurrent.':state.reveal?`The four contact chords meet at Ω. This face follows from the other ${data.faces.length-1}.`:`${data.Q.length} conics, ${data.edges.length} contacts. ${isCube()?'The same Penrose family as chapter 1. All eight conics are supplied here.':state.kind==='odd'?'The 3-edge loop prevents any black–white coloring.':'Select a face and reveal its concurrence.'}`;
   $('surface-diagnostic').textContent=`Largest contact residual ${data.maxEdge.toExponential(2)}; selected face residual ${data.faces[state.face].error.toExponential(2)}. These are drawing diagnostics, not proof evidence.`;
   $('surface-parameters').hidden=!isNet();$('net-face-buttons').hidden=!isNet();$('patch-controls').hidden=!isNet();$('net-map').hidden=!isNet()||isCube();$('cube-patches').hidden=!isCube();$('patch-four').hidden=isCube();
-  canvas.setAttribute('aria-label',!isNet()?'A single quadrilateral with four conics.':isCube()?'Rotatable Penrose cube. Drag to orbit; click a face to inspect its four conics. Arrow keys turn the camera.':state.map?'Flat torus with matching opposite sides identified. Click a face to inspect its four conics, or use the numbered face buttons.':'Rotatable labeled torus. Drag to orbit; click a face to inspect its conics. Arrow keys turn the camera.');$('net-counts').textContent=isNet()?`${data.Q.length} conics · ${data.edges.length} contacts · ${data.faces.length} faces`:'4 conics · 4 contacts · H = 2';
-  $('topology-caption').textContent=!isNet()?'A single face; no gluing is asserted.':isCube()?'The cube is a six-face sphere, as in the Desargues example. Its vertices now carry conics.':state.map?'Flat torus: matching colored sides are identified. Click a face to inspect its conics; orange marks the selected face or patch boundary.':'Drag to turn the gluing diagram; click a face.';
-  $('net-map').textContent=state.map?'Show 3D torus':'Cut open';$('net-map').setAttribute('aria-pressed',String(state.map));
+  canvas.style.cursor=!isNet()?'default':!isCube()&&state.map?'pointer':'grab';
+  canvas.setAttribute('aria-label',!isNet()?'A single quadrilateral of contacting conics.':isCube()?'Rotatable Penrose cube. Drag to orbit; click a face to inspect its four conics. Arrow keys turn the camera.':state.map?'Flattened periodic torus map. Opposite sides with matching arrows are identified. Click a numbered face or use the face buttons to inspect its conics.':'Rotatable labeled torus. Drag to orbit; click a face to inspect its conics. Arrow keys turn the camera.');$('net-counts').textContent=isNet()?`${data.Q.length} conics · ${data.edges.length} contacts · ${data.faces.length} faces`:'4 conics · 4 contacts · H = 2';
+  $('topology-caption').textContent=!isNet()?'A single face; no gluing is asserted.':isCube()?'The cube is a six-face sphere, as in the Desargues example. Its vertices now carry conics.':state.map?'Opposite sides with matching arrows are identified. Repeated labels are the same conic. Orange marks the patch boundary.':'Drag to turn the gluing diagram; click a face. Turn off 3D torus to return to the periodic map.';
+  $('net-map').textContent='3D torus';$('net-map').setAttribute('aria-pressed',String(!state.map));$('net-map').title=state.map?'Wrap the periodic map into a torus.':'Return to the flattened periodic map.';
   $('face-number').textContent=isNet()?`Face ${state.face+1} / ${data.faces.length}`:'A noncoherent quadrilateral';
   $('reveal-face').textContent=state.reveal?'Hide concurrence':'Reveal concurrence';$('reveal-face').disabled=state.kind==='square';
   // Keep buttons in the DOM: keyboard focus must survive moving geometry.
@@ -139,9 +160,9 @@ $('net-context').onchange=e=>{state.context=e.target.checked;schedule();};
 $('reveal-face').onclick=()=>{state.reveal=!state.reveal;schedule();};$('clear-contact').onclick=()=>{state.edge=-1;schedule();};
 $('net-face-buttons').addEventListener('click',e=>{const b=e.target.closest('[data-face]');if(b)selectFace(+b.dataset.face);});
 $('transport-values').addEventListener('click',e=>{const b=e.target.closest('[data-contact]');if(b){state.edge=+b.dataset.contact;schedule();}});
-$('surface-example').onchange=e=>{stop(true);state.kind=e.target.value;state.face=state.kind==='odd'?10:state.kind==='torus'?5:0;state.region=[state.face];state.edge=-1;state.reveal=state.kind==='square';state.map=isNet()&&!isCube();state.zoom=1;state.pan=[0,0];schedule();};
+$('surface-example').onchange=e=>{stop(true);state.kind=e.target.value;state.face=state.kind==='odd'?10:state.kind==='torus'?5:0;state.region=[state.face];state.edge=-1;state.reveal=state.kind==='square';state.zoom=1;state.pan=[0,0];schedule();};
 function cubePatch(faces){
- stop(true);state.kind='cube';state.face=faces[0];state.region=faces.slice();state.patch=true;state.edge=-1;state.map=false;state.reveal=false;state.zoom=1;state.pan=[0,0];
+ stop(true);state.kind='cube';state.face=faces[0];state.region=faces.slice();state.patch=true;state.edge=-1;state.reveal=false;state.zoom=1;state.pan=[0,0];
  $('surface-example').value='cube';$('patch-mode').checked=true;$('patch-controls').open=true;render();
 }
 $('cube-base-patch').onclick=()=>cubePatch(ConicCube.baseFaces);

@@ -52,7 +52,6 @@ with sync_playwright() as p:
     checks.append('Pappus/Pascal remain uncluttered; Penrose retains editable vectors and random motion')
 
     load(page,'connections.html')
-    assert page.evaluate('conicSurface.state.map')
     assert page.locator('#net-face-buttons button').count()==16
     assert page.locator('#holonomy-value').text_content()=='?'
     assert not page.locator('#surface-status').evaluate('e=>e.classList.contains("error")')
@@ -86,10 +85,10 @@ with sync_playwright() as p:
     page.emulate_media(reduced_motion='no-preference')
     checks.append('Equation rescaling changes transports but preserves conics and holonomy; scale trace closes')
 
-    # Orbit is optional: explicitly leave the default flat proof diagram.
+    # The torus opens flat; orbiting is an explicit secondary view.
     assert page.evaluate('conicSurface.state.map')
-    page.locator('#net-map').click();page.wait_for_timeout(100)
-    assert not page.evaluate('conicSurface.state.map')
+    page.locator('#net-map').click();page.wait_for_timeout(80)
+    assert page.locator('#net-topology').get_attribute('data-view')=='wrapped'
     canvas=page.locator('#net-topology');canvas.scroll_into_view_if_needed();r=canvas.bounding_box()
     camera=canvas.get_attribute('data-camera');geometry=page.evaluate('JSON.stringify(conicSurface.getData().Q)')
     page.mouse.move(r['x']+30,r['y']+30);page.mouse.down();page.mouse.move(r['x']+65,r['y']+48,steps=5);page.mouse.up()
@@ -117,7 +116,6 @@ with sync_playwright() as p:
     page.emulate_media(reduced_motion='reduce');page.locator('#trace-scale').click()
     assert 'not back to the original scale' in page.locator('#transport-trace').text_content()
     page.locator('#surface-example').select_option('torus');page.wait_for_timeout(90)
-    assert page.evaluate('conicSurface.state.map')
     checks.append('Conic motion stays contact-preserving; exact H=2 example distinguishes contact from concurrence')
 
     page.evaluate('document.getElementById("surface-laboratory").scrollTop=0;window.scrollTo(0,0)')

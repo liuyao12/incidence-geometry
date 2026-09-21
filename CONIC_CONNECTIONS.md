@@ -42,7 +42,7 @@ the boundary theorem gives the resulting compatibility when the completion is
 regular.
 
 `connections.html?example=cube` opens this example directly. The existing
-opening torus and torus bookmarks remain unchanged. Cube bookmarks use the
+torus equations and existing torus bookmarks are retained. Cube bookmarks use the
 same validated saved-view schema, extended with the cube example type.
 
 ## Verification boundary
@@ -62,3 +62,15 @@ complementary patches, across 121 configurations.
 24 directed contact inspections, actual cube picking, independent camera,
 patch switching, geometry and gauge controls, bookmark recovery, reduced
 motion, and typesetting down to 320px. CI also retains every earlier test.
+
+## Flattened torus display
+
+The sixteen- and twelve-conic tori open as periodic rectangular maps, in the
+same visual language as the Fomin chapter. Matching arrowheads identify
+opposite sides by translation; selected corner colors and repeated conic
+labels make the gluing explicit. Numbered cells select the same geometric
+faces as before. The `3D torus` toggle is optional and changes only the view.
+Cube inspection does not overwrite that choice. Version-1 bookmarks retain
+an explicitly saved flat or wrapped view. The review suite checks all 28
+flat faces, seam-crossing patches, view round trips and bookmark compatibility.
+No conic equations, contacts, transport calculations or Lean source changed.
