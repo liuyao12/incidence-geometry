@@ -1,0 +1,138 @@
+{
+  "CONIC_CONNECTIONS.md": {
+    "before": "003d4e1a4bdd92c81d891ef0681b121bf53554cc1581cd4b9998f9b6e83c63a7",
+    "after": "98bb685132072c70bd0faf26b28640f1def1d8f2ce31dca3496e8be3be1fea54",
+    "edits": [
+      [
+        2360,
+        2536,
+        "example=cube` opens this example directly. The existing\nopening torus now uses a flat periodic map, as on the Fomin page. Explicit\nbookmarks preserve their saved flat or wrapped view. Cube bookmarks use the\nsame validated saved-view schema, extended wi"
+      ],
+      [
+        3409,
+        3479,
+        "n, and typesetting down to 320px. CI also retains every earlier test.\n\n## Flat torus presentation\n\nBoth the sixteen-conic and twelve-conic torus open cut open as periodic grids.\nMatching arrow pairs identify opposite sides by translation. The selected\nvertex colors and labels match the four conics; repeated boundary occurrences\nare the same vertex. Orange edges display the selected patch boundary and are\nnot overwritten by the identification marks. Arrow keys select adjacent faces,\nwrapping across the seams, without turning the camera.\n\nThe view toggle explicitly offers **Show torus in 3D** or **Show flat map**.\nChanging the display preserves conic equations, face/contact selection, patch,\nand camera. Visiting the Penrose cube does not overwrite the torus preference;\nthe cube remains independently rotatable. Reset view restores the flat torus.\nExisting saved views with `map: false` still reopen in 3D. No mathematical\nconstruction or Lean source changes.\n"
+      ]
+    ]
+  },
+  "conic-surface-page.js": {
+    "before": "a4d8c78251fe781e44d68014e5efb0b0f16e62e87f93c15ef519cb875dda4e3f",
+    "after": "70bf444d94870750bbb83892dac8d37402bc385f16a538f0195970f7ca5a3842",
+    "edits": [
+      [
+        522,
+        666,
+        "false,kind:'torus',yaw:.55,tilt:.7,zoom:1,pan:[0,0],animate:false,map:true,patch:false,region:[5]};\nlet data,frame=0,view,polygons=[],drag=null"
+      ],
+      [
+        1234,
+        1374,
+        "5+.57*Math.cos(v))*Math.sin(u),.57*Math.sin(v)];}\nfunction topology(){\n canvas.dataset.view=state.kind==='square'?'square':isCube()?'cube':state.map?'flat':'wrapped';\n const rect=canvas.getBoundingClientRect(),w=rect.width,h=rect.height"
+      ],
+      [
+        3307,
+        3461,
+        "n;\n }\n const rows=data.rows;\n if(state.map){\n  const cell=Math.min((w-64)/rows,(h-48)/4),x0=(w-rows*cell)/2,y0=(h-4*cell)/2;\n  for(let i=0;i<rows;i++)for("
+      ],
+      [
+        4656,
+        5200,
+        "orners[a]);ctx.lineTo(...corners[b]);ctx.stroke();\n  }}\n  // Matching arrows identify sides by translation, not by boundary orientation.\n  // Draw outside the actual edges so a seam-crossing patch stays legible.\n  function seam(a,b,color,label,at){\n   ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=1.5;ctx.setLineDash([4,3]);\n   ctx.beginPath();ctx.moveTo(...a);ctx.lineTo(...b);ctx.stroke();ctx.setLineDash([]);\n   const dx=b[0]-a[0],dy=b[1]-a[1],len=Math.hypot(dx,dy),ux=dx/len,uy=dy/len;\n   const x=(a[0]+b[0])/2,y=(a[1]+b[1])/2;\n   ctx.beginPath();ctx.moveTo(x-5*ux+3*uy,y-5*uy-3*ux);ctx.lineTo(x,y);ctx.lineTo(x-5*ux-3*uy,y-5*uy+3*ux);ctx.stroke();\n   ctx.font='10px system-ui';ctx.textAlign='center';ctx.fillText(label,...at);\n  }\n  const right=x0+rows*cell,bottom=y0+4*cell;\n  seam([x0,y0-8],[right,y0-8],'#315f9c','I',[(x0+right)/2,y0-14]);\n  seam([x0,bottom+8],[right,bottom+8],'#315f9c','I',[(x0+right)/2,bottom+21]);\n  seam([x0-8,y0],[x0-8,bottom],'#168477','II',[x0-20,(y0+bottom)/2+14]);\n  seam([right+8,y0],[right+8,bottom],'#168477','II',[right+20,(y0+bottom)/2+14]);\n  // Repeated boundary occurrences represent the same conic. Color every copy\n  // of each selected vertex exactly as in the conic diagram and its legend.\n  const selected=data.faces[state.face].vertices,sub=n=>String(n).replace(/\\d/g,c=>'₀₁₂₃₄₅₆₇₈₉'[+c]);\n  for(let i=0;i<=rows;i++)for(let j=0;j<=4;j++){\n   const v=4*(i%rows)+j%4,k=selected.indexOf(v),x=x0+i*cell,y=y0+j*cell;\n   ctx.beginPath();ctx.arc(x,y,k<0?2:4,0,2*Math.PI);ctx.fillStyle=k<0?'#748d82':colors[k];ctx.fill();\n   if(k>=0&&cell>=36){\n    const label='Q'+sub(v>>2)+','+sub(v%4);\n    ctx.font='10px system-ui';ctx.textAlign='left';ctx.lineWidth=3;ctx.strokeStyle='#fffef9';ctx.lineJoin='round';\n    ctx.strokeText(label,x+6,y+(j===0?12:-5));ctx.fillText(label,x+6,y+(j===0?12:-5));\n   }\n  }\n  ctx.setLineDash([]);ctx.textAlign='left';canvas.dataset.camera"
+      ],
+      [
+        10263,
+        10546,
+        ");$('patch-four').hidden=isCube();\n  canvas.setAttribute('aria-label',!isNet()?'A noncoherent contact quadrilateral.':isCube()?'Rotatable Penrose cube. Drag to orbit; click a face to inspect its four conics. Arrow keys turn the camera.':state.map?'Flat periodic torus map. Opposite sides with matching arrows are identified. Click a face or use arrow keys to select its four conics.':'Wrapped torus in 3D. Drag to orbit; click a face to inspect its conics. Arrow keys turn t"
+      ],
+      [
+        10843,
+        11166,
+        " in the Desargues example. Its vertices now carry conics.':state.map?'Flat torus: matching arrows identify opposite sides. Colored vertices match the conics; orange marks the selected patch boundary.':'Wrapped torus: drag to turn the gluing diagram; click a face. The flat map shows the same identifications.';\n  $('net-map').textContent=state.map?'Show torus in 3D':'Show flat map';$('net-map').setAttribute('aria-label','Flat torus map');$('net-map').setAttribute('aria-pressed',String(state.map));\n  $('fac"
+      ],
+      [
+        15789,
+        15957,
+        ".region=[state.face];state.edge=-1;state.reveal=state.kind==='square';state.zoom=1;state.pan=[0,0];schedule();};\nfunction cubePatch(faces){\n"
+      ],
+      [
+        15994,
+        16150,
+        "ace=faces[0];state.region=faces.slice();state.patch=true;state.edge=-1;state.reveal=false;state.zoom=1;state.pan=[0,0];\n $('surface-example'"
+      ],
+      [
+        17619,
+        17759,
+        "tListener(event,()=>drag=null);\ncanvas.addEventListener('keydown',e=>{\n if(isNet()&&!isCube()&&state.map&&['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)){\n  e.preventDefault();const i=state.face>>2,j=state.face%4;\n  const x=(i+(e.key==='ArrowLeft'?-1:e.key==='ArrowRight'?1:0)+data.rows)%data.rows;\n  const y=(j+(e.key==='ArrowUp'?-1:e.key==='ArrowDown'?1:0)+4)%4;selectFace(4*x+y);return;\n }\n if((!state.map||isCube())&&['ArrowLeft','ArrowRight','ArrowUp','ArrowD"
+      ],
+      [
+        18772,
+        18912,
+        "e.map=!state.map;topology();schedule();};\n$('net-reset').onclick=()=>{if(isNet()&&!isCube())state.map=true;state.yaw=.55;state.tilt=.7;state.zoom=1;state.pan=[0,0];schedule();};"
+      ]
+    ]
+  },
+  "connections.html": {
+    "before": "0243c027e0db741290b1f61002c2d2637d1e2992899f8d735bc54a267edf46cf",
+    "after": "c5f8ca7645e73b39b4d00fa950c0dac1a31636c298ee4a7feade7c4dc19f2202",
+    "edits": [
+      [
+        12371,
+        12652,
+        "s.</p>\n<p>The conics still lie in \\(\\mathbb P^2(K)\\), not on the torus. As on the Fomin page, the gluing diagram opens as a <strong>flat periodic rectangle</strong>: opposite sides with matching arrows are identified. Selecting a face highlights its four vertex conics. <em>Show torus in 3D</em> wraps the same map without changing the geometry.</p>\n<p class=\"try\"><button data-net-example=\"torus\">Explore the sixt"
+      ],
+      [
+        14980,
+        15196,
+        "\"><button data-net-example=\"odd\">Explore the odd-cycle torus</button> The flat periodic map shows the three-step loop across the identified sides; the wrapped view is optional.</p>\n</section>\n<section id=\"noncoherent\">\n<p class=\"chapter-number\">"
+      ],
+      [
+        18395,
+        18783,
+        "<div class=\"topology-actions\"><button type=\"button\" id=\"net-map\" aria-label=\"Flat torus map\" aria-pressed=\"true\">Show torus in 3D</button><button type=\"button\" id=\"net-reset\">Reset view</button></div><canvas id=\"net-topology\" tabindex=\"0\" aria-label=\"Flat periodic torus map. Opposite sides with matching arrows are identified. Click a face or use arrow keys to select its four conics.\"></canvas><p id=\"topology-caption\" class=\"net-caption\"></p><p id=\"ne"
+      ]
+    ]
+  },
+  "scripts/browser_results.py": {
+    "before": "caa673fd8f5dde958889efdb396e724059a5b875a6aefcd33e2086877fe6065e",
+    "after": "303d6cdf3a84441cb070250d9bbee81495d7808de6abadbc5143a20ddfb84bdd",
+    "edits": [
+      [
+        4856,
+        4996,
+        "ansports but preserves conics and holonomy; scale trace closes')\n\n    assert page.evaluate('conicSurface.state.map'), 'Torus opens flat'\n    page.locator('#net-map').click();page.wait_for_timeout(80)\n    assert not page.evaluate('conicSurface.state.map'), '3D orbit remains available explicitly'\n    canvas=page.locator('#net-topology');canvas.scroll_into_view_if_needed"
+      ]
+    ]
+  },
+  "scripts/browser_review.py": {
+    "before": "c8e0481e5a952ef4470fa6cf18fef2455668e57fab8569a01317008d28e6fd3c",
+    "after": "7da2a259b694af9fcaecdce46e3017a754b24f94be57b3461b0dca614459ef9b",
+    "edits": [
+      [
+        2282,
+        2422,
+        "(f'HTTP {r.status}: {r.url}')if r.status>=400 else None)\n load(page)\n assert page.evaluate('conicSurface.state.map'), 'New torus visits must open flat'\n assert page.locator('#net-topology').get_attribute('data-view')=='flat'\n assert page.locator('#net-map').inner_text()=='Show torus in 3D'\n assert 'Flat periodic' in page.locator('#net-topology').get_attribute('aria-label')\n for kind,rows in [('torus',4),('odd',3)]:\n  page.locator('#surface-example').select_option(kind);page.wait_for_timeout(60)\n  assert page.evaluate('conicSurface.state.map')\n  geometry=page.evaluate('JSON.stringify(conicSurface.getData().Q)')\n  c=page.locator('#net-topology');c.scroll_into_view_if_needed();box=c.bounding_box()\n  cell=min((box['width']-64)/rows,(box['height']-48)/4)\n  x0=(box['width']-rows*cell)/2;y0=(box['height']-4*cell)/2\n  for i in range(rows):\n   for j in range(4):\n    page.mouse.click(box['x']+x0+(i+.5)*cell,box['y']+y0+(j+.5)*cell);page.wait_for_timeout(25)\n    assert page.evaluate('conicSurface.state.face')==4*i+j\n    assert page.evaluate('JSON.stringify(conicSurface.getData().Q)')==geometry\n    assert page.evaluate('conicSurface.getData().faces[conicSurface.state.face].error')<1e-8\n  page.locator('[data-face=\"0\"]').click();c.focus()\n  for key,expected in [('ArrowLeft',4*(rows-1)),('ArrowRight',0),('ArrowUp',3),('ArrowDown',0)]:\n   page.keyboard.press(key);page.wait_for_timeout(30)\n   assert page.evaluate('conicSurface.state.face')==expected\n  before=page.evaluate('conicSurface.snapshot()')\n  page.mouse.move(box['x']+30,box['y']+30);page.mouse.down();page.mouse.move(box['x']+60,box['y']+48,steps=5);page.mouse.up()\n  assert page.evaluate('conicSurface.snapshot()')==before, 'Flat-map drag must not rotate or change labels'\n checks.append('Both torus grids open flat; actual canvas clicks select all 28 faces and arrow keys wrap across both seams')\n # Switching views preserves both the geometry and the complete inspection.\n page.locator('#patch-controls summary').click();page.locator('#patch-four').click();page.wait_for_timeout(60)\n page.locator('[data-contact=\"1\"]').click();page.locator('#reveal-face').click();page.wait_for_timeout(60)\n before=page.evaluate('conicSurface.snapshot()');geometry=page.evaluate('JSON.stringify(conicSurface.getData().Q)')\n for flat in [False,True]:\n  page.locator('#net-map').click();page.wait_for_timeout(60)\n  after=page.evaluate('conicSurface.snapshot()')\n  assert after=={**before,'map':flat}\n  assert page.locator('#net-topology').get_attribute('data-view')==('flat' if flat else 'wrapped')\n  assert page.evaluate('JSON.stringify(conicSurface.getData().Q)')==geometry\n checks.append('Flat/wrapped switching preserves equations, chosen contact, concurrence, patch, and camera')\n page.locator('#surface-example').select_option('cube');page.wait_for_timeout(60)\n assert page.locator('#net-topology').get_attribute('data-view')=='cube'\n assert page.locator('#net-map').is_hidden()\n page.locator('#cube-base-patch').click();page.locator('#surface-example').select_option('torus');page.wait_for_timeout(60)\n assert page.evaluate('conicSurface.state.map'), 'Cube patch inspection must not erase the flat-torus preference'\n page.locator('#patch-mode').uncheck();page.wait_for_timeout(30)\n # A deliberately saved 3D view remains 3D after reloading an old-schema link.\n page.locator('#net-map').click();page.wait_for_timeout(60)\n saved=page.evaluate('conicSurface.snapshot()');assert saved['map'] is False\n page.locator('#bookmark-scene').click();fragment=page.evaluate('location.hash');load(page,fragment)\n assert page.evaluate('conicSurface.snapshot()')==saved\n assert page.locator('#net-topology').get_attribute('data-view')=='wrapped'\n page.locator('#net-reset').click();page.wait_for_timeout(60)\n assert page.evaluate('conicSurface.state.map')\n assert page.evaluate('conicSurface.state.face')==saved['face']\n checks.append('Cube remains rotatable; returning to a torus preserves its view; old wrapped bookmarks load and Reset restores the flat default')\n load(page)\n page.locator('#surface-example').select_option('odd');page.wait_for_ti"
+      ],
+      [
+        2848,
+        3047,
+        "odd-cycle torus: all faces and contacts, without a vertex coloring')\n assert page.evaluate('conicSurface.state.map'), 'Both torus examples open flat'\n geometry=page.evaluate('JSON.stringify(conicSurface.getData().Q)')\n "
+      ],
+      [
+        6263,
+        6429,
+        "wist',.1)\n page.locator('#surface-example').select_option('odd');page.wait_for_timeout(80)\n assert page.evaluate('conicSurface.state.map')\n page.locator('#surface-laboratory').evaluate('e=>e.scrollTop=0');pa"
+      ]
+    ]
+  },
+  "scripts/browser_theorems.py": {
+    "before": "a98cb6fb1db274b13687cd6f31ec61ff2a903ce06f9563e15aed38b97aaa3f7e",
+    "after": "50c65e5c26bd8acbce8048dec8de2dc3e5a54adcb622cca73adaee82a770ee30",
+    "edits": [
+      [
+        10066,
+        10206,
+        "  assert page.locator('#net-face-buttons button').count()==12\n        assert page.evaluate('conicSurface.state.map')\n        page.locator('#net-map').click();page.wait_for_timeout(100)\n        assert page.locator('#net-map').get_attribute('aria-pressed')=='false'\n        page.locator('#net-map').click();page.wait_for_timeout(100)\n        as"
+      ]
+    ]
+  }
+}

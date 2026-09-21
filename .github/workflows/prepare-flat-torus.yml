@@ -1,0 +1,83 @@
+name: Validate flat torus presentation
+on:
+  push:
+    branches: ['work/flat-torus-20260921']
+    paths: ['.release/**', '.github/workflows/prepare-flat-torus.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: prepare-flat-torus
+  cancel-in-progress: true
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: work/flat-torus-20260921
+      - name: Apply the explicit presentation edits
+        run: python3 .release/apply_flat_torus.py
+      - name: Check all mathematical engines and source references
+        shell: bash
+        run: |
+          set -euo pipefail
+          node test.cjs
+          for suite in ganja chern narrative moduli vector-moduli conic-net oriented-net journey-view fomin-classics conic-bridge; do
+            node "test-$suite.cjs"
+          done
+          python3 scripts/check_site_links.py
+          python3 scripts/check_math_assets.py
+          python3 scripts/check_release_sources.py
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Exercise all twelve browser suites on actual HTTP-loaded assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          pip install playwright==1.55.0
+          python -m playwright install --with-deps chromium
+          for suite in smoke narrative moduli focus vectors results review journey_view theorems columns fomin_classics conic_bridge; do
+            python "scripts/browser_$suite.py" --serve
+          done
+      - uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: formal
+          use-mathlib-cache: 'true'
+          build: 'true'
+          test: 'false'
+          lint: 'false'
+      - name: Audit the unchanged mathematical library
+        working-directory: formal
+        shell: bash
+        run: |
+          set -euo pipefail
+          lake env lean Audit.lean | tee axiom-audit-current.txt
+          python3 ../scripts/audit_axioms.py axiom-audit-current.txt | tee audit-report.json
+      - name: Commit only the tested ordinary source files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          python3 - <<'PY'
+          import json, subprocess
+          paths = json.load(open('.release/paths.json'))
+          subprocess.run(['git', 'add', '--', *paths], check=True)
+          PY
+          git diff --cached --stat
+          git commit -m 'Open conic torus diagrams as flat periodic maps with optional 3D view'
+          git push origin HEAD:work/flat-torus-20260921
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: flat-torus-verification
+          path: |
+            review-browser-test-results.json
+            review-surface-desktop.png
+            review-surface-mobile.png
+            formal/axiom-audit-current.txt
+            formal/audit-report.json
+            *browser-test-results.json
