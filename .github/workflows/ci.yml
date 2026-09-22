@@ -42,6 +42,7 @@ jobs:
           node test-journey-view.cjs
           node test-fomin-classics.cjs
           node test-conic-bridge.cjs
+          node test-atlas.cjs
           python3 scripts/generate_oriented_example.py
           python3 scripts/check_site_links.py
           python3 scripts/check_release_sources.py
@@ -67,6 +68,7 @@ jobs:
           python scripts/browser_columns.py --serve
           python scripts/browser_fomin_classics.py --serve
           python scripts/browser_conic_bridge.py --serve
+          python scripts/browser_atlas.py --serve
       - uses: leanprover/lean-action@v1
         with:
           lake-package-directory: formal
@@ -134,3 +136,7 @@ jobs:
             conic-bridge-test-results.json
             conic-bridge-browser-test-results.json
             connections-bridge-*.png
+            atlas-test-results.json
+            atlas-browser-test-results.json
+            atlas-desktop.png
+            atlas-mobile.png

@@ -21,3 +21,14 @@ window.MathJax = {
     }
   }
 };
+
+// The overview is separate from the three chapters; keep their laboratories intact.
+document.addEventListener('DOMContentLoaded', () => {
+  const nav = document.querySelector('.site-nav > div');
+  if (!nav || nav.querySelector('a[href="theorem-map.html"]')) return;
+  const link = document.createElement('a');
+  link.href = 'theorem-map.html';
+  link.textContent = 'Theorem map';
+  nav.style.flexWrap = 'wrap';
+  nav.append(link);
+});

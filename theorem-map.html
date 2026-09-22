@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="An interactive map of incidence theorems: select a named result to explore its geometry, implications, duality and proofs.">
+<title>Theorem map · Incidence Geometry</title>
+<link rel="stylesheet" href="narrative.css"><link rel="stylesheet" href="math.css"><link rel="stylesheet" href="atlas.css">
+<script defer src="math-config.js"></script><script defer src="vendor/mathjax/tex-svg.js"></script>
+<script defer src="atlas-data.js"></script><script defer src="atlas.js"></script></head>
+<body class="atlas-page">
+<nav class="site-nav" aria-label="Chapters"><a class="brand" href="index.html">Incidence <span>Geometry</span></a><div><a href="index.html">From Pappus, to Pascal, to Penrose</a><a href="fomin.html">Incidence on surfaces</a><a href="connections.html">Conic contact on surfaces</a><a href="theorem-map.html" aria-current="page">Theorem map</a></div><a class="source-nav" href="proofs.html">Theorems &amp; sources ↗</a></nav>
+<header class="atlas-heading"><div><p class="eyebrow">One map · many ways to the same geometry</p><h1>Theorem map</h1></div><p>Select a theorem on the left. Explore its geometry on the right.<br>Arrows run from a more general result to its consequence.</p></header>
+<main class="atlas-workspace">
+<section class="atlas-map" aria-label="Graph of named theorems">
+<div class="map-tools"><label class="search-label">Find a theorem <input id="atlas-search" type="search" list="atlas-options" autocomplete="off" placeholder="Pappus, Monge, a surface…"><datalist id="atlas-options"></datalist></label><div class="zoom-tools"><button id="atlas-out" aria-label="Zoom graph out">−</button><button id="atlas-in" aria-label="Zoom graph in">+</button><button id="atlas-fit">Overview</button><button id="atlas-reset">Readable size</button></div></div>
+<div class="map-legend" id="atlas-legend" aria-label="Show or hide relation types"></div>
+<p class="map-instruction">Click a line for its exact meaning. <span id="atlas-count"></span></p>
+<div class="graph-viewport" id="graph-viewport" tabindex="-1"><svg id="atlas-graph" viewBox="0 0 680 1250" role="group" aria-label="Named theorem graph. Tab to a node and press Enter, or use arrow keys between nodes."></svg></div>
+<div class="relation-reading" id="relation-reading" aria-live="polite">Select a theorem or one of its connections. Dashed limits may leave the generic locus; dotted links are not implications.</div>
+</section>
+<section class="atlas-detail" id="atlas-detail" aria-labelledby="selected-title">
+<header class="detail-header"><div><span id="selected-kind" class="mini-label"></span><h2 id="selected-title">Pappus</h2></div><a id="selected-chapter" target="_blank" rel="noopener">Open chapter ↗</a></header>
+<div class="selected-statement prose" id="selected-statement"></div>
+<div class="illustration-toolbar"><label for="atlas-view">Illustration</label><select id="atlas-view"></select><button id="atlas-link">Link to this theorem</button><span id="link-status" role="status"></span></div>
+<p class="illustration-note" id="illustration-note"></p>
+<div id="atlas-frames" class="atlas-frames" aria-busy="true"><p class="frame-loading" id="frame-loading" role="status">Loading the interactive geometry…</p></div>
+<details class="atlas-provenance"><summary>Statement scope, sources, and formalization</summary><p id="selected-scope"></p><p id="selected-proof-status"></p><ul id="selected-lean"></ul><p><a id="selected-source" target="_blank" rel="noopener">Source and precise hypotheses ↗</a></p><p class="small-print">The graph records mathematical relationships, not Lean imports. A checked theorem at each end does not mean that the connecting reduction has been formalized. Examples and spatial proof illustrations are labeled separately.</p></details>
+</section>
+</main><noscript>This map needs JavaScript. The <a href="proofs.html">theorem appendix</a> lists statements and sources without it.</noscript>
+</body></html>

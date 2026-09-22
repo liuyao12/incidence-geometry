@@ -57,6 +57,37 @@
         "IncidenceCubes.Connection.OrientedExample.not_bicolorable",
         "IncidenceCubes.Connection.OrientedExample.twelfth_face"
       ]
+    },
+    {
+      "page": "theorem-map.html",
+      "entryPoints": [
+        "IncidenceCubes.Classical.braikenridge_maclaurin_iff",
+        "IncidenceCubes.Classical.brianchon",
+        "IncidenceCubes.Classical.ceva_iff",
+        "IncidenceCubes.Classical.desargues_iff",
+        "IncidenceCubes.Classical.dual_desargues",
+        "IncidenceCubes.Classical.dual_pappus",
+        "IncidenceCubes.Classical.menelaus_iff",
+        "IncidenceCubes.Classical.pappus",
+        "IncidenceCubes.Classical.pascal",
+        "IncidenceCubes.Classical.polar_tangent_expansion",
+        "IncidenceCubes.Connection.ConicTransport.face_concurrent_iff",
+        "IncidenceCubes.Connection.GeometricSurface.conic_surface_last_face",
+        "IncidenceCubes.Connection.HyperplaneSurface.hyperplane_surface_last_face",
+        "IncidenceCubes.Connection.OrientedExample.not_bicolorable",
+        "IncidenceCubes.Connection.OrientedExample.twelfth_face",
+        "IncidenceCubes.Connection.OrientedSurface.conic_surface_last_face",
+        "IncidenceCubes.Connection.OrientedSurface.region_boundary",
+        "IncidenceCubes.Connection.SurfaceApplications.conic_cube_five_faces",
+        "IncidenceCubes.Connection.TorusExample.sixteenth_face",
+        "IncidenceCubes.Connection.TransportExamples.not_concurrent",
+        "IncidenceCubes.Penrose.Uniqueness.penrose_generic",
+        "IncidenceCubes.Presentation.pappus_via_pascal",
+        "IncidenceCubes.Presentation.salmon_concurrence",
+        "IncidenceCubes.Presentation.salmon_from_contacts",
+        "IncidenceCubes.Spatial.lift_rank_one",
+        "IncidenceCubes.Spatial.plane_section_collinear"
+      ]
     }
   ]
 }
