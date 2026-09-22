@@ -107,8 +107,8 @@ n('cube-compatibility','Conic cube\nfive faces ⇒ sixth',570,915,'surfaces',sur
  'Cube application of the checked surface theorem. It does not construct an eighth conic; compare the Penrose node.',
  [S+'SurfaceApplications.conic_cube_five_faces'],'corollary','formal/IncidenceCubes/Connection/SurfaceApplications.lean','connections.html#from-penrose');
 n('point-line-cube','Point–line cube\nseven labels ⇒ eighth',110,1025,'fomin',fomin(),
- 'In the paper’s generic point–hyperplane cube configuration, seven compatible vertex labels admit a completing eighth label.',
- 'Proposition 9.1 of the paper. The planar Desargues construction illustrates a case; no arbitrary-dimensional completion theorem is claimed in our Lean library.',
+ 'In the real or complex projective plane, seven generic point–line labels on a cube, with the three completed faces coherent, determine a unique eighth label making the remaining three faces coherent.',
+ 'Proposition 9.1 of the paper is Desargues in coherent-cube form. The illustration is planar; this is not an arbitrary-dimensional point–hyperplane uniqueness theorem or a separate Lean completion theorem.',
  [],'theorem',F,'fomin.html#desargues');
 n('torus16','Sixteen-conic\ntorus',340,1025,'surfaces',surface('torus',{face:15,reveal:true}),
  'Fifteen face concurrences in the supplied sixteen-conic periodic net imply the sixteenth.',
@@ -123,7 +123,7 @@ n('ceva','Ceva',110,1180,'classical',extra('ceva'),
  'Checked division-free homogeneous criterion. Each coefficient pair must be nonzero to represent a projective point.',
  [C+'ceva_iff'],'theorem','formal/IncidenceCubes/Classical/Triangle.lean','formal/README.md');
 n('menelaus','Menelaus',340,1180,'classical',extra('menelaus'),
- 'With the same side-point notation, \\(X,Y,Z\\) are collinear exactly when \\(ace+bdf=0\\).',
+ 'For \\(X=aB+bC\\), \\(Y=cC+dA\\), \\(Z=eA+fB\\) on a noncollinear triangle’s sides, \\(X,Y,Z\\) are collinear exactly when \\(ace+bdf=0\\).',
  'Checked homogeneous criterion. The sign is built into the coefficients, avoiding ambiguity about unsigned versus directed lengths.',
  [C+'menelaus_iff'],'theorem','formal/IncidenceCubes/Classical/Triangle.lean','formal/README.md');
 n('noncoherent','Contact without\nconcurrence · H = 2',570,1180,'surfaces',surface('square'),
@@ -149,6 +149,7 @@ e('fomin','pappus','implication','Nine-face torus','Theorem 3.2, Figure 9: the n
 e('fomin','generalized-quadrangle','implication','Nine-face sphere','Theorem 3.4 uses the same sphere as Figure 15, retaining only the collinearities needed by the proof.',F);
 e('generalized-quadrangle','quadrangle','implication','Restore one transversal','Theorem 3.3 is the special case in which all six section points lie on one line.',F);
 e('desargues','dual-desargues','duality','Projective duality','Dualizing the perspectivity statement gives the counterpart with points and lines interchanged.','formal/IncidenceCubes/Classical/PappusDesargues.lean',true);
+e('desargues','point-line-cube','implication','Desargues in cube labels','Proposition 9.1 is a restatement of planar Desargues: coherence of three initial faces yields the unique completing line. This is not a higher-dimensional uniqueness assertion.',F+'#page=65');
 e('fomin','point-line-cube','bridge','Compatibility vs completion','The paper’s surface implication and Proposition 9.1 have related coherent-cube geometry, but the latter supplies a missing label. They are not identified here.',F);
 e('fomin','conic-surface','bridge','Same cancellation mechanism','Both local geometric conditions become multiplicative face invariants. Edge cancellation is shared; there is no claimed pointwise conversion of arbitrary Fomin labels into conics.','connections.html#from-fomin');
 e('penrose','conic-surface','bridge','Same contact geometry','Penrose constructs a conic from seven. The surface theorem assumes every vertex conic and edge contact and deduces a face condition.','connections.html#from-penrose');
